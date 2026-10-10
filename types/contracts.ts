@@ -377,6 +377,36 @@ export interface UploadResponse {
   url: string;
 }
 
+/** One solve of the budget tradeoff curve (feature 7). `objective` is null when the solver produced no plan. */
+export interface BudgetCurvePointSummary {
+  budgetUsd: number;
+  feasible: boolean;
+  withinBudget: boolean;
+  weeklyCostUsd: number;
+  objective: number | null; // lower is better
+  proteinGapG: number; // mean daily shortfall vs target, >= 0
+  calorieGapPct: number; // mean abs deviation, % of target
+  sodiumUsePct: number; // mean day sodium / Doctor cap, %
+  bindingConstraints: string[];
+  mealNames: string[]; // distinct dish names, for "what changes"
+}
+
+export interface BudgetCurveSummary {
+  budgets: number[];
+  points: BudgetCurvePointSummary[];
+  insights: string[]; // sentences assembled by code from the points, never an LLM
+  minFeasibleBudgetUsd: number | null;
+  saturationBudgetUsd: number | null;
+  computedMs: number;
+}
+
+/** GET /api/plan/curve response. `planAt` is present only when `?budget=` was given. */
+export interface BudgetCurveResponse {
+  curve: BudgetCurveSummary;
+  planAt?: PlanDay[];
+  cached: boolean;
+}
+
 /** Standard error body for every route. */
 export interface ApiError {
   error: string;
