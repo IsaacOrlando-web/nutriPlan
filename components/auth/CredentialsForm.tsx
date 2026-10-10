@@ -79,7 +79,9 @@ export function CredentialsForm({ mode, redirectTo }: CredentialsFormProps) {
               autoComplete={mode === "login" ? "current-password" : "new-password"}
               {...form.register("password")}
             />
-            <p className="text-xs text-ink-subtle">Demo mode: any password works.</p>
+            <p className="text-xs text-ink-subtle">
+              Demo users: alex@demo.nutriplan.app or maria@demo.nutriplan.app, password demo1234.
+            </p>
           </div>
           {error && (
             <p role="alert" className="text-sm text-danger">
