@@ -1,4 +1,4 @@
-import { Show, SignUpButton, UserButton } from "@clerk/nextjs";
+import { Show, SignInButton, SignUpButton, UserButton } from "@clerk/nextjs";
 import { Leaf } from "lucide-react";
 import Link from "next/link";
 import { Disclaimer } from "@/components/common/Disclaimer";
@@ -18,6 +18,9 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
         {clerkEnabled && (
           <div className="flex items-center gap-3 text-sm">
             <Show when="signed-out">
+              <SignInButton mode="modal">
+                <button className="rounded-md px-3 py-1.5 text-ink hover:bg-surface-sunken">Sign in</button>
+              </SignInButton>
               <SignUpButton>
                 <button className="rounded-md bg-brand px-3 py-1.5 text-brand-foreground hover:bg-brand-dark">
                   Sign up
