@@ -51,6 +51,23 @@ function assertEventRules(events: AgentEvent[]) {
   const doctorProposal = events.find((e) => e.agent === "doctor" && e.kind === "proposal");
   expect(doctorProposal?.data?.constraints).toBeDefined();
   for (const e of events.filter((x) => x.kind === "tool_call")) expect(e.data?.tool).toBeDefined();
+  // Column generation: first solve -> scarcity brief -> Chef columns -> second solve, in that order.
+  const brief = events.findIndex(
+    (e) => e.agent === "orchestrator" && e.kind === "tool_call" && e.data?.brief !== undefined,
+  );
+  expect(brief).toBeGreaterThan(0);
+  expect(events[brief].text).toMatch(/^First solve/);
+  const columns = events.findIndex(
+    (e, i) => i > brief && e.agent === "chef" && e.kind === "proposal" && Array.isArray(e.data?.columns),
+  );
+  expect(columns).toBeGreaterThan(brief);
+  expect((events[columns].data!.columns as string[]).length).toBeGreaterThan(0);
+  const second = events.findIndex((e, i) => i > columns && e.agent === "orchestrator" && e.data?.solve === 2);
+  expect(second).toBeGreaterThan(columns);
+  expect(events[second].text).toMatch(/^Second solve/);
+  expect(typeof events[second].data?.usedColumns).toBe("number");
+  const decision = events[events.length - 1];
+  expect(decision.data?.timingMs).toBeDefined();
 }
 
 describe("runPlanNegotiation (scripted)", () => {

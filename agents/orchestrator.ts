@@ -12,6 +12,8 @@ import type {
   MealType,
   OptimizeInput,
   OptimizeResult,
+  PlanDay,
+  ShadowPrice,
   UserProfile,
 } from "@/types/contracts";
 import { getStore } from "@/lib/db";
@@ -23,8 +25,9 @@ import type { AgentContext } from "./context";
 import { emitEvent, emitterFor, eventDelayMs } from "./tools/events";
 import { loadFoodsMap, loadUserBundle, nextPlanVersion, todayIso } from "./tools/backend";
 import { buildGroceryList, money, optimizePlan, verifyPlan, type OptimizeOptions } from "./tools/math";
-import { runDoctor, doctorReviewPool } from "./doctor";
+import { runDoctor, doctorReviewPool, reviewPool } from "./doctor";
 import { runChef, chefConcede, chefAcceptSwap, chefReplaceRemoved, scoredTemplates } from "./chef";
+import { buildScarcityBrief, proteinDeviation, runChefColumns } from "./chef-columns";
 import { runBudget, budgetConcede } from "./budget";
 
 export interface PlanRunArgs {
@@ -46,6 +49,39 @@ export interface PlanRunOutcome {
 }
 
 export const MAX_ROUNDS = 3;
+
+/**
+ * Shadow prices run only inside the second solve (after Chef's columns), day by day with a short time limit,
+ * and only when the first solve on the same size of pool was quick enough that the extra re-solves fit the
+ * run's time budget. Otherwise Budget speaks from the binding constraints instead.
+ */
+export const SHADOW_SOLVE_MAX_MS = 3_500;
+export const SHADOW_ELAPSED_BUDGET_MS = 14_000;
+export const SHADOW_SOLVE_OPTS: OptimizeOptions = { mode: "daily", timeLimitSec: 1, mipRelGap: 0.05 };
+/** The first solve only has to reveal what is scarce; a short time limit keeps it near 2 s. */
+export const FIRST_SOLVE_TIME_SEC = 2;
+/** The second solve (base pool + Chef's columns) is the plan: a little more time, still bounded. */
+export const SECOND_SOLVE_TIME_SEC = 3;
+/** Deferred shadow pricing waits this long after the decision so the plan page loads before the solver runs. */
+export const DEFERRED_SHADOW_DELAY_MS = 1_500;
+
+/** AGENTS_SHADOW_MAX_MS overrides the gate (0 disables shadow prices, a large value forces them). */
+function shadowSolveMaxMs(): number {
+  const n = Number(process.env.AGENTS_SHADOW_MAX_MS);
+  return Number.isFinite(n) && n >= 0 ? n : SHADOW_SOLVE_MAX_MS;
+}
+
+/** How many of the Chef's new columns the solver actually scheduled (by candidateId in the mealId suffix). */
+export function usedColumns(days: PlanDay[], columns: CandidateMeal[]): number {
+  const ids = columns.map((c) => c.candidateId);
+  const used = new Set<string>();
+  for (const d of days)
+    for (const m of d.meals) {
+      const hit = ids.find((id) => m.mealId.endsWith(`_${id}`));
+      if (hit) used.add(hit);
+    }
+  return used.size;
+}
 
 const TRIGGER_TEXT: Record<AgentRunTrigger, string> = {
   onboarding: "Onboarding plan",
@@ -163,6 +199,7 @@ export async function runPlanNegotiation(args: PlanRunArgs): Promise<PlanRunOutc
   const { userId, runId, trigger } = args;
   const emit = emitterFor(store, runId);
   const reasonText = args.reason?.trim() || TRIGGER_TEXT[trigger];
+  const runStartedAt = Date.now();
 
   try {
     if (args.weeklyBudgetUsd !== undefined) {
@@ -241,15 +278,116 @@ export async function runPlanNegotiation(args: PlanRunArgs): Promise<PlanRunOutc
       mealsPerDay: profile.mealsPerDay,
     };
     const opts = optimizeOptions(args.optimize);
+    const timing: Record<string, number> = {};
 
-    await emit(
-      "orchestrator",
-      "tool_call",
-      `Running the optimizer: 7 days, ${profile.mealsPerDay} slots a day, integer servings`,
-      { tool: "optimizePlan", poolSize: pool.length },
-    );
-    let result = await optimizePlan(baseInput, opts);
-    let shadowPrices = result.shadowPrices;
+    // 6a. First solve on the base pool, no shadow prices: fast, and it tells us what is scarce.
+    let t = Date.now();
+    const first = await optimizePlan(baseInput, {
+      ...opts,
+      shadowPrices: false,
+      timeLimitSec: opts.timeLimitSec ?? FIRST_SOLVE_TIME_SEC,
+    });
+    timing.firstSolveMs = Date.now() - t;
+    let result = first;
+    const brief = buildScarcityBrief({
+      result: first,
+      targets: ctx.targets,
+      constraints,
+      profile,
+      poolSize: pool.length,
+    });
+    await emit("orchestrator", "tool_call", brief.text, {
+      tool: "optimizePlan",
+      solve: 1,
+      poolSize: pool.length,
+      solveMs: first.solveMs,
+      brief,
+    });
+
+    // 6b. Column generation: Chef answers the brief with new candidates, Doctor checks them in code, solve again.
+    let shadowPrices: ShadowPrice[] = [];
+    let shadowLater: OptimizeInput | null = null;
+    let summaryEmitted = false;
+    t = Date.now();
+    const columns = await runChefColumns(ctx, brief, pool, scored);
+    timing.chefColumnsMs = Date.now() - t;
+    if (columns.columns.length > 0) {
+      const check = reviewPool(columns.columns, constraints, foods);
+      if (check.removed.length > 0) {
+        const n = check.removed.length;
+        await emit(
+          "doctor",
+          "objection",
+          `${n} of Chef's new ${n === 1 ? "idea breaks" : "ideas break"} a cap even at the smallest portion (${check.removed[0].why}). Out.`,
+          { tool: "reviewPool", removed: n, candidateIds: check.removed.map((r) => r.candidateId) },
+        );
+      }
+      if (check.kept.length > 0) {
+        pool = [...pool, ...check.kept];
+        timing.elapsedBeforeSecondSolveMs = Date.now() - runStartedAt;
+        t = Date.now();
+        const second = await optimizePlan(
+          { ...baseInput, pool },
+          { ...opts, shadowPrices: false, timeLimitSec: opts.timeLimitSec ?? SECOND_SOLVE_TIME_SEC },
+        );
+        timing.secondSolveMs = Date.now() - t;
+        const keep = second.feasible && (second.withinBudget || !first.withinBudget || !first.feasible);
+        if (keep) result = second;
+        // Shadow prices are explanatory, not the plan: they run on the critical path only when the second solve
+        // was very quick and the run is on time (measured: 8 to 9 s for 3 to 4 relaxations, too slow for the
+        // room). Otherwise Budget speaks from the binding constraints now and the prices are computed after the
+        // decision and written into the saved plan for the Why sheet.
+        timing.shadowPricesMs = 0;
+        if (keep && opts.shadowPrices !== false) {
+          const wantNow =
+            second.solveMs <= shadowSolveMaxMs() && Date.now() - runStartedAt <= SHADOW_ELAPSED_BUDGET_MS;
+          if (wantNow) {
+            t = Date.now();
+            const priced = await optimizePlan(
+              { ...baseInput, pool },
+              { ...opts, ...SHADOW_SOLVE_OPTS, shadowPrices: true },
+            );
+            timing.shadowPricesMs = Date.now() - t;
+            shadowPrices = priced.shadowPrices;
+          } else {
+            shadowLater = { ...baseInput, pool };
+          }
+        }
+        const used = usedColumns(second.days, check.kept);
+        const before = proteinDeviation(first, ctx.targets);
+        const after = proteinDeviation(second, ctx.targets);
+        const change = !first.feasible
+          ? `a feasible week appeared`
+          : !first.withinBudget && second.withinBudget
+            ? `weekly cost went from ${money(first.weeklyCostUsd)} to ${money(second.weeklyCostUsd)}, inside the $${profile.weeklyBudgetUsd}`
+            : before !== after
+              ? `protein deviation went from ${before} g to ${after} g`
+              : `weekly cost went from ${money(first.weeklyCostUsd)} to ${money(second.weeklyCostUsd)}`;
+        await emit(
+          "orchestrator",
+          "proposal",
+          keep
+            ? `Second solve used ${used} of Chef's ${check.kept.length} new meals; ${change}. Solved in ${(second.solveMs / 1000).toFixed(1)} s.`
+            : `Second solve did not beat the first plan (${second.conflicts[0] ?? "over budget"}); keeping the first solve.`,
+          {
+            solve: 2,
+            usedColumns: used,
+            offeredColumns: check.kept.length,
+            kept: keep,
+            proteinDeviationBeforeG: before,
+            proteinDeviationAfterG: after,
+            weeklyCostBeforeUsd: first.weeklyCostUsd,
+            weeklyCostAfterUsd: second.weeklyCostUsd,
+            solveMs: second.solveMs,
+            solveSec: Number((second.solveMs / 1000).toFixed(1)),
+            shadowPricesMs: timing.shadowPricesMs,
+          },
+        );
+        summaryEmitted = true;
+      }
+    }
+
+    // 6c. Concession rounds (Chef repeats 3, Budget 5%, Budget 10%) when still infeasible or over budget.
     let round = 0;
     let concededAny = false;
     while ((!result.feasible || !result.withinBudget) && round < MAX_ROUNDS) {
@@ -260,7 +398,11 @@ export async function runPlanNegotiation(args: PlanRunArgs): Promise<PlanRunOutc
         ? `Rules collide (${result.conflicts.slice(0, 2).join(", ")}).`
         : `Week costs ${money(result.weeklyCostUsd)}, ${money(overBy)} over.`;
       if (round === 1) {
-        concessions = await chefConcede(ctx, round, concessions, problem, { weeklyCostUsd: result.weeklyCostUsd, overBy: Math.round(overBy * 100) / 100, conflicts: result.conflicts });
+        concessions = await chefConcede(ctx, round, concessions, problem, {
+          weeklyCostUsd: result.weeklyCostUsd,
+          overBy: Math.round(overBy * 100) / 100,
+          conflicts: result.conflicts,
+        });
         pool = [...pool, ...scored.filter((t) => !pool.some((c) => c.candidateId === t.candidateId))];
         pool = reviewSafe(
           pool,
@@ -269,15 +411,27 @@ export async function runPlanNegotiation(args: PlanRunArgs): Promise<PlanRunOutc
       } else {
         concessions = await budgetConcede(ctx, round - 1, concessions, overBy);
       }
+      t = Date.now();
       result = await optimizePlan({ ...baseInput, pool, concessions }, { ...opts, shadowPrices: false });
-      if (result.shadowPrices.length) shadowPrices = result.shadowPrices;
+      timing[`round${round}SolveMs`] = Date.now() - t;
     }
-    await emit(
-      "orchestrator",
-      "proposal",
-      `Optimizer solved in ${(result.solveMs / 1000).toFixed(1)} s. Weekly cost ${money(result.weeklyCostUsd)}${round ? ` after ${round} ${round === 1 ? "round" : "rounds"}` : ""}.`,
-      { solveMs: result.solveMs, solveSec: Number((result.solveMs / 1000).toFixed(1)), weeklyCostUsd: result.weeklyCostUsd, rounds: round, concessions },
-    );
+    if (shadowLater) {
+      if (round > 0) shadowLater = { ...baseInput, pool, concessions };
+      timing.shadowPricesDeferred = 1;
+    }
+    if (round > 0 || !summaryEmitted)
+      await emit(
+        "orchestrator",
+        "proposal",
+        `Optimizer solved in ${(result.solveMs / 1000).toFixed(1)} s. Weekly cost ${money(result.weeklyCostUsd)}${round ? ` after ${round} ${round === 1 ? "round" : "rounds"}` : ""}.`,
+        {
+          solveMs: result.solveMs,
+          solveSec: Number((result.solveMs / 1000).toFixed(1)),
+          weeklyCostUsd: result.weeklyCostUsd,
+          rounds: round,
+          concessions,
+        },
+      );
     if (!result.feasible)
       throw new Error(
         `the rules cannot all be met together (${result.conflicts.join(", ") || "no safe candidates"})`,
@@ -311,9 +465,18 @@ export async function runPlanNegotiation(args: PlanRunArgs): Promise<PlanRunOutc
     explainPlan(plan, profile, { ...result, shadowPrices });
     await store.savePlan(plan);
 
+    // Budget's "what would more money buy" line: a shadow price when one was computed in time, otherwise the
+    // binding constraints of the final solve (both come from the optimizer, never from a model).
     const budgetSp = shadowPrices.find((s) => s.constraint === "weekly_budget");
     if (budgetSp && budgetSp.value > 0)
       await emit("budget", "proposal", budgetSp.humanText, { shadowPrice: budgetSp });
+    else if (!budgetSp && result.bindingConstraints.includes("weekly_budget"))
+      await emit(
+        "budget",
+        "proposal",
+        `Budget is the binding constraint: ${money(result.weeklyCostUsd)} of your $${profile.weeklyBudgetUsd} is working. Every extra dollar buys variety.`,
+        { bindingConstraints: result.bindingConstraints, weeklyCostUsd: result.weeklyCostUsd },
+      );
     await emit(
       "budget",
       "proposal",
@@ -331,9 +494,10 @@ export async function runPlanNegotiation(args: PlanRunArgs): Promise<PlanRunOutc
       bestEffort
         ? `Plan v${version} approved as best effort: every rule met, ${money(plan.weeklyCostUsd)} is over the $${profile.weeklyBudgetUsd} budget.`
         : `Plan v${version} approved: ${plan.days.length} days, ${money(plan.weeklyCostUsd)}, zero rule violations.`,
-      { planId: plan.planId, version, bestEffort, concededAny },
+      { planId: plan.planId, version, bestEffort, concededAny, timingMs: timing },
     );
     await store.setRunStatus(runId, "done");
+    if (shadowLater) void priceShadowsLater(store, plan, profile, result, shadowLater, opts);
     return { plan, events: await store.listEvents(runId), status: "done", fallback: false };
   } catch (err) {
     console.error(`[orchestrator] run ${runId} failed:`, err instanceof Error ? err.message : err);
@@ -367,6 +531,35 @@ export async function runPlanNegotiation(args: PlanRunArgs): Promise<PlanRunOutc
       status: "failed",
       fallback: false,
     };
+  }
+}
+
+/**
+ * Shadow prices after the decision: re-solves day by day with a short limit, then writes the prices and the
+ * refreshed per meal explanations into the saved plan, unless a newer plan replaced it meanwhile. Never throws.
+ */
+async function priceShadowsLater(
+  store: Store,
+  plan: MealPlan,
+  profile: UserProfile,
+  result: OptimizeResult,
+  input: OptimizeInput,
+  opts: OptimizeOptions,
+): Promise<void> {
+  try {
+    // Let the plan page load first: the WASM solver blocks the event loop between awaits.
+    await new Promise<void>((r) => setTimeout(r, DEFERRED_SHADOW_DELAY_MS));
+    const t0 = Date.now();
+    const priced = await optimizePlan(input, { ...opts, ...SHADOW_SOLVE_OPTS, shadowPrices: true });
+    if (!priced.feasible || priced.shadowPrices.length === 0) return;
+    const current = await store.getCurrentPlan(plan.userId);
+    if (!current || current.planId !== plan.planId) return;
+    const updated: MealPlan = { ...current, shadowPrices: priced.shadowPrices };
+    explainPlan(updated, profile, { ...result, shadowPrices: priced.shadowPrices });
+    await store.savePlan(updated);
+    console.info(`[orchestrator] shadow prices for plan ${plan.planId} saved after ${Date.now() - t0} ms`);
+  } catch (err) {
+    console.warn(`[orchestrator] deferred shadow prices skipped:`, err instanceof Error ? err.message : err);
   }
 }
 

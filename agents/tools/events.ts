@@ -25,6 +25,9 @@ export function clampText(text: string, max = MAX_EVENT_TEXT): string {
 
 const sleep = (ms: number) => (ms > 0 ? new Promise<void>((r) => setTimeout(r, ms)) : Promise.resolve());
 
+/** Last emit time per run: pacing guarantees a minimum gap between events instead of sleeping after each one. */
+const lastEmitAt = new Map<string, number>();
+
 export async function emitEvent(
   store: Store,
   runId: string,
@@ -33,6 +36,10 @@ export async function emitEvent(
   text: string,
   data?: Record<string, unknown>,
 ): Promise<AgentEvent> {
+  // Wait only for what is left of the gap: an LLM call or a solve that already took longer costs nothing extra.
+  const delay = eventDelayMs();
+  const last = lastEmitAt.get(runId);
+  if (last !== undefined && delay > 0) await sleep(last + delay - Date.now());
   const event: AgentEvent = {
     eventId: newId(),
     runId,
@@ -43,7 +50,8 @@ export async function emitEvent(
     ...(data ? { data } : {}),
   };
   await store.addEvent(event);
-  await sleep(eventDelayMs());
+  lastEmitAt.set(runId, Date.now());
+  if (kind === "decision") lastEmitAt.delete(runId);
   return event;
 }
 

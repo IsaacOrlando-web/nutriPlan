@@ -1,5 +1,6 @@
 // callObject: the single door to every LLM. Owner: Agents.
-// Vercel AI SDK v5 generateObject with a Zod schema, 15 s timeout, one retry, then the backup model.
+// Vercel AI SDK v5 generateObject with a Zod schema, per agent timeout and maxOutputTokens (config.ts),
+// one attempt per model, then the backup model.
 // Throws NoLlmError in scripted mode or when no provider key exists so callers use their scripted path.
 // Logs every call to store.addAgentLog without photo data URLs.
 import fs from "node:fs";
@@ -10,7 +11,17 @@ import { createOpenAI } from "@ai-sdk/openai";
 import { createGoogleGenerativeAI } from "@ai-sdk/google";
 import type { z } from "zod";
 import { getStore } from "@/lib/db";
-import { describeModel, getAgentsMode, LLM_RETRIES, LLM_TIMEOUT_MS, PROVIDER_ENV_KEYS, resolveModels, type AgentKey, type ModelChoice } from "./config";
+import {
+  describeModel,
+  getAgentsMode,
+  LLM_RETRIES,
+  maxOutputTokensFor,
+  PROVIDER_ENV_KEYS,
+  resolveModels,
+  timeoutFor,
+  type AgentKey,
+  type ModelChoice,
+} from "./config";
 
 export type NoLlmReason = "scripted" | "no_key" | "all_failed";
 
@@ -33,6 +44,9 @@ export interface CallObjectArgs<T> {
   /** Image URLs (https or data: URLs) or local paths under /public. Only vision agents pass these. */
   images?: string[];
   temperature?: number;
+  /** Overrides the per agent defaults from config (AGENT_TIMEOUT_MS, AGENT_MAX_OUTPUT_TOKENS). */
+  timeoutMs?: number;
+  maxOutputTokens?: number;
 }
 
 export interface CallObjectResult<T> {
@@ -100,8 +114,9 @@ async function attempt<T>(choice: ModelChoice, args: CallObjectArgs<T>): Promise
     schema: args.schema,
     system: args.system,
     ...(hasImages ? { messages: buildMessages(args.prompt, args.images!) } : { prompt: args.prompt }),
-    abortSignal: AbortSignal.timeout(LLM_TIMEOUT_MS),
+    abortSignal: AbortSignal.timeout(args.timeoutMs ?? timeoutFor(args.agent)),
     maxRetries: 0,
+    maxOutputTokens: args.maxOutputTokens ?? maxOutputTokensFor(args.agent),
     temperature: args.temperature ?? 0.7,
   });
   return result.object as T;
@@ -114,7 +129,14 @@ export function isPermanentProviderError(message: string): boolean {
   );
 }
 
-async function safeLog(record: { runId: string | null; agent: string; model: string; input: unknown; output: unknown; ms: number }): Promise<void> {
+async function safeLog(record: {
+  runId: string | null;
+  agent: string;
+  model: string;
+  input: unknown;
+  output: unknown;
+  ms: number;
+}): Promise<void> {
   try {
     await getStore().addAgentLog(record);
   } catch {
@@ -130,7 +152,11 @@ export async function callObjectWithModel<T>(args: CallObjectArgs<T>): Promise<C
 
   const started = Date.now();
   const errors: string[] = [];
-  const inputForLog = { system: args.system.slice(0, 300), prompt: stripDataUrls(args.prompt).slice(0, 4000), images: args.images?.length ?? 0 };
+  const inputForLog = {
+    system: args.system.slice(0, 300),
+    prompt: stripDataUrls(args.prompt).slice(0, 4000),
+    images: args.images?.length ?? 0,
+  };
 
   for (const choice of chain) {
     for (let tryNo = 0; tryNo <= LLM_RETRIES; tryNo++) {
@@ -138,12 +164,26 @@ export async function callObjectWithModel<T>(args: CallObjectArgs<T>): Promise<C
       try {
         const object = await attempt(choice, args);
         const ms = Date.now() - t0;
-        await safeLog({ runId: args.runId ?? null, agent: args.agent, model: describeModel(choice), input: inputForLog, output: object, ms });
+        await safeLog({
+          runId: args.runId ?? null,
+          agent: args.agent,
+          model: describeModel(choice),
+          input: inputForLog,
+          output: object,
+          ms,
+        });
         return { object, model: describeModel(choice), ms: Date.now() - started };
       } catch (err) {
         const msg = err instanceof Error ? err.message : String(err);
         errors.push(`${describeModel(choice)} try ${tryNo + 1}: ${msg.slice(0, 200)}`);
-        await safeLog({ runId: args.runId ?? null, agent: args.agent, model: describeModel(choice), input: inputForLog, output: { error: msg.slice(0, 300) }, ms: Date.now() - t0 });
+        await safeLog({
+          runId: args.runId ?? null,
+          agent: args.agent,
+          model: describeModel(choice),
+          input: inputForLog,
+          output: { error: msg.slice(0, 300) },
+          ms: Date.now() - t0,
+        });
         // Billing, auth and unknown-model errors will not fix themselves: skip the retry and move to the backup.
         if (isPermanentProviderError(msg)) break;
       }

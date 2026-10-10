@@ -4,7 +4,8 @@
 // AGENTS_MODE=live|scripted (default: live when any provider key is present, scripted otherwise).
 
 export type Provider = "anthropic" | "openai" | "google";
-export type AgentKey = "doctor" | "chef" | "budget" | "monitor" | "orchestrator" | "coach" | "visionA" | "visionB";
+export type AgentKey =
+  "doctor" | "chef" | "budget" | "monitor" | "orchestrator" | "coach" | "visionA" | "visionB";
 export type AgentsMode = "live" | "scripted";
 
 export interface ModelChoice {
@@ -17,9 +18,42 @@ export interface AgentModelConfig {
   backup: ModelChoice | null;
 }
 
-/** Per call timeout and retry policy for every LLM request. */
-export const LLM_TIMEOUT_MS = 12_000;
-export const LLM_RETRIES = 1;
+/**
+ * Per call timeout and retry policy for every LLM request. One attempt per model, then the next model in the
+ * chain: a timeout must never cost more than the call itself. Default timeout for agents not listed below.
+ */
+export const LLM_TIMEOUT_MS = 8_000;
+export const LLM_RETRIES = 0;
+
+/** Per agent timeout (ms). Chef writes recipes, vision reads images, coach writes a paragraph: a little longer. */
+export const AGENT_TIMEOUT_MS: Partial<Record<AgentKey, number>> = {
+  chef: 10_000,
+  coach: 10_000,
+  visionA: 10_000,
+  visionB: 10_000,
+};
+
+/** maxOutputTokens sized to each agent's schema so a model cannot ramble past its timeout. */
+export const AGENT_MAX_OUTPUT_TOKENS: Record<AgentKey, number> = {
+  doctor: 600,
+  chef: 2_500,
+  budget: 600,
+  monitor: 600,
+  orchestrator: 600,
+  coach: 900,
+  visionA: 800,
+  visionB: 800,
+};
+
+export function timeoutFor(agent: AgentKey): number {
+  const env = Number(process.env.LLM_TIMEOUT_MS);
+  if (Number.isFinite(env) && env > 0) return env;
+  return AGENT_TIMEOUT_MS[agent] ?? LLM_TIMEOUT_MS;
+}
+
+export function maxOutputTokensFor(agent: AgentKey): number {
+  return AGENT_MAX_OUTPUT_TOKENS[agent];
+}
 
 export const PROVIDER_ENV_KEYS: Record<Provider, string> = {
   anthropic: "ANTHROPIC_API_KEY",
@@ -35,7 +69,9 @@ const GEMINI_FLASH: ModelChoice = { provider: "google", model: "gemini-3.5-flash
 
 export const MODEL_TABLE: Record<AgentKey, AgentModelConfig> = {
   doctor: { primary: SONNET, backup: GEMINI_FLASH },
-  chef: { primary: GEMINI_FLASH, backup: HAIKU }, // creative + fast; GPT mini when OpenAI credits exist (MODEL_CHEF)
+  // Measured 2026-10-10: Gemini 3.5 Flash answered "high demand" on 4 of 4 Chef calls (2 to 9 s lost each),
+  // Haiku 5.5 finished the column brief in 5 to 8 s. Haiku leads; Gemini stays as the backup (MODEL_CHEF overrides).
+  chef: { primary: HAIKU, backup: GEMINI_FLASH },
   budget: { primary: HAIKU, backup: GEMINI_FLASH },
   monitor: { primary: HAIKU, backup: GEMINI_FLASH },
   orchestrator: { primary: SONNET, backup: GEMINI_FLASH },

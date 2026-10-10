@@ -141,12 +141,17 @@ async function liveProposal(ctx: AgentContext): Promise<{ pool: CandidateMeal[];
 /** Chef proposes the candidate pool. */
 export async function runChef(ctx: AgentContext): Promise<CandidateMeal[]> {
   const { profile, emit } = ctx;
-  await emit("chef", "tool_call", "Searching the food database for ingredients", { tool: "searchFoods" });
+  await emit("chef", "tool_call", `Opening the recipe book and scoring every dish for ${profile.name}`, {
+    tool: "getMealTemplates",
+  });
   const scored = await scoredTemplates(ctx);
 
+  // The base pool is always the scored templates: instant, every ingredient a real food. The LLM's creativity
+  // goes where the optimizer needs it, after the first solve (column generation in chef-columns.ts).
+  // CHEF_LLM_BASE_POOL=true restores the old "invent the whole pool" call for experiments.
   let pool: CandidateMeal[] | null = null;
   let message: string | null = null;
-  if (ctx.live) {
+  if (ctx.live && process.env.CHEF_LLM_BASE_POOL === "true") {
     const live = await liveProposal(ctx);
     if (live && live.pool.length >= 8) {
       pool = topUpPool(live.pool, scored, profile.mealsPerDay);

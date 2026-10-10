@@ -76,7 +76,7 @@ export default function GroceryPage() {
       />
       {plan.isLoading && <LoadingState variant="list" rows={6} />}
       {plan.error && <ErrorState error={plan.error} onRetry={() => void plan.refetch()} />}
-      {plan.data && plan.data.groceryList.length === 0 && (
+      {!plan.isLoading && !plan.error && (!plan.data || plan.data.groceryList.length === 0) && (
         <EmptyState
           title="No groceries yet"
           body="Your grocery list appears once a plan is built."

@@ -27,7 +27,7 @@ export default function PlanPage() {
     <div data-testid="plan-screen" className="space-y-6">
       {plan.isLoading && <LoadingState variant="page" />}
       {plan.error && <ErrorState error={plan.error} onRetry={() => void plan.refetch()} />}
-      {plan.data && plan.data.days.length === 0 && (
+      {!plan.isLoading && !plan.error && (!plan.data || plan.data.days.length === 0) && (
         <EmptyState
           title="No plan yet"
           body="Finish onboarding and the agents will build your first week."

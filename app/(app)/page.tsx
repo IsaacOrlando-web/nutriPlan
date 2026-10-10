@@ -196,7 +196,7 @@ export default function DashboardPage() {
         </div>
         {plan.isLoading && <LoadingState variant="cards" rows={3} />}
         {plan.error && <ErrorState error={plan.error} onRetry={() => void plan.refetch()} />}
-        {plan.data && !todayDay && (
+        {!plan.isLoading && !plan.error && !todayDay && (
           <EmptyState
             title="No plan yet"
             body="Answer a few questions and the agents will build your first week."
