@@ -39,6 +39,10 @@ export function AuthModal() {
     try {
       if (mode === "signup") {
         const response = await api.auth.signup({ name, email, password });
+        if (response.authenticated) {
+          window.location.assign("/");
+          return;
+        }
         setMessage(response.message);
         setPassword("");
       } else {
@@ -126,7 +130,7 @@ function AuthForm({
       <DialogHeader>
         <DialogTitle>{mode === "login" ? "Welcome back" : "Create your account"}</DialogTitle>
         <DialogDescription>
-          {mode === "login" ? "Log in to see your plan." : "Verify your email, then build your first plan."}
+          {mode === "login" ? "Log in to see your plan." : "Create your account and build your first plan."}
         </DialogDescription>
       </DialogHeader>
       {message ? (

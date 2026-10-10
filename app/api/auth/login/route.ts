@@ -2,6 +2,7 @@ import type { NextRequest } from "next/server";
 import { z } from "zod";
 import type { SessionInfo } from "@/types/contracts";
 import { createSessionToken, SESSION_COOKIE, SESSION_MAX_AGE, resolveLocalUserId } from "@/lib/auth/session";
+import { authMode } from "@/lib/auth/session";
 import { verifyPassword } from "@/lib/auth/password";
 import { getStore } from "@/lib/db";
 import { DEMO_EMAILS, DEMO_PASSWORD, DEMO_USER_IDS, type DemoUserKey } from "@/lib/db/seed/demo-users";
@@ -18,6 +19,19 @@ const LoginSchema = z.object({
 
 export const POST = handler(async (req: NextRequest) => {
   const { email: rawEmail, identifier, password } = await parseBody(req, LoginSchema);
+  if (authMode() === "supabase") {
+    if (!rawEmail || !password) throw new HttpError(400, "Email and password are required");
+    const supabase = await (await import("@/lib/supabase/server")).createServerSupabase();
+    const { data, error } = await supabase.auth.signInWithPassword({ email: rawEmail.toLowerCase(), password });
+    if (error || !data.user) throw new HttpError(401, error?.message ?? "Invalid email or password");
+    const info: SessionInfo = {
+      userId: data.user.id,
+      email: data.user.email ?? null,
+      mode: "supabase",
+      hasProfile: (await getStore().getProfile(data.user.id)) !== null,
+    };
+    return json(info);
+  }
   const store = getStore();
   if (identifier) {
     const legacy = resolveLocalUserId(identifier);
@@ -30,7 +44,9 @@ export const POST = handler(async (req: NextRequest) => {
   const user = await store.getUserByEmail(email);
   if (demo && password === DEMO_PASSWORD && !user) return authenticate(resolveLocalUserId(email).userId, email, store);
   if (!user || !verifyPassword(password, user.passwordHash)) throw new HttpError(401, "Invalid email or password");
-  if (!user.emailVerified) throw new HttpError(403, "Verify your email before signing in");
+  if (process.env.AUTH_REQUIRE_EMAIL_VERIFICATION !== "false" && !user.emailVerified) {
+    throw new HttpError(403, "Verify your email before signing in");
+  }
   return authenticate(user.userId, user.email, store);
 });
 

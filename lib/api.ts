@@ -180,7 +180,7 @@ export const api = {
             return { userId: u, email: `${u}@demo.nutriplan.app`, mode: "local" as const, hasProfile: true };
           })
         : post("/api/auth/login", { email, password }),
-    signup: (input: { name: string; email: string; password: string }): Promise<{ message: string }> =>
+    signup: (input: { name: string; email: string; password: string }): Promise<{ message: string; authenticated?: boolean }> =>
       USE_MOCKS ? mock(async () => ({ message: "Check your email to verify your account." })) : post("/api/auth/signup", input),
     logout: (): Promise<void> => (USE_MOCKS ? mock(async () => undefined) : request("/api/auth/logout", { method: "POST" })),
   },
