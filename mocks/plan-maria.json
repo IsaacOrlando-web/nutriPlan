@@ -1,0 +1,2279 @@
+{
+  "planId": "maria-plan-0001",
+  "userId": "00000000-0000-4000-8000-0000000a7a1a",
+  "version": 1,
+  "reason": "Onboarding plan",
+  "runId": "maria-run-0001",
+  "startDate": "2026-10-12",
+  "weeklyCostUsd": 67.84,
+  "days": [
+    {
+      "date": "2026-10-12",
+      "meals": [
+        {
+          "mealId": "2026-10-12_breakfast_tofu_scramble",
+          "type": "breakfast",
+          "name": "Tofu veggie scramble with toast",
+          "cuisine": "American",
+          "recipeSteps": [
+            "Crumble tofu into a hot pan with peppers",
+            "Add spinach until wilted, season with turmeric and pepper",
+            "Serve with toast"
+          ],
+          "prepMinutes": 12,
+          "items": [
+            {
+              "foodId": "tofu",
+              "name": "Tofu, firm",
+              "servings": 2,
+              "grams": 170
+            },
+            {
+              "foodId": "bell_pepper",
+              "name": "Bell pepper",
+              "servings": 1,
+              "grams": 119
+            },
+            {
+              "foodId": "spinach",
+              "name": "Spinach, raw",
+              "servings": 1,
+              "grams": 30
+            },
+            {
+              "foodId": "ww_bread",
+              "name": "Whole wheat bread",
+              "servings": 1,
+              "grams": 32
+            }
+          ],
+          "totals": {
+            "calories": 369,
+            "proteinG": 35.4,
+            "carbsG": 26.6,
+            "fatG": 16.4,
+            "fiberG": 9,
+            "sugarG": 7.5,
+            "addedSugarG": 0.8,
+            "satFatG": 2.5,
+            "sodiumMg": 196,
+            "potassiumMg": 903,
+            "glycemicLoad": 9.3,
+            "costUsd": 2.46
+          },
+          "explanation": [
+            {
+              "agent": "chef",
+              "text": "Tofu veggie scramble with toast: American flavors you said you like, 12 minutes of prep."
+            },
+            {
+              "agent": "doctor",
+              "text": "26.6 g carbs and glycemic load 9.3: inside the per meal caps."
+            },
+            {
+              "agent": "budget",
+              "text": "$2.46 for this meal, 28% of today's sodium. Raising your budget by $5 would let Chef add greek yogurt with blueberries twice"
+            }
+          ]
+        },
+        {
+          "mealId": "2026-10-12_lunch_tofu_edamame_bowl",
+          "type": "lunch",
+          "name": "Tofu edamame rice bowl",
+          "cuisine": "Asian",
+          "recipeSteps": [
+            "Pan sear tofu cubes",
+            "Warm edamame and rice",
+            "Top with shredded carrot and soy sauce"
+          ],
+          "prepMinutes": 20,
+          "items": [
+            {
+              "foodId": "tofu",
+              "name": "Tofu, firm",
+              "servings": 2,
+              "grams": 170
+            },
+            {
+              "foodId": "edamame",
+              "name": "Edamame, shelled, cooked",
+              "servings": 1,
+              "grams": 78
+            },
+            {
+              "foodId": "brown_rice",
+              "name": "Brown rice, cooked",
+              "servings": 1,
+              "grams": 98
+            },
+            {
+              "foodId": "carrots",
+              "name": "Carrots",
+              "servings": 1,
+              "grams": 61
+            },
+            {
+              "foodId": "soy_sauce",
+              "name": "Soy sauce, low sodium",
+              "servings": 1,
+              "grams": 9
+            }
+          ],
+          "totals": {
+            "calories": 490,
+            "proteinG": 42.6,
+            "carbsG": 43.1,
+            "fatG": 20,
+            "fiberG": 11.3,
+            "sugarG": 5.8,
+            "addedSugarG": 0,
+            "satFatG": 3,
+            "sodiumMg": 374,
+            "potassiumMg": 1040,
+            "glycemicLoad": 18.3,
+            "costUsd": 2.13
+          },
+          "explanation": [
+            {
+              "agent": "chef",
+              "text": "Tofu edamame rice bowl: Asian flavors you said you like, 20 minutes of prep."
+            },
+            {
+              "agent": "doctor",
+              "text": "43.1 g carbs and glycemic load 18.3: inside the per meal caps."
+            },
+            {
+              "agent": "budget",
+              "text": "$2.13 for this meal, 53% of today's sodium. Raising your budget by $5 would let Chef add greek yogurt with blueberries twice"
+            }
+          ]
+        },
+        {
+          "mealId": "2026-10-12_dinner_tilapia_quinoa",
+          "type": "dinner",
+          "name": "Lemon tilapia with quinoa and zucchini",
+          "cuisine": "Mediterranean",
+          "recipeSteps": [
+            "Bake tilapia with lemon",
+            "Saute zucchini in olive oil",
+            "Serve over quinoa"
+          ],
+          "prepMinutes": 25,
+          "items": [
+            {
+              "foodId": "tilapia",
+              "name": "Tilapia, baked",
+              "servings": 2,
+              "grams": 200
+            },
+            {
+              "foodId": "quinoa",
+              "name": "Quinoa, cooked",
+              "servings": 2,
+              "grams": 184
+            },
+            {
+              "foodId": "zucchini",
+              "name": "Zucchini",
+              "servings": 1,
+              "grams": 124
+            },
+            {
+              "foodId": "olive_oil",
+              "name": "Olive oil",
+              "servings": 1,
+              "grams": 14
+            }
+          ],
+          "totals": {
+            "calories": 622,
+            "proteinG": 61.6,
+            "carbsG": 43,
+            "fatG": 23.3,
+            "fiberG": 6.4,
+            "sugarG": 4.8,
+            "addedSugarG": 0,
+            "satFatG": 4.2,
+            "sodiumMg": 135,
+            "potassiumMg": 1400,
+            "glycemicLoad": 18.3,
+            "costUsd": 4.05
+          },
+          "explanation": [
+            {
+              "agent": "chef",
+              "text": "Lemon tilapia with quinoa and zucchini: Mediterranean flavors you said you like, 25 minutes of prep."
+            },
+            {
+              "agent": "doctor",
+              "text": "43 g carbs and glycemic load 18.3: inside the per meal caps."
+            },
+            {
+              "agent": "budget",
+              "text": "$4.05 for this meal, 19% of today's sodium. Raising your budget by $5 would let Chef add greek yogurt with blueberries twice"
+            }
+          ]
+        },
+        {
+          "mealId": "2026-10-12_snack_almonds_orange",
+          "type": "snack",
+          "name": "Almonds and an orange",
+          "cuisine": "American",
+          "recipeSteps": [
+            "Portion almonds",
+            "Peel orange"
+          ],
+          "prepMinutes": 1,
+          "items": [
+            {
+              "foodId": "almonds",
+              "name": "Almonds",
+              "servings": 1,
+              "grams": 28
+            },
+            {
+              "foodId": "orange",
+              "name": "Orange",
+              "servings": 1,
+              "grams": 131
+            }
+          ],
+          "totals": {
+            "calories": 224,
+            "proteinG": 7.1,
+            "carbsG": 21.5,
+            "fatG": 14.1,
+            "fiberG": 6.6,
+            "sugarG": 13.5,
+            "addedSugarG": 0,
+            "satFatG": 1.1,
+            "sodiumMg": 0,
+            "potassiumMg": 442,
+            "glycemicLoad": 5.3,
+            "costUsd": 0.91
+          },
+          "explanation": [
+            {
+              "agent": "chef",
+              "text": "Almonds and an orange: American flavors you said you like, 1 minutes of prep."
+            },
+            {
+              "agent": "doctor",
+              "text": "21.5 g carbs and glycemic load 5.3: inside the per meal caps."
+            },
+            {
+              "agent": "budget",
+              "text": "$0.91 for this meal, 0% of today's sodium. Raising your budget by $5 would let Chef add greek yogurt with blueberries twice"
+            }
+          ]
+        }
+      ],
+      "dayTotals": {
+        "calories": 1705,
+        "proteinG": 146.7,
+        "carbsG": 134.2,
+        "fatG": 73.8,
+        "fiberG": 33.3,
+        "sugarG": 31.6,
+        "addedSugarG": 0.8,
+        "satFatG": 10.8,
+        "sodiumMg": 705,
+        "potassiumMg": 3785,
+        "glycemicLoad": 51.2,
+        "costUsd": 9.55
+      }
+    },
+    {
+      "date": "2026-10-13",
+      "meals": [
+        {
+          "mealId": "2026-10-13_breakfast_avocado_egg_toast",
+          "type": "breakfast",
+          "name": "Avocado toast with eggs",
+          "cuisine": "American",
+          "recipeSteps": [
+            "Toast bread",
+            "Mash avocado on toast",
+            "Top with eggs cooked your way and tomato slices"
+          ],
+          "prepMinutes": 8,
+          "items": [
+            {
+              "foodId": "ww_bread",
+              "name": "Whole wheat bread",
+              "servings": 2,
+              "grams": 64
+            },
+            {
+              "foodId": "avocado",
+              "name": "Avocado",
+              "servings": 1,
+              "grams": 50
+            },
+            {
+              "foodId": "eggs",
+              "name": "Eggs, whole",
+              "servings": 1,
+              "grams": 50
+            },
+            {
+              "foodId": "tomato",
+              "name": "Tomato",
+              "servings": 1,
+              "grams": 123
+            }
+          ],
+          "totals": {
+            "calories": 335,
+            "proteinG": 16.3,
+            "carbsG": 36.7,
+            "fatG": 14.6,
+            "fiberG": 8.7,
+            "sugarG": 6.6,
+            "addedSugarG": 1.6,
+            "satFatG": 3,
+            "sodiumMg": 369,
+            "potassiumMg": 766,
+            "glycemicLoad": 18,
+            "costUsd": 1.63
+          },
+          "explanation": [
+            {
+              "agent": "chef",
+              "text": "Avocado toast with eggs: American flavors you said you like, 8 minutes of prep."
+            },
+            {
+              "agent": "doctor",
+              "text": "36.7 g carbs and glycemic load 18: inside the per meal caps."
+            },
+            {
+              "agent": "budget",
+              "text": "$1.63 for this meal, 52% of today's sodium. Raising your budget by $5 would let Chef add greek yogurt with blueberries twice"
+            }
+          ]
+        },
+        {
+          "mealId": "2026-10-13_lunch_turkey_chili",
+          "type": "lunch",
+          "name": "Turkey and pinto bean chili",
+          "cuisine": "American",
+          "recipeSteps": [
+            "Brown turkey with onion and pepper",
+            "Add beans, tomatoes, chili powder and cumin",
+            "Simmer 20 minutes"
+          ],
+          "prepMinutes": 30,
+          "items": [
+            {
+              "foodId": "ground_turkey",
+              "name": "Ground turkey 93% lean, cooked",
+              "servings": 2,
+              "grams": 170
+            },
+            {
+              "foodId": "pinto_beans",
+              "name": "Pinto beans, cooked",
+              "servings": 1,
+              "grams": 86
+            },
+            {
+              "foodId": "canned_tomatoes",
+              "name": "Diced tomatoes, no salt added",
+              "servings": 1,
+              "grams": 121
+            },
+            {
+              "foodId": "onion",
+              "name": "Onion",
+              "servings": 1,
+              "grams": 55
+            },
+            {
+              "foodId": "bell_pepper",
+              "name": "Bell pepper",
+              "servings": 1,
+              "grams": 119
+            }
+          ],
+          "totals": {
+            "calories": 566,
+            "proteinG": 57.4,
+            "carbsG": 43.6,
+            "fatG": 18.4,
+            "fiberG": 13.5,
+            "sugarG": 12.9,
+            "addedSugarG": 0,
+            "satFatG": 4.5,
+            "sodiumMg": 153,
+            "potassiumMg": 1396,
+            "glycemicLoad": 9.1,
+            "costUsd": 3.47
+          },
+          "explanation": [
+            {
+              "agent": "chef",
+              "text": "Turkey and pinto bean chili: American flavors you said you like, 30 minutes of prep."
+            },
+            {
+              "agent": "doctor",
+              "text": "43.6 g carbs and glycemic load 9.1: inside the per meal caps."
+            },
+            {
+              "agent": "budget",
+              "text": "$3.47 for this meal, 22% of today's sodium. Raising your budget by $5 would let Chef add greek yogurt with blueberries twice"
+            }
+          ]
+        },
+        {
+          "mealId": "2026-10-13_dinner_chipotle_chicken_tostadas",
+          "type": "dinner",
+          "name": "Chipotle shredded chicken tostadas",
+          "cuisine": "Mexican",
+          "recipeSteps": [
+            "Simmer shredded chicken with tomato, onion and chipotle",
+            "Crisp tortillas in the oven",
+            "Top with tinga, cabbage and farmer cheese"
+          ],
+          "prepMinutes": 30,
+          "items": [
+            {
+              "foodId": "chicken_breast",
+              "name": "Chicken breast, roasted",
+              "servings": 2,
+              "grams": 200
+            },
+            {
+              "foodId": "corn_tortilla",
+              "name": "Corn tortilla",
+              "servings": 2,
+              "grams": 52
+            },
+            {
+              "foodId": "canned_tomatoes",
+              "name": "Diced tomatoes, no salt added",
+              "servings": 1,
+              "grams": 121
+            },
+            {
+              "foodId": "onion",
+              "name": "Onion",
+              "servings": 1,
+              "grams": 55
+            },
+            {
+              "foodId": "cabbage",
+              "name": "Cabbage, shredded",
+              "servings": 1,
+              "grams": 89
+            }
+          ],
+          "totals": {
+            "calories": 526,
+            "proteinG": 68.7,
+            "carbsG": 42.3,
+            "fatG": 9.2,
+            "fiberG": 8.7,
+            "sugarG": 11,
+            "addedSugarG": 0,
+            "satFatG": 2.2,
+            "sodiumMg": 202,
+            "potassiumMg": 1071,
+            "glycemicLoad": 12.4,
+            "costUsd": 3.09
+          },
+          "explanation": [
+            {
+              "agent": "chef",
+              "text": "Chipotle shredded chicken tostadas: Mexican flavors you said you like, 30 minutes of prep."
+            },
+            {
+              "agent": "doctor",
+              "text": "42.3 g carbs and glycemic load 12.4: inside the per meal caps."
+            },
+            {
+              "agent": "budget",
+              "text": "$3.09 for this meal, 29% of today's sodium. Raising your budget by $5 would let Chef add greek yogurt with blueberries twice"
+            }
+          ]
+        },
+        {
+          "mealId": "2026-10-13_snack_almonds_orange",
+          "type": "snack",
+          "name": "Almonds and an orange",
+          "cuisine": "American",
+          "recipeSteps": [
+            "Portion almonds",
+            "Peel orange"
+          ],
+          "prepMinutes": 1,
+          "items": [
+            {
+              "foodId": "almonds",
+              "name": "Almonds",
+              "servings": 1,
+              "grams": 28
+            },
+            {
+              "foodId": "orange",
+              "name": "Orange",
+              "servings": 1,
+              "grams": 131
+            }
+          ],
+          "totals": {
+            "calories": 224,
+            "proteinG": 7.1,
+            "carbsG": 21.5,
+            "fatG": 14.1,
+            "fiberG": 6.6,
+            "sugarG": 13.5,
+            "addedSugarG": 0,
+            "satFatG": 1.1,
+            "sodiumMg": 0,
+            "potassiumMg": 442,
+            "glycemicLoad": 5.3,
+            "costUsd": 0.91
+          },
+          "explanation": [
+            {
+              "agent": "chef",
+              "text": "Almonds and an orange: American flavors you said you like, 1 minutes of prep."
+            },
+            {
+              "agent": "doctor",
+              "text": "21.5 g carbs and glycemic load 5.3: inside the per meal caps."
+            },
+            {
+              "agent": "budget",
+              "text": "$0.91 for this meal, 0% of today's sodium. Raising your budget by $5 would let Chef add greek yogurt with blueberries twice"
+            }
+          ]
+        }
+      ],
+      "dayTotals": {
+        "calories": 1651,
+        "proteinG": 149.5,
+        "carbsG": 144.1,
+        "fatG": 56.3,
+        "fiberG": 37.5,
+        "sugarG": 44,
+        "addedSugarG": 1.6,
+        "satFatG": 10.8,
+        "sodiumMg": 724,
+        "potassiumMg": 3675,
+        "glycemicLoad": 44.8,
+        "costUsd": 9.1
+      }
+    },
+    {
+      "date": "2026-10-14",
+      "meals": [
+        {
+          "mealId": "2026-10-14_breakfast_tofu_scramble",
+          "type": "breakfast",
+          "name": "Tofu veggie scramble with toast",
+          "cuisine": "American",
+          "recipeSteps": [
+            "Crumble tofu into a hot pan with peppers",
+            "Add spinach until wilted, season with turmeric and pepper",
+            "Serve with toast"
+          ],
+          "prepMinutes": 12,
+          "items": [
+            {
+              "foodId": "tofu",
+              "name": "Tofu, firm",
+              "servings": 2,
+              "grams": 170
+            },
+            {
+              "foodId": "bell_pepper",
+              "name": "Bell pepper",
+              "servings": 1,
+              "grams": 119
+            },
+            {
+              "foodId": "spinach",
+              "name": "Spinach, raw",
+              "servings": 1,
+              "grams": 30
+            },
+            {
+              "foodId": "ww_bread",
+              "name": "Whole wheat bread",
+              "servings": 1,
+              "grams": 32
+            }
+          ],
+          "totals": {
+            "calories": 369,
+            "proteinG": 35.4,
+            "carbsG": 26.6,
+            "fatG": 16.4,
+            "fiberG": 9,
+            "sugarG": 7.5,
+            "addedSugarG": 0.8,
+            "satFatG": 2.5,
+            "sodiumMg": 196,
+            "potassiumMg": 903,
+            "glycemicLoad": 9.3,
+            "costUsd": 2.46
+          },
+          "explanation": [
+            {
+              "agent": "chef",
+              "text": "Tofu veggie scramble with toast: American flavors you said you like, 12 minutes of prep."
+            },
+            {
+              "agent": "doctor",
+              "text": "26.6 g carbs and glycemic load 9.3: inside the per meal caps."
+            },
+            {
+              "agent": "budget",
+              "text": "$2.46 for this meal, 28% of today's sodium. Raising your budget by $5 would let Chef add greek yogurt with blueberries twice"
+            }
+          ]
+        },
+        {
+          "mealId": "2026-10-14_lunch_tofu_edamame_bowl",
+          "type": "lunch",
+          "name": "Tofu edamame rice bowl",
+          "cuisine": "Asian",
+          "recipeSteps": [
+            "Pan sear tofu cubes",
+            "Warm edamame and rice",
+            "Top with shredded carrot and soy sauce"
+          ],
+          "prepMinutes": 20,
+          "items": [
+            {
+              "foodId": "tofu",
+              "name": "Tofu, firm",
+              "servings": 2,
+              "grams": 170
+            },
+            {
+              "foodId": "edamame",
+              "name": "Edamame, shelled, cooked",
+              "servings": 1,
+              "grams": 78
+            },
+            {
+              "foodId": "brown_rice",
+              "name": "Brown rice, cooked",
+              "servings": 1,
+              "grams": 98
+            },
+            {
+              "foodId": "carrots",
+              "name": "Carrots",
+              "servings": 1,
+              "grams": 61
+            },
+            {
+              "foodId": "soy_sauce",
+              "name": "Soy sauce, low sodium",
+              "servings": 1,
+              "grams": 9
+            }
+          ],
+          "totals": {
+            "calories": 490,
+            "proteinG": 42.6,
+            "carbsG": 43.1,
+            "fatG": 20,
+            "fiberG": 11.3,
+            "sugarG": 5.8,
+            "addedSugarG": 0,
+            "satFatG": 3,
+            "sodiumMg": 374,
+            "potassiumMg": 1040,
+            "glycemicLoad": 18.3,
+            "costUsd": 2.13
+          },
+          "explanation": [
+            {
+              "agent": "chef",
+              "text": "Tofu edamame rice bowl: Asian flavors you said you like, 20 minutes of prep."
+            },
+            {
+              "agent": "doctor",
+              "text": "43.1 g carbs and glycemic load 18.3: inside the per meal caps."
+            },
+            {
+              "agent": "budget",
+              "text": "$2.13 for this meal, 53% of today's sodium. Raising your budget by $5 would let Chef add greek yogurt with blueberries twice"
+            }
+          ]
+        },
+        {
+          "mealId": "2026-10-14_dinner_tilapia_quinoa",
+          "type": "dinner",
+          "name": "Lemon tilapia with quinoa and zucchini",
+          "cuisine": "Mediterranean",
+          "recipeSteps": [
+            "Bake tilapia with lemon",
+            "Saute zucchini in olive oil",
+            "Serve over quinoa"
+          ],
+          "prepMinutes": 25,
+          "items": [
+            {
+              "foodId": "tilapia",
+              "name": "Tilapia, baked",
+              "servings": 2,
+              "grams": 200
+            },
+            {
+              "foodId": "quinoa",
+              "name": "Quinoa, cooked",
+              "servings": 2,
+              "grams": 184
+            },
+            {
+              "foodId": "zucchini",
+              "name": "Zucchini",
+              "servings": 1,
+              "grams": 124
+            },
+            {
+              "foodId": "olive_oil",
+              "name": "Olive oil",
+              "servings": 1,
+              "grams": 14
+            }
+          ],
+          "totals": {
+            "calories": 622,
+            "proteinG": 61.6,
+            "carbsG": 43,
+            "fatG": 23.3,
+            "fiberG": 6.4,
+            "sugarG": 4.8,
+            "addedSugarG": 0,
+            "satFatG": 4.2,
+            "sodiumMg": 135,
+            "potassiumMg": 1400,
+            "glycemicLoad": 18.3,
+            "costUsd": 4.05
+          },
+          "explanation": [
+            {
+              "agent": "chef",
+              "text": "Lemon tilapia with quinoa and zucchini: Mediterranean flavors you said you like, 25 minutes of prep."
+            },
+            {
+              "agent": "doctor",
+              "text": "43 g carbs and glycemic load 18.3: inside the per meal caps."
+            },
+            {
+              "agent": "budget",
+              "text": "$4.05 for this meal, 19% of today's sodium. Raising your budget by $5 would let Chef add greek yogurt with blueberries twice"
+            }
+          ]
+        },
+        {
+          "mealId": "2026-10-14_snack_edamame_snack",
+          "type": "snack",
+          "name": "Steamed edamame",
+          "cuisine": "Asian",
+          "recipeSteps": [
+            "Steam edamame",
+            "Sprinkle lightly with chili flakes"
+          ],
+          "prepMinutes": 5,
+          "items": [
+            {
+              "foodId": "edamame",
+              "name": "Edamame, shelled, cooked",
+              "servings": 2,
+              "grams": 156
+            }
+          ],
+          "totals": {
+            "calories": 189,
+            "proteinG": 18.6,
+            "carbsG": 13.9,
+            "fatG": 8.1,
+            "fiberG": 8.1,
+            "sugarG": 3.4,
+            "addedSugarG": 0,
+            "satFatG": 0.9,
+            "sodiumMg": 9,
+            "potassiumMg": 680,
+            "glycemicLoad": 1,
+            "costUsd": 1.09
+          },
+          "explanation": [
+            {
+              "agent": "chef",
+              "text": "Steamed edamame: Asian flavors you said you like, 5 minutes of prep."
+            },
+            {
+              "agent": "doctor",
+              "text": "13.9 g carbs and glycemic load 1: inside the per meal caps."
+            },
+            {
+              "agent": "budget",
+              "text": "$1.09 for this meal, 1% of today's sodium. Raising your budget by $5 would let Chef add greek yogurt with blueberries twice"
+            }
+          ]
+        }
+      ],
+      "dayTotals": {
+        "calories": 1670,
+        "proteinG": 158.2,
+        "carbsG": 126.6,
+        "fatG": 67.8,
+        "fiberG": 34.8,
+        "sugarG": 21.5,
+        "addedSugarG": 0.8,
+        "satFatG": 10.6,
+        "sodiumMg": 714,
+        "potassiumMg": 4023,
+        "glycemicLoad": 46.9,
+        "costUsd": 9.73
+      }
+    },
+    {
+      "date": "2026-10-15",
+      "meals": [
+        {
+          "mealId": "2026-10-15_breakfast_yogurt_parfait",
+          "type": "breakfast",
+          "name": "Greek yogurt parfait with walnuts",
+          "cuisine": "American",
+          "recipeSteps": [
+            "Layer yogurt and sliced strawberries",
+            "Top with oats and chopped walnuts"
+          ],
+          "prepMinutes": 5,
+          "items": [
+            {
+              "foodId": "greek_yogurt",
+              "name": "Greek yogurt, plain, nonfat",
+              "servings": 1,
+              "grams": 170
+            },
+            {
+              "foodId": "strawberries",
+              "name": "Strawberries",
+              "servings": 1,
+              "grams": 144
+            },
+            {
+              "foodId": "oats",
+              "name": "Rolled oats, dry",
+              "servings": 1,
+              "grams": 40
+            }
+          ],
+          "totals": {
+            "calories": 298,
+            "proteinG": 23.6,
+            "carbsG": 44.3,
+            "fatG": 3.7,
+            "fiberG": 6.9,
+            "sugarG": 12.9,
+            "addedSugarG": 0,
+            "satFatG": 0.6,
+            "sodiumMg": 65,
+            "potassiumMg": 605,
+            "glycemicLoad": 18.1,
+            "costUsd": 2.71
+          },
+          "explanation": [
+            {
+              "agent": "chef",
+              "text": "Greek yogurt parfait with walnuts: American flavors you said you like, 5 minutes of prep."
+            },
+            {
+              "agent": "doctor",
+              "text": "44.3 g carbs and glycemic load 18.1: inside the per meal caps."
+            },
+            {
+              "agent": "budget",
+              "text": "$2.71 for this meal, 9% of today's sodium. Raising your budget by $5 would let Chef add greek yogurt with blueberries twice"
+            }
+          ]
+        },
+        {
+          "mealId": "2026-10-15_lunch_turkey_chili",
+          "type": "lunch",
+          "name": "Turkey and pinto bean chili",
+          "cuisine": "American",
+          "recipeSteps": [
+            "Brown turkey with onion and pepper",
+            "Add beans, tomatoes, chili powder and cumin",
+            "Simmer 20 minutes"
+          ],
+          "prepMinutes": 30,
+          "items": [
+            {
+              "foodId": "ground_turkey",
+              "name": "Ground turkey 93% lean, cooked",
+              "servings": 2,
+              "grams": 170
+            },
+            {
+              "foodId": "pinto_beans",
+              "name": "Pinto beans, cooked",
+              "servings": 1,
+              "grams": 86
+            },
+            {
+              "foodId": "canned_tomatoes",
+              "name": "Diced tomatoes, no salt added",
+              "servings": 1,
+              "grams": 121
+            },
+            {
+              "foodId": "onion",
+              "name": "Onion",
+              "servings": 1,
+              "grams": 55
+            },
+            {
+              "foodId": "bell_pepper",
+              "name": "Bell pepper",
+              "servings": 1,
+              "grams": 119
+            }
+          ],
+          "totals": {
+            "calories": 566,
+            "proteinG": 57.4,
+            "carbsG": 43.6,
+            "fatG": 18.4,
+            "fiberG": 13.5,
+            "sugarG": 12.9,
+            "addedSugarG": 0,
+            "satFatG": 4.5,
+            "sodiumMg": 153,
+            "potassiumMg": 1396,
+            "glycemicLoad": 9.1,
+            "costUsd": 3.47
+          },
+          "explanation": [
+            {
+              "agent": "chef",
+              "text": "Turkey and pinto bean chili: American flavors you said you like, 30 minutes of prep."
+            },
+            {
+              "agent": "doctor",
+              "text": "43.6 g carbs and glycemic load 9.1: inside the per meal caps."
+            },
+            {
+              "agent": "budget",
+              "text": "$3.47 for this meal, 22% of today's sodium. Raising your budget by $5 would let Chef add greek yogurt with blueberries twice"
+            }
+          ]
+        },
+        {
+          "mealId": "2026-10-15_dinner_chipotle_chicken_tostadas",
+          "type": "dinner",
+          "name": "Chipotle shredded chicken tostadas",
+          "cuisine": "Mexican",
+          "recipeSteps": [
+            "Simmer shredded chicken with tomato, onion and chipotle",
+            "Crisp tortillas in the oven",
+            "Top with tinga, cabbage and farmer cheese"
+          ],
+          "prepMinutes": 30,
+          "items": [
+            {
+              "foodId": "chicken_breast",
+              "name": "Chicken breast, roasted",
+              "servings": 2,
+              "grams": 200
+            },
+            {
+              "foodId": "corn_tortilla",
+              "name": "Corn tortilla",
+              "servings": 2,
+              "grams": 52
+            },
+            {
+              "foodId": "canned_tomatoes",
+              "name": "Diced tomatoes, no salt added",
+              "servings": 1,
+              "grams": 121
+            },
+            {
+              "foodId": "onion",
+              "name": "Onion",
+              "servings": 1,
+              "grams": 55
+            },
+            {
+              "foodId": "cabbage",
+              "name": "Cabbage, shredded",
+              "servings": 1,
+              "grams": 89
+            }
+          ],
+          "totals": {
+            "calories": 526,
+            "proteinG": 68.7,
+            "carbsG": 42.3,
+            "fatG": 9.2,
+            "fiberG": 8.7,
+            "sugarG": 11,
+            "addedSugarG": 0,
+            "satFatG": 2.2,
+            "sodiumMg": 202,
+            "potassiumMg": 1071,
+            "glycemicLoad": 12.4,
+            "costUsd": 3.09
+          },
+          "explanation": [
+            {
+              "agent": "chef",
+              "text": "Chipotle shredded chicken tostadas: Mexican flavors you said you like, 30 minutes of prep."
+            },
+            {
+              "agent": "doctor",
+              "text": "42.3 g carbs and glycemic load 12.4: inside the per meal caps."
+            },
+            {
+              "agent": "budget",
+              "text": "$3.09 for this meal, 29% of today's sodium. Raising your budget by $5 would let Chef add greek yogurt with blueberries twice"
+            }
+          ]
+        },
+        {
+          "mealId": "2026-10-15_snack_banana_milk",
+          "type": "snack",
+          "name": "Banana and a glass of milk",
+          "cuisine": "American",
+          "recipeSteps": [
+            "Pour milk",
+            "Enjoy with banana"
+          ],
+          "prepMinutes": 1,
+          "items": [
+            {
+              "foodId": "banana",
+              "name": "Banana",
+              "servings": 1,
+              "grams": 118
+            },
+            {
+              "foodId": "milk",
+              "name": "Milk, 2%",
+              "servings": 1,
+              "grams": 244
+            }
+          ],
+          "totals": {
+            "calories": 227,
+            "proteinG": 9.4,
+            "carbsG": 38.6,
+            "fatG": 5.2,
+            "fiberG": 3.1,
+            "sugarG": 26.8,
+            "addedSugarG": 0,
+            "satFatG": 2.8,
+            "sodiumMg": 101,
+            "potassiumMg": 764,
+            "glycemicLoad": 15.7,
+            "costUsd": 0.42
+          },
+          "explanation": [
+            {
+              "agent": "chef",
+              "text": "Banana and a glass of milk: American flavors you said you like, 1 minutes of prep."
+            },
+            {
+              "agent": "doctor",
+              "text": "38.6 g carbs and glycemic load 15.7: inside the per meal caps."
+            },
+            {
+              "agent": "budget",
+              "text": "$0.42 for this meal, 14% of today's sodium. Raising your budget by $5 would let Chef add greek yogurt with blueberries twice"
+            }
+          ]
+        }
+      ],
+      "dayTotals": {
+        "calories": 1617,
+        "proteinG": 159.1,
+        "carbsG": 168.8,
+        "fatG": 36.5,
+        "fiberG": 32.2,
+        "sugarG": 63.6,
+        "addedSugarG": 0,
+        "satFatG": 10.1,
+        "sodiumMg": 521,
+        "potassiumMg": 3836,
+        "glycemicLoad": 55.3,
+        "costUsd": 9.69
+      }
+    },
+    {
+      "date": "2026-10-16",
+      "meals": [
+        {
+          "mealId": "2026-10-16_breakfast_yogurt_parfait",
+          "type": "breakfast",
+          "name": "Greek yogurt parfait with walnuts",
+          "cuisine": "American",
+          "recipeSteps": [
+            "Layer yogurt and sliced strawberries",
+            "Top with oats and chopped walnuts"
+          ],
+          "prepMinutes": 5,
+          "items": [
+            {
+              "foodId": "greek_yogurt",
+              "name": "Greek yogurt, plain, nonfat",
+              "servings": 1,
+              "grams": 170
+            },
+            {
+              "foodId": "strawberries",
+              "name": "Strawberries",
+              "servings": 1,
+              "grams": 144
+            },
+            {
+              "foodId": "oats",
+              "name": "Rolled oats, dry",
+              "servings": 1,
+              "grams": 40
+            }
+          ],
+          "totals": {
+            "calories": 298,
+            "proteinG": 23.6,
+            "carbsG": 44.3,
+            "fatG": 3.7,
+            "fiberG": 6.9,
+            "sugarG": 12.9,
+            "addedSugarG": 0,
+            "satFatG": 0.6,
+            "sodiumMg": 65,
+            "potassiumMg": 605,
+            "glycemicLoad": 18.1,
+            "costUsd": 2.71
+          },
+          "explanation": [
+            {
+              "agent": "chef",
+              "text": "Greek yogurt parfait with walnuts: American flavors you said you like, 5 minutes of prep."
+            },
+            {
+              "agent": "doctor",
+              "text": "44.3 g carbs and glycemic load 18.1: inside the per meal caps."
+            },
+            {
+              "agent": "budget",
+              "text": "$2.71 for this meal, 9% of today's sodium. Raising your budget by $5 would let Chef add greek yogurt with blueberries twice"
+            }
+          ]
+        },
+        {
+          "mealId": "2026-10-16_lunch_teriyaki_chicken_bowl",
+          "type": "lunch",
+          "name": "Ginger soy chicken rice bowl",
+          "cuisine": "Asian",
+          "recipeSteps": [
+            "Sear chicken thigh pieces",
+            "Steam broccoli",
+            "Toss chicken with soy sauce and ginger, serve over rice"
+          ],
+          "prepMinutes": 20,
+          "items": [
+            {
+              "foodId": "chicken_thigh",
+              "name": "Chicken thigh, skinless, roasted",
+              "servings": 2,
+              "grams": 200
+            },
+            {
+              "foodId": "white_rice",
+              "name": "White rice, cooked",
+              "servings": 1,
+              "grams": 93
+            },
+            {
+              "foodId": "broccoli",
+              "name": "Broccoli, cooked",
+              "servings": 2,
+              "grams": 182
+            },
+            {
+              "foodId": "soy_sauce",
+              "name": "Soy sauce, low sodium",
+              "servings": 1,
+              "grams": 9
+            }
+          ],
+          "totals": {
+            "calories": 607,
+            "proteinG": 59.6,
+            "carbsG": 39.8,
+            "fatG": 22.8,
+            "fiberG": 6.5,
+            "sugarG": 2.7,
+            "addedSugarG": 0,
+            "satFatG": 6.3,
+            "sodiumMg": 565,
+            "potassiumMg": 1064,
+            "glycemicLoad": 19.6,
+            "costUsd": 2.55
+          },
+          "explanation": [
+            {
+              "agent": "chef",
+              "text": "Ginger soy chicken rice bowl: Asian flavors you said you like, 20 minutes of prep."
+            },
+            {
+              "agent": "doctor",
+              "text": "39.8 g carbs and glycemic load 19.6: inside the per meal caps."
+            },
+            {
+              "agent": "budget",
+              "text": "$2.55 for this meal, 80% of today's sodium. Raising your budget by $5 would let Chef add greek yogurt with blueberries twice"
+            }
+          ]
+        },
+        {
+          "mealId": "2026-10-16_dinner_tilapia_tacos",
+          "type": "dinner",
+          "name": "Tilapia tacos with cabbage slaw",
+          "cuisine": "Mexican",
+          "recipeSteps": [
+            "Season and bake tilapia",
+            "Toss cabbage with lime",
+            "Fill tortillas with fish, slaw, salsa and avocado"
+          ],
+          "prepMinutes": 20,
+          "items": [
+            {
+              "foodId": "tilapia",
+              "name": "Tilapia, baked",
+              "servings": 2,
+              "grams": 200
+            },
+            {
+              "foodId": "corn_tortilla",
+              "name": "Corn tortilla",
+              "servings": 3,
+              "grams": 78
+            },
+            {
+              "foodId": "cabbage",
+              "name": "Cabbage, shredded",
+              "servings": 1,
+              "grams": 89
+            },
+            {
+              "foodId": "fresh_salsa",
+              "name": "Fresh tomato salsa",
+              "servings": 1,
+              "grams": 60
+            }
+          ],
+          "totals": {
+            "calories": 460,
+            "proteinG": 58.1,
+            "carbsG": 42.5,
+            "fatG": 7.9,
+            "fiberG": 7.9,
+            "sugarG": 5.1,
+            "addedSugarG": 0,
+            "satFatG": 2.1,
+            "sodiumMg": 223,
+            "potassiumMg": 1194,
+            "glycemicLoad": 14.3,
+            "costUsd": 3.47
+          },
+          "explanation": [
+            {
+              "agent": "chef",
+              "text": "Tilapia tacos with cabbage slaw: Mexican flavors you said you like, 20 minutes of prep."
+            },
+            {
+              "agent": "doctor",
+              "text": "42.5 g carbs and glycemic load 14.3: inside the per meal caps."
+            },
+            {
+              "agent": "budget",
+              "text": "$3.47 for this meal, 32% of today's sodium. Raising your budget by $5 would let Chef add greek yogurt with blueberries twice"
+            }
+          ]
+        },
+        {
+          "mealId": "2026-10-16_snack_edamame_snack",
+          "type": "snack",
+          "name": "Steamed edamame",
+          "cuisine": "Asian",
+          "recipeSteps": [
+            "Steam edamame",
+            "Sprinkle lightly with chili flakes"
+          ],
+          "prepMinutes": 5,
+          "items": [
+            {
+              "foodId": "edamame",
+              "name": "Edamame, shelled, cooked",
+              "servings": 2,
+              "grams": 156
+            }
+          ],
+          "totals": {
+            "calories": 189,
+            "proteinG": 18.6,
+            "carbsG": 13.9,
+            "fatG": 8.1,
+            "fiberG": 8.1,
+            "sugarG": 3.4,
+            "addedSugarG": 0,
+            "satFatG": 0.9,
+            "sodiumMg": 9,
+            "potassiumMg": 680,
+            "glycemicLoad": 1,
+            "costUsd": 1.09
+          },
+          "explanation": [
+            {
+              "agent": "chef",
+              "text": "Steamed edamame: Asian flavors you said you like, 5 minutes of prep."
+            },
+            {
+              "agent": "doctor",
+              "text": "13.9 g carbs and glycemic load 1: inside the per meal caps."
+            },
+            {
+              "agent": "budget",
+              "text": "$1.09 for this meal, 1% of today's sodium. Raising your budget by $5 would let Chef add greek yogurt with blueberries twice"
+            }
+          ]
+        }
+      ],
+      "dayTotals": {
+        "calories": 1554,
+        "proteinG": 159.9,
+        "carbsG": 140.5,
+        "fatG": 42.5,
+        "fiberG": 29.4,
+        "sugarG": 24.1,
+        "addedSugarG": 0,
+        "satFatG": 9.9,
+        "sodiumMg": 862,
+        "potassiumMg": 3543,
+        "glycemicLoad": 53,
+        "costUsd": 9.82
+      }
+    },
+    {
+      "date": "2026-10-17",
+      "meals": [
+        {
+          "mealId": "2026-10-17_breakfast_papaya_yogurt_bowl",
+          "type": "breakfast",
+          "name": "Papaya yogurt bowl with pumpkin seeds",
+          "cuisine": "Latin",
+          "recipeSteps": [
+            "Cube papaya",
+            "Layer over yogurt",
+            "Sprinkle with pumpkin seeds and oats"
+          ],
+          "prepMinutes": 5,
+          "items": [
+            {
+              "foodId": "greek_yogurt",
+              "name": "Greek yogurt, plain, nonfat",
+              "servings": 1,
+              "grams": 170
+            },
+            {
+              "foodId": "papaya",
+              "name": "Papaya",
+              "servings": 1,
+              "grams": 140
+            },
+            {
+              "foodId": "pumpkin_seeds",
+              "name": "Pumpkin seeds",
+              "servings": 1,
+              "grams": 28
+            }
+          ],
+          "totals": {
+            "calories": 317,
+            "proteinG": 26.4,
+            "carbsG": 24.2,
+            "fatG": 14.8,
+            "fiberG": 4.1,
+            "sugarG": 16.8,
+            "addedSugarG": 0,
+            "satFatG": 2.6,
+            "sodiumMg": 74,
+            "potassiumMg": 721,
+            "glycemicLoad": 9.5,
+            "costUsd": 2.23
+          },
+          "explanation": [
+            {
+              "agent": "chef",
+              "text": "Papaya yogurt bowl with pumpkin seeds: Latin flavors you said you like, 5 minutes of prep."
+            },
+            {
+              "agent": "doctor",
+              "text": "24.2 g carbs and glycemic load 9.5: inside the per meal caps."
+            },
+            {
+              "agent": "budget",
+              "text": "$2.23 for this meal, 10% of today's sodium. Raising your budget by $5 would let Chef add greek yogurt with blueberries twice"
+            }
+          ]
+        },
+        {
+          "mealId": "2026-10-17_lunch_chicken_avocado_sandwich",
+          "type": "lunch",
+          "name": "Chicken avocado sandwich",
+          "cuisine": "American",
+          "recipeSteps": [
+            "Toast bread",
+            "Layer sliced chicken, avocado, tomato and greens"
+          ],
+          "prepMinutes": 10,
+          "items": [
+            {
+              "foodId": "ww_bread",
+              "name": "Whole wheat bread",
+              "servings": 2,
+              "grams": 64
+            },
+            {
+              "foodId": "chicken_breast",
+              "name": "Chicken breast, roasted",
+              "servings": 1,
+              "grams": 100
+            },
+            {
+              "foodId": "avocado",
+              "name": "Avocado",
+              "servings": 1,
+              "grams": 50
+            },
+            {
+              "foodId": "tomato",
+              "name": "Tomato",
+              "servings": 1,
+              "grams": 123
+            },
+            {
+              "foodId": "mixed_greens",
+              "name": "Mixed salad greens",
+              "servings": 1,
+              "grams": 40
+            }
+          ],
+          "totals": {
+            "calories": 435,
+            "proteinG": 41.6,
+            "carbsG": 37.7,
+            "fatG": 13.5,
+            "fiberG": 9.5,
+            "sugarG": 6.8,
+            "addedSugarG": 1.6,
+            "satFatG": 2.5,
+            "sodiumMg": 384,
+            "potassiumMg": 1051,
+            "glycemicLoad": 18.1,
+            "costUsd": 2.82
+          },
+          "explanation": [
+            {
+              "agent": "chef",
+              "text": "Chicken avocado sandwich: American flavors you said you like, 10 minutes of prep."
+            },
+            {
+              "agent": "doctor",
+              "text": "37.7 g carbs and glycemic load 18.1: inside the per meal caps."
+            },
+            {
+              "agent": "budget",
+              "text": "$2.82 for this meal, 54% of today's sodium. Raising your budget by $5 would let Chef add greek yogurt with blueberries twice"
+            }
+          ]
+        },
+        {
+          "mealId": "2026-10-17_dinner_tilapia_tacos",
+          "type": "dinner",
+          "name": "Tilapia tacos with cabbage slaw",
+          "cuisine": "Mexican",
+          "recipeSteps": [
+            "Season and bake tilapia",
+            "Toss cabbage with lime",
+            "Fill tortillas with fish, slaw, salsa and avocado"
+          ],
+          "prepMinutes": 20,
+          "items": [
+            {
+              "foodId": "tilapia",
+              "name": "Tilapia, baked",
+              "servings": 2,
+              "grams": 200
+            },
+            {
+              "foodId": "corn_tortilla",
+              "name": "Corn tortilla",
+              "servings": 2,
+              "grams": 52
+            },
+            {
+              "foodId": "cabbage",
+              "name": "Cabbage, shredded",
+              "servings": 1,
+              "grams": 89
+            },
+            {
+              "foodId": "avocado",
+              "name": "Avocado",
+              "servings": 1,
+              "grams": 50
+            },
+            {
+              "foodId": "fresh_salsa",
+              "name": "Fresh tomato salsa",
+              "servings": 1,
+              "grams": 60
+            }
+          ],
+          "totals": {
+            "calories": 484,
+            "proteinG": 57.7,
+            "carbsG": 35.2,
+            "fatG": 14.5,
+            "fiberG": 9.6,
+            "sugarG": 5.2,
+            "addedSugarG": 0,
+            "satFatG": 3.1,
+            "sodiumMg": 215,
+            "potassiumMg": 1389,
+            "glycemicLoad": 9.9,
+            "costUsd": 3.8
+          },
+          "explanation": [
+            {
+              "agent": "chef",
+              "text": "Tilapia tacos with cabbage slaw: Mexican flavors you said you like, 20 minutes of prep."
+            },
+            {
+              "agent": "doctor",
+              "text": "35.2 g carbs and glycemic load 9.9: inside the per meal caps."
+            },
+            {
+              "agent": "budget",
+              "text": "$3.80 for this meal, 30% of today's sodium. Raising your budget by $5 would let Chef add greek yogurt with blueberries twice"
+            }
+          ]
+        },
+        {
+          "mealId": "2026-10-17_snack_hummus_veggies",
+          "type": "snack",
+          "name": "Hummus and veggie sticks",
+          "cuisine": "Mediterranean",
+          "recipeSteps": [
+            "Cut carrots and cucumber into sticks",
+            "Serve with hummus"
+          ],
+          "prepMinutes": 5,
+          "items": [
+            {
+              "foodId": "hummus",
+              "name": "Hummus",
+              "servings": 2,
+              "grams": 60
+            },
+            {
+              "foodId": "carrots",
+              "name": "Carrots",
+              "servings": 1,
+              "grams": 61
+            },
+            {
+              "foodId": "cucumber",
+              "name": "Cucumber",
+              "servings": 1,
+              "grams": 104
+            }
+          ],
+          "totals": {
+            "calories": 140,
+            "proteinG": 6,
+            "carbsG": 18.2,
+            "fatG": 6,
+            "fiberG": 5.8,
+            "sugarG": 4.8,
+            "addedSugarG": 0,
+            "satFatG": 0.8,
+            "sodiumMg": 272,
+            "potassiumMg": 485,
+            "glycemicLoad": 3.3,
+            "costUsd": 1.04
+          },
+          "explanation": [
+            {
+              "agent": "chef",
+              "text": "Hummus and veggie sticks: Mediterranean flavors you said you like, 5 minutes of prep."
+            },
+            {
+              "agent": "doctor",
+              "text": "18.2 g carbs and glycemic load 3.3: inside the per meal caps."
+            },
+            {
+              "agent": "budget",
+              "text": "$1.04 for this meal, 39% of today's sodium. Raising your budget by $5 would let Chef add greek yogurt with blueberries twice"
+            }
+          ]
+        }
+      ],
+      "dayTotals": {
+        "calories": 1376,
+        "proteinG": 131.7,
+        "carbsG": 115.3,
+        "fatG": 48.8,
+        "fiberG": 29,
+        "sugarG": 33.6,
+        "addedSugarG": 1.6,
+        "satFatG": 9,
+        "sodiumMg": 945,
+        "potassiumMg": 3646,
+        "glycemicLoad": 40.8,
+        "costUsd": 9.89
+      }
+    },
+    {
+      "date": "2026-10-18",
+      "meals": [
+        {
+          "mealId": "2026-10-18_breakfast_avocado_egg_toast",
+          "type": "breakfast",
+          "name": "Avocado toast with eggs",
+          "cuisine": "American",
+          "recipeSteps": [
+            "Toast bread",
+            "Mash avocado on toast",
+            "Top with eggs cooked your way and tomato slices"
+          ],
+          "prepMinutes": 8,
+          "items": [
+            {
+              "foodId": "ww_bread",
+              "name": "Whole wheat bread",
+              "servings": 2,
+              "grams": 64
+            },
+            {
+              "foodId": "avocado",
+              "name": "Avocado",
+              "servings": 1,
+              "grams": 50
+            },
+            {
+              "foodId": "eggs",
+              "name": "Eggs, whole",
+              "servings": 1,
+              "grams": 50
+            },
+            {
+              "foodId": "tomato",
+              "name": "Tomato",
+              "servings": 1,
+              "grams": 123
+            }
+          ],
+          "totals": {
+            "calories": 335,
+            "proteinG": 16.3,
+            "carbsG": 36.7,
+            "fatG": 14.6,
+            "fiberG": 8.7,
+            "sugarG": 6.6,
+            "addedSugarG": 1.6,
+            "satFatG": 3,
+            "sodiumMg": 369,
+            "potassiumMg": 766,
+            "glycemicLoad": 18,
+            "costUsd": 1.63
+          },
+          "explanation": [
+            {
+              "agent": "chef",
+              "text": "Avocado toast with eggs: American flavors you said you like, 8 minutes of prep."
+            },
+            {
+              "agent": "doctor",
+              "text": "36.7 g carbs and glycemic load 18: inside the per meal caps."
+            },
+            {
+              "agent": "budget",
+              "text": "$1.63 for this meal, 52% of today's sodium. Raising your budget by $5 would let Chef add greek yogurt with blueberries twice"
+            }
+          ]
+        },
+        {
+          "mealId": "2026-10-18_lunch_cactus_chicken_tacos",
+          "type": "lunch",
+          "name": "Chicken and cactus tacos",
+          "cuisine": "Mexican",
+          "recipeSteps": [
+            "Grill chicken and cactus",
+            "Slice both into strips",
+            "Serve in tortillas with salsa and avocado"
+          ],
+          "prepMinutes": 20,
+          "items": [
+            {
+              "foodId": "corn_tortilla",
+              "name": "Corn tortilla",
+              "servings": 3,
+              "grams": 78
+            },
+            {
+              "foodId": "chicken_breast",
+              "name": "Chicken breast, roasted",
+              "servings": 1,
+              "grams": 100
+            },
+            {
+              "foodId": "cactus",
+              "name": "Cactus paddles, cooked",
+              "servings": 1,
+              "grams": 75
+            },
+            {
+              "foodId": "fresh_salsa",
+              "name": "Fresh tomato salsa",
+              "servings": 1,
+              "grams": 60
+            },
+            {
+              "foodId": "avocado",
+              "name": "Avocado",
+              "servings": 1,
+              "grams": 50
+            }
+          ],
+          "totals": {
+            "calories": 438,
+            "proteinG": 38,
+            "carbsG": 44.1,
+            "fatG": 13.4,
+            "fiberG": 10.5,
+            "sugarG": 3.5,
+            "addedSugarG": 0,
+            "satFatG": 2.4,
+            "sodiumMg": 188,
+            "potassiumMg": 928,
+            "glycemicLoad": 14.2,
+            "costUsd": 2.67
+          },
+          "explanation": [
+            {
+              "agent": "chef",
+              "text": "Chicken and cactus tacos: Mexican flavors you said you like, 20 minutes of prep."
+            },
+            {
+              "agent": "doctor",
+              "text": "44.1 g carbs and glycemic load 14.2: inside the per meal caps."
+            },
+            {
+              "agent": "budget",
+              "text": "$2.67 for this meal, 27% of today's sodium. Raising your budget by $5 would let Chef add greek yogurt with blueberries twice"
+            }
+          ]
+        },
+        {
+          "mealId": "2026-10-18_dinner_shrimp_fajitas",
+          "type": "dinner",
+          "name": "Shrimp fajitas",
+          "cuisine": "Mexican",
+          "recipeSteps": [
+            "Sear peppers and onion",
+            "Add shrimp with fajita spices",
+            "Serve in warm tortillas with avocado"
+          ],
+          "prepMinutes": 20,
+          "items": [
+            {
+              "foodId": "shrimp",
+              "name": "Shrimp, cooked",
+              "servings": 2,
+              "grams": 170
+            },
+            {
+              "foodId": "bell_pepper",
+              "name": "Bell pepper",
+              "servings": 1,
+              "grams": 119
+            },
+            {
+              "foodId": "onion",
+              "name": "Onion",
+              "servings": 1,
+              "grams": 55
+            },
+            {
+              "foodId": "corn_tortilla",
+              "name": "Corn tortilla",
+              "servings": 2,
+              "grams": 52
+            },
+            {
+              "foodId": "avocado",
+              "name": "Avocado",
+              "servings": 1,
+              "grams": 50
+            }
+          ],
+          "totals": {
+            "calories": 421,
+            "proteinG": 46.6,
+            "carbsG": 40,
+            "fatG": 9.8,
+            "fiberG": 10.1,
+            "sugarG": 8.1,
+            "addedSugarG": 0,
+            "satFatG": 1.4,
+            "sodiumMg": 223,
+            "potassiumMg": 1111,
+            "glycemicLoad": 10.2,
+            "costUsd": 5.34
+          },
+          "explanation": [
+            {
+              "agent": "chef",
+              "text": "Shrimp fajitas: Mexican flavors you said you like, 20 minutes of prep."
+            },
+            {
+              "agent": "doctor",
+              "text": "40 g carbs and glycemic load 10.2: inside the per meal caps."
+            },
+            {
+              "agent": "budget",
+              "text": "$5.34 for this meal, 32% of today's sodium. Raising your budget by $5 would let Chef add greek yogurt with blueberries twice"
+            }
+          ]
+        },
+        {
+          "mealId": "2026-10-18_snack_banana_milk",
+          "type": "snack",
+          "name": "Banana and a glass of milk",
+          "cuisine": "American",
+          "recipeSteps": [
+            "Pour milk",
+            "Enjoy with banana"
+          ],
+          "prepMinutes": 1,
+          "items": [
+            {
+              "foodId": "banana",
+              "name": "Banana",
+              "servings": 1,
+              "grams": 118
+            },
+            {
+              "foodId": "milk",
+              "name": "Milk, 2%",
+              "servings": 1,
+              "grams": 244
+            }
+          ],
+          "totals": {
+            "calories": 227,
+            "proteinG": 9.4,
+            "carbsG": 38.6,
+            "fatG": 5.2,
+            "fiberG": 3.1,
+            "sugarG": 26.8,
+            "addedSugarG": 0,
+            "satFatG": 2.8,
+            "sodiumMg": 101,
+            "potassiumMg": 764,
+            "glycemicLoad": 15.7,
+            "costUsd": 0.42
+          },
+          "explanation": [
+            {
+              "agent": "chef",
+              "text": "Banana and a glass of milk: American flavors you said you like, 1 minutes of prep."
+            },
+            {
+              "agent": "doctor",
+              "text": "38.6 g carbs and glycemic load 15.7: inside the per meal caps."
+            },
+            {
+              "agent": "budget",
+              "text": "$0.42 for this meal, 14% of today's sodium. Raising your budget by $5 would let Chef add greek yogurt with blueberries twice"
+            }
+          ]
+        }
+      ],
+      "dayTotals": {
+        "calories": 1421,
+        "proteinG": 110.3,
+        "carbsG": 159.4,
+        "fatG": 43,
+        "fiberG": 32.4,
+        "sugarG": 45,
+        "addedSugarG": 1.6,
+        "satFatG": 9.6,
+        "sodiumMg": 881,
+        "potassiumMg": 3569,
+        "glycemicLoad": 58.1,
+        "costUsd": 10.06
+      }
+    }
+  ],
+  "groceryList": [
+    {
+      "foodId": "avocado",
+      "name": "Avocado",
+      "quantityG": 300,
+      "quantityLabel": "300 g (about 6 x 1/3 avocado)",
+      "costUsd": 2.7,
+      "storeSection": "produce"
+    },
+    {
+      "foodId": "banana",
+      "name": "Banana",
+      "quantityG": 236,
+      "quantityLabel": "236 g (about 2 x 1 medium)",
+      "costUsd": 0.35,
+      "storeSection": "produce"
+    },
+    {
+      "foodId": "bell_pepper",
+      "name": "Bell pepper",
+      "quantityG": 595,
+      "quantityLabel": "595 g (about 5 x 1 medium)",
+      "costUsd": 3.87,
+      "storeSection": "produce"
+    },
+    {
+      "foodId": "broccoli",
+      "name": "Broccoli, cooked",
+      "quantityG": 182,
+      "quantityLabel": "182 g (about 2 x 1 cup)",
+      "costUsd": 0.82,
+      "storeSection": "produce"
+    },
+    {
+      "foodId": "cabbage",
+      "name": "Cabbage, shredded",
+      "quantityG": 356,
+      "quantityLabel": "356 g (about 4 x 1 cup shredded)",
+      "costUsd": 0.64,
+      "storeSection": "produce"
+    },
+    {
+      "foodId": "cactus",
+      "name": "Cactus paddles, cooked",
+      "quantityG": 75,
+      "quantityLabel": "75 g (about 1 x 1/2 cup)",
+      "costUsd": 0.41,
+      "storeSection": "produce"
+    },
+    {
+      "foodId": "carrots",
+      "name": "Carrots",
+      "quantityG": 183,
+      "quantityLabel": "183 g (about 3 x 1 medium)",
+      "costUsd": 0.4,
+      "storeSection": "produce"
+    },
+    {
+      "foodId": "cucumber",
+      "name": "Cucumber",
+      "quantityG": 104,
+      "quantityLabel": "104 g (about 1 x 1/2 cucumber)",
+      "costUsd": 0.36,
+      "storeSection": "produce"
+    },
+    {
+      "foodId": "fresh_salsa",
+      "name": "Fresh tomato salsa",
+      "quantityG": 180,
+      "quantityLabel": "180 g (about 3 x 1/4 cup)",
+      "costUsd": 1.08,
+      "storeSection": "produce"
+    },
+    {
+      "foodId": "mixed_greens",
+      "name": "Mixed salad greens",
+      "quantityG": 40,
+      "quantityLabel": "40 g (about 1 x 1 1/2 cups)",
+      "costUsd": 0.36,
+      "storeSection": "produce"
+    },
+    {
+      "foodId": "onion",
+      "name": "Onion",
+      "quantityG": 275,
+      "quantityLabel": "275 g (about 5 x 1/2 cup chopped)",
+      "costUsd": 0.69,
+      "storeSection": "produce"
+    },
+    {
+      "foodId": "orange",
+      "name": "Orange",
+      "quantityG": 262,
+      "quantityLabel": "262 g (about 2 x 1 medium)",
+      "costUsd": 0.92,
+      "storeSection": "produce"
+    },
+    {
+      "foodId": "papaya",
+      "name": "Papaya",
+      "quantityG": 140,
+      "quantityLabel": "140 g (about 1 x 1 cup cubes)",
+      "costUsd": 0.56,
+      "storeSection": "produce"
+    },
+    {
+      "foodId": "spinach",
+      "name": "Spinach, raw",
+      "quantityG": 60,
+      "quantityLabel": "60 g (about 2 x 1 cup)",
+      "costUsd": 0.48,
+      "storeSection": "produce"
+    },
+    {
+      "foodId": "strawberries",
+      "name": "Strawberries",
+      "quantityG": 288,
+      "quantityLabel": "288 g (about 2 x 1 cup)",
+      "costUsd": 2.59,
+      "storeSection": "produce"
+    },
+    {
+      "foodId": "tomato",
+      "name": "Tomato",
+      "quantityG": 369,
+      "quantityLabel": "369 g (about 3 x 1 medium)",
+      "costUsd": 1.66,
+      "storeSection": "produce"
+    },
+    {
+      "foodId": "zucchini",
+      "name": "Zucchini",
+      "quantityG": 248,
+      "quantityLabel": "248 g (about 2 x 1 medium)",
+      "costUsd": 0.99,
+      "storeSection": "produce"
+    },
+    {
+      "foodId": "chicken_breast",
+      "name": "Chicken breast, roasted",
+      "quantityG": 600,
+      "quantityLabel": "600 g (about 6 x 1 palm-size piece (100 g))",
+      "costUsd": 6.6,
+      "storeSection": "protein"
+    },
+    {
+      "foodId": "chicken_thigh",
+      "name": "Chicken thigh, skinless, roasted",
+      "quantityG": 200,
+      "quantityLabel": "200 g (about 2 x 1 thigh (100 g))",
+      "costUsd": 1.6,
+      "storeSection": "protein"
+    },
+    {
+      "foodId": "ground_turkey",
+      "name": "Ground turkey 93% lean, cooked",
+      "quantityG": 340,
+      "quantityLabel": "340 g (about 4 x 3 oz cooked)",
+      "costUsd": 3.91,
+      "storeSection": "protein"
+    },
+    {
+      "foodId": "shrimp",
+      "name": "Shrimp, cooked",
+      "quantityG": 170,
+      "quantityLabel": "170 g (about 2 x 3 oz cooked)",
+      "costUsd": 3.74,
+      "storeSection": "protein"
+    },
+    {
+      "foodId": "tilapia",
+      "name": "Tilapia, baked",
+      "quantityG": 800,
+      "quantityLabel": "800 g (about 8 x 1 fillet (100 g))",
+      "costUsd": 10.4,
+      "storeSection": "protein"
+    },
+    {
+      "foodId": "tofu",
+      "name": "Tofu, firm",
+      "quantityG": 680,
+      "quantityLabel": "680 g (about 8 x 3 oz)",
+      "costUsd": 5.1,
+      "storeSection": "protein"
+    },
+    {
+      "foodId": "eggs",
+      "name": "Eggs, whole",
+      "quantityG": 100,
+      "quantityLabel": "100 g (about 2 x 1 large egg)",
+      "costUsd": 0.55,
+      "storeSection": "dairy"
+    },
+    {
+      "foodId": "greek_yogurt",
+      "name": "Greek yogurt, plain, nonfat",
+      "quantityG": 510,
+      "quantityLabel": "510 g (about 3 x 1 container (170 g))",
+      "costUsd": 3.83,
+      "storeSection": "dairy"
+    },
+    {
+      "foodId": "hummus",
+      "name": "Hummus",
+      "quantityG": 60,
+      "quantityLabel": "60 g (about 2 x 2 tbsp)",
+      "costUsd": 0.54,
+      "storeSection": "dairy"
+    },
+    {
+      "foodId": "milk",
+      "name": "Milk, 2%",
+      "quantityG": 488,
+      "quantityLabel": "488 g (about 2 x 1 cup)",
+      "costUsd": 0.49,
+      "storeSection": "dairy"
+    },
+    {
+      "foodId": "brown_rice",
+      "name": "Brown rice, cooked",
+      "quantityG": 196,
+      "quantityLabel": "196 g (about 2 x 1/2 cup cooked)",
+      "costUsd": 0.24,
+      "storeSection": "grains"
+    },
+    {
+      "foodId": "corn_tortilla",
+      "name": "Corn tortilla",
+      "quantityG": 364,
+      "quantityLabel": "364 g (about 14 x 1 tortilla (6 in))",
+      "costUsd": 1.64,
+      "storeSection": "grains"
+    },
+    {
+      "foodId": "quinoa",
+      "name": "Quinoa, cooked",
+      "quantityG": 368,
+      "quantityLabel": "368 g (about 4 x 1/2 cup cooked)",
+      "costUsd": 1.66,
+      "storeSection": "grains"
+    },
+    {
+      "foodId": "oats",
+      "name": "Rolled oats, dry",
+      "quantityG": 80,
+      "quantityLabel": "80 g (about 2 x 1/2 cup dry)",
+      "costUsd": 0.28,
+      "storeSection": "grains"
+    },
+    {
+      "foodId": "white_rice",
+      "name": "White rice, cooked",
+      "quantityG": 93,
+      "quantityLabel": "93 g (about 1 x 1/2 cup cooked)",
+      "costUsd": 0.07,
+      "storeSection": "grains"
+    },
+    {
+      "foodId": "ww_bread",
+      "name": "Whole wheat bread",
+      "quantityG": 256,
+      "quantityLabel": "256 g (about 8 x 1 slice)",
+      "costUsd": 1.41,
+      "storeSection": "grains"
+    },
+    {
+      "foodId": "almonds",
+      "name": "Almonds",
+      "quantityG": 56,
+      "quantityLabel": "56 g (about 2 x 1 oz (23 almonds))",
+      "costUsd": 0.9,
+      "storeSection": "pantry"
+    },
+    {
+      "foodId": "canned_tomatoes",
+      "name": "Diced tomatoes, no salt added",
+      "quantityG": 484,
+      "quantityLabel": "484 g (about 4 x 1/2 cup)",
+      "costUsd": 1.45,
+      "storeSection": "pantry"
+    },
+    {
+      "foodId": "olive_oil",
+      "name": "Olive oil",
+      "quantityG": 28,
+      "quantityLabel": "28 g (about 2 x 1 tbsp)",
+      "costUsd": 0.25,
+      "storeSection": "pantry"
+    },
+    {
+      "foodId": "pinto_beans",
+      "name": "Pinto beans, cooked",
+      "quantityG": 172,
+      "quantityLabel": "172 g (about 2 x 1/2 cup cooked)",
+      "costUsd": 0.48,
+      "storeSection": "pantry"
+    },
+    {
+      "foodId": "pumpkin_seeds",
+      "name": "Pumpkin seeds",
+      "quantityG": 28,
+      "quantityLabel": "28 g (about 1 x 1 oz)",
+      "costUsd": 0.39,
+      "storeSection": "pantry"
+    },
+    {
+      "foodId": "soy_sauce",
+      "name": "Soy sauce, low sodium",
+      "quantityG": 27,
+      "quantityLabel": "27 g (about 3 x 1/2 tbsp)",
+      "costUsd": 0.16,
+      "storeSection": "pantry"
+    },
+    {
+      "foodId": "edamame",
+      "name": "Edamame, shelled, cooked",
+      "quantityG": 468,
+      "quantityLabel": "468 g (about 6 x 1/2 cup)",
+      "costUsd": 3.28,
+      "storeSection": "frozen"
+    }
+  ],
+  "shadowPrices": [
+    {
+      "constraint": "weekly_budget",
+      "value": 24.139,
+      "humanText": "Raising your budget by $5 would let Chef add greek yogurt with blueberries twice"
+    },
+    {
+      "constraint": "max_sodium",
+      "value": 0,
+      "humanText": "Your sodium limit is not changing any meals this week"
+    },
+    {
+      "constraint": "calorie_target",
+      "value": 0,
+      "humanText": "Your calorie target is not limiting meal choices"
+    },
+    {
+      "constraint": "max_carbs_per_meal",
+      "value": 43.959,
+      "humanText": "A carb cap 5 g looser would allow ranchero eggs with black beans. Doctor keeps it at 45 g per meal"
+    }
+  ],
+  "bestEffort": false
+}

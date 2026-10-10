@@ -1,0 +1,57 @@
+[
+  {
+    "logId": "alex-log-0001",
+    "userId": "00000000-0000-4000-8000-00000000a1e1",
+    "eatenAt": "2026-10-09T12:40:00.000Z",
+    "photoUrl": "/demo/lunch-bowl.jpg",
+    "source": "photo",
+    "visionAgreement": 0.84,
+    "question": null,
+    "items": [
+      {
+        "foodId": "chicken_thigh",
+        "name": "Chicken thigh, skinless, roasted",
+        "grams": 200,
+        "confidence": 0.86
+      },
+      {
+        "foodId": "pinto_beans",
+        "name": "Pinto beans, cooked",
+        "grams": 172,
+        "confidence": 0.86
+      },
+      {
+        "foodId": "white_rice",
+        "name": "White rice, cooked",
+        "grams": 93,
+        "confidence": 0.86
+      },
+      {
+        "foodId": "cabbage",
+        "name": "Cabbage, shredded",
+        "grams": 89,
+        "confidence": 0.86
+      }
+    ],
+    "totals": {
+      "calories": 807,
+      "proteinG": 71.1,
+      "carbsG": 76.5,
+      "fatG": 23.4,
+      "fiberG": 18.1,
+      "sugarG": 3.5,
+      "addedSugarG": 0,
+      "satFatG": 6.3,
+      "sodiumMg": 209,
+      "potassiumMg": 1414,
+      "glycemicLoad": 30.7,
+      "costUsd": 2.32
+    },
+    "flags": [
+      {
+        "agent": "monitor",
+        "text": "Right on plan for lunch. Nice."
+      }
+    ]
+  }
+]

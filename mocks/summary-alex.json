@@ -1,0 +1,42 @@
+{
+  "date": "2026-10-09",
+  "targets": {
+    "calories": 2080,
+    "proteinG": 179,
+    "carbsG": 198,
+    "fatG": 64,
+    "fiberG": 29,
+    "sodiumMg": 2300,
+    "potassiumMg": 3400,
+    "tdeeEstimate": 2630,
+    "tdeeUncertainty": 300
+  },
+  "eaten": {
+    "calories": 1374,
+    "proteinG": 108.8,
+    "carbsG": 144.1,
+    "fatG": 40.1,
+    "fiberG": 37.1,
+    "sugarG": 6.6,
+    "addedSugarG": 0,
+    "satFatG": 11.3,
+    "sodiumMg": 509,
+    "potassiumMg": 2466,
+    "glycemicLoad": 47.9,
+    "costUsd": 4.26
+  },
+  "remaining": {
+    "calories": 706,
+    "proteinG": 70.2,
+    "carbsG": 53.9,
+    "fatG": 23.9,
+    "fiberG": 0,
+    "sugarG": 0,
+    "addedSugarG": 0,
+    "satFatG": 0,
+    "sodiumMg": 1791,
+    "potassiumMg": 934,
+    "glycemicLoad": 0,
+    "costUsd": 0
+  }
+}

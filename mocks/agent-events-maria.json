@@ -1,0 +1,265 @@
+[
+  {
+    "eventId": "maria-ev-01",
+    "runId": "maria-run-0001",
+    "agent": "orchestrator",
+    "kind": "proposal",
+    "text": "New plan for Maria: maintain goal, $70/week, 4 meals a day. Doctor first.",
+    "at": "2026-10-09T15:00:01.400Z"
+  },
+  {
+    "eventId": "maria-ev-02",
+    "runId": "maria-run-0001",
+    "agent": "doctor",
+    "kind": "tool_call",
+    "text": "Reading guidelines.json for the rules that apply",
+    "at": "2026-10-09T15:00:02.800Z",
+    "data": {
+      "tool": "buildConstraints"
+    }
+  },
+  {
+    "eventId": "maria-ev-03",
+    "runId": "maria-run-0001",
+    "agent": "doctor",
+    "kind": "proposal",
+    "text": "Floors and caps are set: at least 1200 kcal, under 1500 mg sodium, 28 g fiber.",
+    "at": "2026-10-09T15:00:04.200Z",
+    "data": {
+      "constraints": {
+        "minCaloriesPerDay": 1200,
+        "minFiberG": 28,
+        "maxAddedSugarG": 25,
+        "maxSodiumMgPerDay": 1500,
+        "maxSatFatPct": 6,
+        "excludedFoodTags": [],
+        "reasons": [
+          {
+            "rule": "min_fiber",
+            "why": "About 14 g of fiber per 1,000 kcal supports digestion, fullness and heart health.",
+            "source": "Dietary Guidelines for Americans, 2020-2025 (https://www.dietaryguidelines.gov/sites/default/files/2020-12/Dietary_Guidelines_for_Americans_2020-2025.pdf)"
+          },
+          {
+            "rule": "max_added_sugar",
+            "why": "Stricter added sugar limit (5% of calories) for diabetes.",
+            "source": "American Diabetes Association, Standards of Care in Diabetes (Section 5: Facilitating Positive Health Behaviors) (https://diabetesjournals.org/care/issue/48/Supplement_1)"
+          },
+          {
+            "rule": "max_sodium",
+            "why": "The DASH plan limits sodium to 1,500 mg a day to lower blood pressure.",
+            "source": "NHLBI, DASH Eating Plan (https://www.nhlbi.nih.gov/education/dash-eating-plan)"
+          },
+          {
+            "rule": "max_sat_fat",
+            "why": "Saturated fat under 6% of calories for people with high blood pressure.",
+            "source": "American Heart Association, Saturated Fat (https://www.heart.org/en/healthy-living/healthy-eating/eat-smart/fats/saturated-fats)"
+          },
+          {
+            "rule": "min_calories",
+            "why": "Eating below this floor makes it hard to get enough nutrients and is not safe without medical supervision.",
+            "source": "NIH NHLBI, Aim for a Healthy Weight: low calorie diets (https://www.nhlbi.nih.gov/health/educational/lose_wt/eat/calories.htm)"
+          },
+          {
+            "rule": "allergies_excluded",
+            "why": "Foods you are allergic to are removed in code before any meal is planned.",
+            "source": "Dietary Guidelines for Americans, 2020-2025 (https://www.dietaryguidelines.gov/sites/default/files/2020-12/Dietary_Guidelines_for_Americans_2020-2025.pdf)"
+          },
+          {
+            "rule": "max_carbs_per_meal",
+            "why": "Spreading carbs evenly, about 45 g per meal, keeps blood sugar steadier.",
+            "source": "American Diabetes Association, Standards of Care in Diabetes (Section 5: Facilitating Positive Health Behaviors) (https://diabetesjournals.org/care/issue/48/Supplement_1)"
+          },
+          {
+            "rule": "max_glycemic_load_per_meal",
+            "why": "A glycemic load of 20 or less per meal avoids sharp glucose spikes.",
+            "source": "American Diabetes Association, Standards of Care in Diabetes (Section 5: Facilitating Positive Health Behaviors) (https://diabetesjournals.org/care/issue/48/Supplement_1)"
+          },
+          {
+            "rule": "min_potassium",
+            "why": "At least 3,500 mg of potassium a day from food helps balance sodium.",
+            "source": "NHLBI, DASH Eating Plan (https://www.nhlbi.nih.gov/education/dash-eating-plan)"
+          }
+        ],
+        "summary": "Maria's plan rules: At least 1200 kcal and 28 g fiber a day, under 1500 mg sodium, under 25 g added sugar, saturated fat under 6% of calories, at most 45 g carbs per meal, glycemic load 20 or less per meal, at least 3500 mg potassium.",
+        "maxCarbsPerMealG": 45,
+        "maxGlycemicLoadPerMeal": 20,
+        "minPotassiumMgPerDay": 3500
+      }
+    }
+  },
+  {
+    "eventId": "maria-ev-04",
+    "runId": "maria-run-0001",
+    "agent": "doctor",
+    "kind": "proposal",
+    "text": "Diabetes rules on: max 45 g carbs and glycemic load 20 per meal. Non negotiable.",
+    "at": "2026-10-09T15:00:05.600Z"
+  },
+  {
+    "eventId": "maria-ev-05",
+    "runId": "maria-run-0001",
+    "agent": "doctor",
+    "kind": "proposal",
+    "text": "DASH rules on: sodium 1500 mg, potassium 3500+ mg, saturated fat 6%.",
+    "at": "2026-10-09T15:00:07.000Z"
+  },
+  {
+    "eventId": "maria-ev-06",
+    "runId": "maria-run-0001",
+    "agent": "chef",
+    "kind": "tool_call",
+    "text": "Searching the food database for ingredients",
+    "at": "2026-10-09T15:00:08.400Z",
+    "data": {
+      "tool": "searchFoods"
+    }
+  },
+  {
+    "eventId": "maria-ev-07",
+    "runId": "maria-run-0001",
+    "agent": "chef",
+    "kind": "proposal",
+    "text": "I have 32 ideas: beans, chicken, mexican with real variety. Let me cook!",
+    "at": "2026-10-09T15:00:09.800Z",
+    "data": {
+      "poolSize": 32
+    }
+  },
+  {
+    "eventId": "maria-ev-08",
+    "runId": "maria-run-0001",
+    "agent": "budget",
+    "kind": "tool_call",
+    "text": "Pricing every candidate with computeTotals",
+    "at": "2026-10-09T15:00:11.200Z",
+    "data": {
+      "tool": "computeTotals"
+    }
+  },
+  {
+    "eventId": "maria-ev-09",
+    "runId": "maria-run-0001",
+    "agent": "budget",
+    "kind": "objection",
+    "text": "Tilapia, baked alone eats $10.40 of the $70. Swap half of it for lentils and tofu?",
+    "at": "2026-10-09T15:00:12.600Z",
+    "data": {
+      "foodId": "tilapia"
+    }
+  },
+  {
+    "eventId": "maria-ev-10",
+    "runId": "maria-run-0001",
+    "agent": "chef",
+    "kind": "concession",
+    "text": "Fine, I keep tilapia once and lean on lentils and tofu for the rest. Flavor stays.",
+    "at": "2026-10-09T15:00:14.000Z"
+  },
+  {
+    "eventId": "maria-ev-11",
+    "runId": "maria-run-0001",
+    "agent": "doctor",
+    "kind": "objection",
+    "text": "Two breakfast ideas push carbs past 45 g per meal. Those are out.",
+    "at": "2026-10-09T15:00:15.400Z",
+    "data": {
+      "removed": 2
+    }
+  },
+  {
+    "eventId": "maria-ev-12",
+    "runId": "maria-run-0001",
+    "agent": "chef",
+    "kind": "concession",
+    "text": "Removed. I swap in a yogurt bowl with pumpkin seeds instead.",
+    "at": "2026-10-09T15:00:16.800Z"
+  },
+  {
+    "eventId": "maria-ev-13",
+    "runId": "maria-run-0001",
+    "agent": "orchestrator",
+    "kind": "tool_call",
+    "text": "Running the optimizer: 7 days, 4 slots a day, integer servings",
+    "at": "2026-10-09T15:00:18.200Z",
+    "data": {
+      "tool": "optimizePlan"
+    }
+  },
+  {
+    "eventId": "maria-ev-14",
+    "runId": "maria-run-0001",
+    "agent": "orchestrator",
+    "kind": "proposal",
+    "text": "Optimizer solved in 6.8 s. Weekly cost $67.84.",
+    "at": "2026-10-09T15:00:19.600Z",
+    "data": {
+      "solveMs": 6809,
+      "weeklyCostUsd": 67.84
+    }
+  },
+  {
+    "eventId": "maria-ev-15",
+    "runId": "maria-run-0001",
+    "agent": "doctor",
+    "kind": "tool_call",
+    "text": "Re-checking every hard rule on the final plan",
+    "at": "2026-10-09T15:00:21.000Z",
+    "data": {
+      "tool": "verifyPlan",
+      "violations": 0
+    }
+  },
+  {
+    "eventId": "maria-ev-16",
+    "runId": "maria-run-0001",
+    "agent": "doctor",
+    "kind": "proposal",
+    "text": "All seven days pass every rule. I am satisfied.",
+    "at": "2026-10-09T15:00:22.400Z"
+  },
+  {
+    "eventId": "maria-ev-17",
+    "runId": "maria-run-0001",
+    "agent": "budget",
+    "kind": "proposal",
+    "text": "Raising your budget by $5 would let Chef add greek yogurt with blueberries twice",
+    "at": "2026-10-09T15:00:23.800Z",
+    "data": {
+      "shadowPrice": {
+        "constraint": "weekly_budget",
+        "value": 24.139,
+        "humanText": "Raising your budget by $5 would let Chef add greek yogurt with blueberries twice"
+      }
+    }
+  },
+  {
+    "eventId": "maria-ev-18",
+    "runId": "maria-run-0001",
+    "agent": "budget",
+    "kind": "proposal",
+    "text": "Grocery list ready: 40 items, $67.84 total.",
+    "at": "2026-10-09T15:00:25.200Z",
+    "data": {
+      "items": 40
+    }
+  },
+  {
+    "eventId": "maria-ev-19",
+    "runId": "maria-run-0001",
+    "agent": "monitor",
+    "kind": "proposal",
+    "text": "I will watch weight, glucose and logs daily and replan when the trend says so.",
+    "at": "2026-10-09T15:00:26.600Z"
+  },
+  {
+    "eventId": "maria-ev-20",
+    "runId": "maria-run-0001",
+    "agent": "orchestrator",
+    "kind": "decision",
+    "text": "Plan v1 approved: 7 days, $67.84, zero rule violations.",
+    "at": "2026-10-09T15:00:28.000Z",
+    "data": {
+      "planId": "maria-plan-0001"
+    }
+  }
+]

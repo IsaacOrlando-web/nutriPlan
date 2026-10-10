@@ -1,0 +1,154 @@
+{
+  "type": "weight",
+  "points": [
+    {
+      "date": "2026-09-19",
+      "raw": 90.2,
+      "filtered": 90.2,
+      "lower": 89.09,
+      "upper": 91.31
+    },
+    {
+      "date": "2026-09-20",
+      "raw": 90.3,
+      "filtered": 90.25,
+      "lower": 89.14,
+      "upper": 91.36
+    },
+    {
+      "date": "2026-09-21",
+      "raw": 89.8,
+      "filtered": 90,
+      "lower": 88.8,
+      "upper": 91.19
+    },
+    {
+      "date": "2026-09-22",
+      "raw": 89.9,
+      "filtered": 89.9,
+      "lower": 88.71,
+      "upper": 91.09
+    },
+    {
+      "date": "2026-09-23",
+      "raw": 89.8,
+      "filtered": 89.8,
+      "lower": 88.66,
+      "upper": 90.94
+    },
+    {
+      "date": "2026-09-24",
+      "raw": 89.1,
+      "filtered": 89.41,
+      "lower": 88.33,
+      "upper": 90.5
+    },
+    {
+      "date": "2026-09-25",
+      "raw": 89.4,
+      "filtered": 89.31,
+      "lower": 88.28,
+      "upper": 90.35
+    },
+    {
+      "date": "2026-09-26",
+      "raw": 89.2,
+      "filtered": 89.17,
+      "lower": 88.18,
+      "upper": 90.17
+    },
+    {
+      "date": "2026-09-27",
+      "raw": 89.6,
+      "filtered": 89.24,
+      "lower": 88.28,
+      "upper": 90.19
+    },
+    {
+      "date": "2026-09-28",
+      "raw": 89.4,
+      "filtered": 89.22,
+      "lower": 88.29,
+      "upper": 90.14
+    },
+    {
+      "date": "2026-09-29",
+      "raw": 89.1,
+      "filtered": 89.11,
+      "lower": 88.21,
+      "upper": 90.01
+    },
+    {
+      "date": "2026-09-30",
+      "raw": 89.3,
+      "filtered": 89.1,
+      "lower": 88.23,
+      "upper": 89.97
+    },
+    {
+      "date": "2026-10-01",
+      "raw": 89.4,
+      "filtered": 89.13,
+      "lower": 88.27,
+      "upper": 89.98
+    },
+    {
+      "date": "2026-10-02",
+      "raw": 89.3,
+      "filtered": 89.12,
+      "lower": 88.28,
+      "upper": 89.96
+    },
+    {
+      "date": "2026-10-03",
+      "raw": 89.6,
+      "filtered": 89.21,
+      "lower": 88.38,
+      "upper": 90.04
+    },
+    {
+      "date": "2026-10-04",
+      "raw": 89,
+      "filtered": 89.12,
+      "lower": 88.3,
+      "upper": 89.94
+    },
+    {
+      "date": "2026-10-05",
+      "raw": 89.2,
+      "filtered": 89.1,
+      "lower": 88.29,
+      "upper": 89.91
+    },
+    {
+      "date": "2026-10-06",
+      "raw": 89.2,
+      "filtered": 89.09,
+      "lower": 88.29,
+      "upper": 89.9
+    },
+    {
+      "date": "2026-10-07",
+      "raw": 89.1,
+      "filtered": 89.06,
+      "lower": 88.26,
+      "upper": 89.86
+    },
+    {
+      "date": "2026-10-08",
+      "raw": 89.6,
+      "filtered": 89.17,
+      "lower": 88.37,
+      "upper": 89.97
+    },
+    {
+      "date": "2026-10-09",
+      "raw": 89,
+      "filtered": 89.11,
+      "lower": 88.31,
+      "upper": 89.91
+    }
+  ],
+  "slopePerWeek": -0.2,
+  "alert": "stalled"
+}

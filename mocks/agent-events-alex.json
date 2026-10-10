@@ -1,0 +1,241 @@
+[
+  {
+    "eventId": "alex-ev-01",
+    "runId": "alex-run-0001",
+    "agent": "orchestrator",
+    "kind": "proposal",
+    "text": "New plan for Alex: lose goal, $50/week, 3 meals a day. Doctor first.",
+    "at": "2026-10-09T15:00:01.400Z"
+  },
+  {
+    "eventId": "alex-ev-02",
+    "runId": "alex-run-0001",
+    "agent": "doctor",
+    "kind": "tool_call",
+    "text": "Reading guidelines.json for the rules that apply",
+    "at": "2026-10-09T15:00:02.800Z",
+    "data": {
+      "tool": "buildConstraints"
+    }
+  },
+  {
+    "eventId": "alex-ev-03",
+    "runId": "alex-run-0001",
+    "agent": "doctor",
+    "kind": "proposal",
+    "text": "Floors and caps are set: at least 1500 kcal, under 2300 mg sodium, 29 g fiber.",
+    "at": "2026-10-09T15:00:04.200Z",
+    "data": {
+      "constraints": {
+        "minCaloriesPerDay": 1500,
+        "minFiberG": 29,
+        "maxAddedSugarG": 52,
+        "maxSodiumMgPerDay": 2300,
+        "maxSatFatPct": 10,
+        "excludedFoodTags": [
+          "peanut"
+        ],
+        "reasons": [
+          {
+            "rule": "min_fiber",
+            "why": "About 14 g of fiber per 1,000 kcal supports digestion, fullness and heart health.",
+            "source": "Dietary Guidelines for Americans, 2020-2025 (https://www.dietaryguidelines.gov/sites/default/files/2020-12/Dietary_Guidelines_for_Americans_2020-2025.pdf)"
+          },
+          {
+            "rule": "max_added_sugar",
+            "why": "Added sugar under 10% of calories leaves room for nutrient dense food.",
+            "source": "Dietary Guidelines for Americans, 2020-2025 (https://www.dietaryguidelines.gov/sites/default/files/2020-12/Dietary_Guidelines_for_Americans_2020-2025.pdf)"
+          },
+          {
+            "rule": "max_sodium",
+            "why": "Sodium under 2,300 mg a day lowers the risk of high blood pressure.",
+            "source": "Dietary Guidelines for Americans, 2020-2025 (https://www.dietaryguidelines.gov/sites/default/files/2020-12/Dietary_Guidelines_for_Americans_2020-2025.pdf)"
+          },
+          {
+            "rule": "max_sat_fat",
+            "why": "Saturated fat under 10% of calories protects your heart.",
+            "source": "Dietary Guidelines for Americans, 2020-2025 (https://www.dietaryguidelines.gov/sites/default/files/2020-12/Dietary_Guidelines_for_Americans_2020-2025.pdf)"
+          },
+          {
+            "rule": "min_calories",
+            "why": "Eating below this floor makes it hard to get enough nutrients and is not safe without medical supervision.",
+            "source": "NIH NHLBI, Aim for a Healthy Weight: low calorie diets (https://www.nhlbi.nih.gov/health/educational/lose_wt/eat/calories.htm)"
+          },
+          {
+            "rule": "allergies_excluded",
+            "why": "Foods you are allergic to are removed in code before any meal is planned.",
+            "source": "Dietary Guidelines for Americans, 2020-2025 (https://www.dietaryguidelines.gov/sites/default/files/2020-12/Dietary_Guidelines_for_Americans_2020-2025.pdf)"
+          }
+        ],
+        "summary": "Alex's plan rules: At least 1500 kcal and 29 g fiber a day, under 2300 mg sodium, under 52 g added sugar, saturated fat under 10% of calories. Never: peanut."
+      }
+    }
+  },
+  {
+    "eventId": "alex-ev-04",
+    "runId": "alex-run-0001",
+    "agent": "doctor",
+    "kind": "proposal",
+    "text": "Allergy filter active: no peanut anywhere in the plan.",
+    "at": "2026-10-09T15:00:05.600Z"
+  },
+  {
+    "eventId": "alex-ev-05",
+    "runId": "alex-run-0001",
+    "agent": "chef",
+    "kind": "tool_call",
+    "text": "Searching the food database for ingredients",
+    "at": "2026-10-09T15:00:07.000Z",
+    "data": {
+      "tool": "searchFoods"
+    }
+  },
+  {
+    "eventId": "alex-ev-06",
+    "runId": "alex-run-0001",
+    "agent": "chef",
+    "kind": "proposal",
+    "text": "I have 32 ideas: chicken, mexican, rice bowls with real variety. Let me cook!",
+    "at": "2026-10-09T15:00:08.400Z",
+    "data": {
+      "poolSize": 32
+    }
+  },
+  {
+    "eventId": "alex-ev-07",
+    "runId": "alex-run-0001",
+    "agent": "budget",
+    "kind": "tool_call",
+    "text": "Pricing every candidate with computeTotals",
+    "at": "2026-10-09T15:00:09.800Z",
+    "data": {
+      "tool": "computeTotals"
+    }
+  },
+  {
+    "eventId": "alex-ev-08",
+    "runId": "alex-run-0001",
+    "agent": "budget",
+    "kind": "objection",
+    "text": "Chicken thigh, skinless, roasted alone eats $12.80 of the $50. Swap half of it for eggs and black beans?",
+    "at": "2026-10-09T15:00:11.200Z",
+    "data": {
+      "foodId": "chicken_thigh"
+    }
+  },
+  {
+    "eventId": "alex-ev-09",
+    "runId": "alex-run-0001",
+    "agent": "chef",
+    "kind": "concession",
+    "text": "Fine, I keep chicken thigh once and lean on eggs and black beans for the rest. Flavor stays.",
+    "at": "2026-10-09T15:00:12.600Z"
+  },
+  {
+    "eventId": "alex-ev-10",
+    "runId": "alex-run-0001",
+    "agent": "doctor",
+    "kind": "objection",
+    "text": "One snack idea is 40% saturated fat. Out of the pool.",
+    "at": "2026-10-09T15:00:14.000Z",
+    "data": {
+      "removed": 2
+    }
+  },
+  {
+    "eventId": "alex-ev-11",
+    "runId": "alex-run-0001",
+    "agent": "chef",
+    "kind": "concession",
+    "text": "Removed. I swap in a yogurt bowl with pumpkin seeds instead.",
+    "at": "2026-10-09T15:00:15.400Z"
+  },
+  {
+    "eventId": "alex-ev-12",
+    "runId": "alex-run-0001",
+    "agent": "orchestrator",
+    "kind": "tool_call",
+    "text": "Running the optimizer: 7 days, 3 slots a day, integer servings",
+    "at": "2026-10-09T15:00:16.800Z",
+    "data": {
+      "tool": "optimizePlan"
+    }
+  },
+  {
+    "eventId": "alex-ev-13",
+    "runId": "alex-run-0001",
+    "agent": "orchestrator",
+    "kind": "proposal",
+    "text": "Optimizer solved in 8.3 s. Weekly cost $49.95.",
+    "at": "2026-10-09T15:00:18.200Z",
+    "data": {
+      "solveMs": 8330,
+      "weeklyCostUsd": 49.95
+    }
+  },
+  {
+    "eventId": "alex-ev-14",
+    "runId": "alex-run-0001",
+    "agent": "doctor",
+    "kind": "tool_call",
+    "text": "Re-checking every hard rule on the final plan",
+    "at": "2026-10-09T15:00:19.600Z",
+    "data": {
+      "tool": "verifyPlan",
+      "violations": 0
+    }
+  },
+  {
+    "eventId": "alex-ev-15",
+    "runId": "alex-run-0001",
+    "agent": "doctor",
+    "kind": "proposal",
+    "text": "All seven days pass every rule. I am satisfied.",
+    "at": "2026-10-09T15:00:21.000Z"
+  },
+  {
+    "eventId": "alex-ev-16",
+    "runId": "alex-run-0001",
+    "agent": "budget",
+    "kind": "proposal",
+    "text": "Raising your budget by $5 would let Chef add chipotle shredded chicken tostadas twice",
+    "at": "2026-10-09T15:00:22.400Z",
+    "data": {
+      "shadowPrice": {
+        "constraint": "weekly_budget",
+        "value": 12.052,
+        "humanText": "Raising your budget by $5 would let Chef add chipotle shredded chicken tostadas twice"
+      }
+    }
+  },
+  {
+    "eventId": "alex-ev-17",
+    "runId": "alex-run-0001",
+    "agent": "budget",
+    "kind": "proposal",
+    "text": "Grocery list ready: 33 items, $49.95 total.",
+    "at": "2026-10-09T15:00:23.800Z",
+    "data": {
+      "items": 33
+    }
+  },
+  {
+    "eventId": "alex-ev-18",
+    "runId": "alex-run-0001",
+    "agent": "monitor",
+    "kind": "proposal",
+    "text": "I will watch weight, glucose and logs daily and replan when the trend says so.",
+    "at": "2026-10-09T15:00:25.200Z"
+  },
+  {
+    "eventId": "alex-ev-19",
+    "runId": "alex-run-0001",
+    "agent": "orchestrator",
+    "kind": "decision",
+    "text": "Plan v1 approved: 7 days, $49.95, zero rule violations.",
+    "at": "2026-10-09T15:00:26.600Z",
+    "data": {
+      "planId": "alex-plan-0001"
+    }
+  }
+]

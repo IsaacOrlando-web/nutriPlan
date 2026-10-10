@@ -1,0 +1,341 @@
+// MemoryStore: in-process store persisted as JSON under .data/. Owner: Backend.
+// Seeded on first load with the real food database, meal templates and the Alex / Maria demo users.
+// Good enough for local development and for the demo fallback when Supabase is unreachable.
+import fs from "node:fs";
+import path from "node:path";
+import type {
+  AgentEvent,
+  AgentRun,
+  AgentRunStatus,
+  AgentRunTrigger,
+  CandidateMeal,
+  DailyTargets,
+  Food,
+  FoodLogEntry,
+  MealPlan,
+  MedicalConstraints,
+  Reading,
+  UserProfile,
+} from "@/types/contracts";
+import { newId, nowIso, type AgentLogRecord, type FoodSearchOptions, type MealRating, type Store } from "./store";
+import foodsJson from "@/scripts/data/foods.json";
+import templatesJson from "@/scripts/data/meal-templates.json";
+import { DEMO_PROFILES, demoReadings, type DemoUserKey } from "./seed/demo-users";
+
+interface UserBucket {
+  profile: UserProfile | null;
+  constraints: MedicalConstraints | null;
+  targets: DailyTargets | null;
+  tdee: { mean: number; sd: number } | null;
+  plans: MealPlan[];
+  logs: FoodLogEntry[];
+  readings: Reading[];
+  ratings: MealRating[];
+}
+
+interface Snapshot {
+  version: 1;
+  users: Record<string, UserBucket>;
+  foods: Record<string, Food>;
+  templates: Omit<CandidateMeal, "tasteScore">[];
+  runs: Record<string, AgentRun>;
+  events: Record<string, AgentEvent[]>;
+  agentLogs: AgentLogRecord[];
+}
+
+function emptyBucket(): UserBucket {
+  return { profile: null, constraints: null, targets: null, tdee: null, plans: [], logs: [], readings: [], ratings: [] };
+}
+
+type Waiter = { afterCount: number; resolve: (events: AgentEvent[]) => void; timer: NodeJS.Timeout };
+
+export class MemoryStore implements Store {
+  readonly kind = "memory" as const;
+  private data: Snapshot;
+  private waiters = new Map<string, Waiter[]>();
+  private saveTimer: NodeJS.Timeout | null = null;
+
+  constructor(private readonly file: string | null) {
+    this.data = this.load();
+  }
+
+  // ---------------------------------------------------------------- persistence
+  private load(): Snapshot {
+    if (this.file && fs.existsSync(this.file)) {
+      try {
+        const parsed = JSON.parse(fs.readFileSync(this.file, "utf8")) as Snapshot;
+        if (parsed.version === 1) return parsed;
+      } catch {
+        // corrupt file: fall through and reseed
+      }
+    }
+    return this.seed();
+  }
+
+  private seed(): Snapshot {
+    const snapshot: Snapshot = {
+      version: 1,
+      users: {},
+      foods: Object.fromEntries((foodsJson as Food[]).map((f) => [f.foodId, f])),
+      templates: templatesJson as Omit<CandidateMeal, "tasteScore">[],
+      runs: {},
+      events: {},
+      agentLogs: [],
+    };
+    for (const key of Object.keys(DEMO_PROFILES) as DemoUserKey[]) {
+      const profile = DEMO_PROFILES[key];
+      snapshot.users[profile.userId] = { ...emptyBucket(), profile, readings: demoReadings(key) };
+    }
+    return snapshot;
+  }
+
+  private persist(): void {
+    if (!this.file) return;
+    if (this.saveTimer) return;
+    this.saveTimer = setTimeout(() => {
+      this.saveTimer = null;
+      try {
+        fs.mkdirSync(path.dirname(this.file!), { recursive: true });
+        const tmp = `${this.file}.tmp`;
+        fs.writeFileSync(tmp, JSON.stringify(this.data));
+        fs.renameSync(tmp, this.file!);
+      } catch (err) {
+        console.warn("[memory-store] persist failed:", (err as Error).message);
+      }
+    }, 150);
+  }
+
+  private bucket(userId: string): UserBucket {
+    return (this.data.users[userId] ??= emptyBucket());
+  }
+
+  // ---------------------------------------------------------------- profile bundle
+  async getProfile(userId: string) {
+    return this.data.users[userId]?.profile ?? null;
+  }
+  async saveProfile(profile: UserProfile) {
+    this.bucket(profile.userId).profile = profile;
+    this.persist();
+  }
+  async getConstraints(userId: string) {
+    return this.data.users[userId]?.constraints ?? null;
+  }
+  async saveConstraints(userId: string, constraints: MedicalConstraints) {
+    this.bucket(userId).constraints = constraints;
+    this.persist();
+  }
+  async getTargets(userId: string) {
+    return this.data.users[userId]?.targets ?? null;
+  }
+  async saveTargets(userId: string, targets: DailyTargets) {
+    this.bucket(userId).targets = targets;
+    this.persist();
+  }
+  async getTdeePosterior(userId: string) {
+    return this.data.users[userId]?.tdee ?? null;
+  }
+  async saveTdeePosterior(userId: string, posterior: { mean: number; sd: number }) {
+    this.bucket(userId).tdee = posterior;
+    this.persist();
+  }
+
+  // ---------------------------------------------------------------- foods
+  async getFood(foodId: string) {
+    return this.data.foods[foodId] ?? null;
+  }
+  async getFoods(foodIds: string[]) {
+    const out: Record<string, Food> = {};
+    for (const id of foodIds) if (this.data.foods[id]) out[id] = this.data.foods[id];
+    return out;
+  }
+  async getAllFoods() {
+    return Object.values(this.data.foods);
+  }
+  async searchFoods(query: string, opts: FoodSearchOptions = {}) {
+    const q = query.trim().toLowerCase();
+    const excluded = new Set((opts.excludeTags ?? []).map((t) => t.toLowerCase()));
+    const scored = Object.values(this.data.foods)
+      .filter((f) => !f.tags.some((t) => excluded.has(t.toLowerCase())))
+      .map((f) => ({ f, score: similarity(q, f.name.toLowerCase()) }))
+      .filter((x) => q.length === 0 || x.score > 0.2)
+      .sort((a, b) => b.score - a.score);
+    return scored.slice(0, opts.limit ?? 20).map((x) => x.f);
+  }
+  async upsertFoods(foods: Food[]) {
+    for (const f of foods) this.data.foods[f.foodId] = f;
+    this.persist();
+  }
+  async getMealTemplates() {
+    return this.data.templates;
+  }
+  async upsertMealTemplates(templates: Omit<CandidateMeal, "tasteScore">[]) {
+    const byId = new Map(this.data.templates.map((t) => [t.candidateId, t]));
+    for (const t of templates) byId.set(t.candidateId, t);
+    this.data.templates = [...byId.values()];
+    this.persist();
+  }
+
+  // ---------------------------------------------------------------- plans
+  async getCurrentPlan(userId: string) {
+    const plans = this.data.users[userId]?.plans ?? [];
+    return plans.length ? plans[plans.length - 1] : null;
+  }
+  async listPlans(userId: string) {
+    return [...(this.data.users[userId]?.plans ?? [])].reverse();
+  }
+  async savePlan(plan: MealPlan) {
+    const b = this.bucket(plan.userId);
+    b.plans = b.plans.filter((p) => p.planId !== plan.planId);
+    b.plans.push(plan);
+    if (b.plans.length > 25) b.plans.splice(0, b.plans.length - 25);
+    this.persist();
+  }
+
+  // ---------------------------------------------------------------- logs and readings
+  async addFoodLog(entry: FoodLogEntry) {
+    const b = this.bucket(entry.userId);
+    b.logs = b.logs.filter((l) => l.logId !== entry.logId);
+    b.logs.push(entry);
+    b.logs.sort((a, c) => a.eatenAt.localeCompare(c.eatenAt));
+    this.persist();
+  }
+  async listFoodLogs(userId: string, opts: { from?: string; to?: string; limit?: number } = {}) {
+    let logs = this.data.users[userId]?.logs ?? [];
+    if (opts.from) logs = logs.filter((l) => l.eatenAt >= opts.from!);
+    if (opts.to) logs = logs.filter((l) => l.eatenAt < opts.to!);
+    return opts.limit ? logs.slice(-opts.limit) : [...logs];
+  }
+  async addReading(reading: Reading) {
+    const b = this.bucket(reading.userId);
+    b.readings.push(reading);
+    b.readings.sort((a, c) => a.takenAt.localeCompare(c.takenAt));
+    this.persist();
+  }
+  async listReadings(userId: string, opts: { type?: Reading["type"]; from?: string; limit?: number } = {}) {
+    let r = this.data.users[userId]?.readings ?? [];
+    if (opts.type) r = r.filter((x) => x.type === opts.type);
+    if (opts.from) r = r.filter((x) => x.takenAt >= opts.from!);
+    return opts.limit ? r.slice(-opts.limit) : [...r];
+  }
+  async addMealRating(userId: string, rating: MealRating) {
+    this.bucket(userId).ratings.push(rating);
+    this.persist();
+  }
+  async listMealRatings(userId: string) {
+    return [...(this.data.users[userId]?.ratings ?? [])];
+  }
+
+  // ---------------------------------------------------------------- agent runs
+  async createRun(run: { userId: string; trigger: AgentRunTrigger; reason?: string | null }) {
+    const record: AgentRun = {
+      runId: newId(),
+      userId: run.userId,
+      trigger: run.trigger,
+      reason: run.reason ?? null,
+      status: "running",
+      createdAt: nowIso(),
+    };
+    this.data.runs[record.runId] = record;
+    this.data.events[record.runId] = [];
+    this.persist();
+    return record;
+  }
+  async getRun(runId: string) {
+    return this.data.runs[runId] ?? null;
+  }
+  async listRuns(userId: string, opts: { limit?: number; since?: string } = {}) {
+    let runs = Object.values(this.data.runs).filter((r) => r.userId === userId);
+    if (opts.since) runs = runs.filter((r) => r.createdAt >= opts.since!);
+    runs.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+    return opts.limit ? runs.slice(0, opts.limit) : runs;
+  }
+  async setRunStatus(runId: string, status: AgentRunStatus) {
+    const run = this.data.runs[runId];
+    if (run) run.status = status;
+    this.persist();
+    if (status !== "running") this.flushWaiters(runId);
+  }
+  async addEvent(event: AgentEvent) {
+    (this.data.events[event.runId] ??= []).push(event);
+    this.persist();
+    this.flushWaiters(event.runId);
+  }
+  async listEvents(runId: string) {
+    return [...(this.data.events[runId] ?? [])];
+  }
+  waitForEvents(runId: string, afterCount: number, timeoutMs: number): Promise<AgentEvent[]> {
+    const current = this.data.events[runId] ?? [];
+    if (current.length > afterCount) return Promise.resolve(current.slice(afterCount));
+    const run = this.data.runs[runId];
+    if (!run || run.status !== "running") return Promise.resolve([]);
+    return new Promise((resolve) => {
+      const waiter: Waiter = {
+        afterCount,
+        resolve,
+        timer: setTimeout(() => {
+          this.removeWaiter(runId, waiter);
+          resolve([]);
+        }, timeoutMs),
+      };
+      (this.waiters.get(runId) ?? this.waiters.set(runId, []).get(runId)!).push(waiter);
+    });
+  }
+  private flushWaiters(runId: string) {
+    const list = this.waiters.get(runId);
+    if (!list?.length) return;
+    const events = this.data.events[runId] ?? [];
+    for (const w of [...list]) {
+      clearTimeout(w.timer);
+      w.resolve(events.slice(w.afterCount));
+    }
+    this.waiters.delete(runId);
+  }
+  private removeWaiter(runId: string, waiter: Waiter) {
+    const list = this.waiters.get(runId);
+    if (!list) return;
+    const i = list.indexOf(waiter);
+    if (i >= 0) list.splice(i, 1);
+  }
+  async addAgentLog(log: AgentLogRecord) {
+    this.data.agentLogs.push(log);
+    if (this.data.agentLogs.length > 500) this.data.agentLogs.splice(0, this.data.agentLogs.length - 500);
+    this.persist();
+  }
+
+  // ---------------------------------------------------------------- demo helpers
+  async listUserIds() {
+    return Object.keys(this.data.users);
+  }
+  async resetUser(userId: string) {
+    const key = (Object.keys(DEMO_PROFILES) as DemoUserKey[]).find((k) => DEMO_PROFILES[k].userId === userId);
+    this.data.users[userId] = key
+      ? { ...emptyBucket(), profile: DEMO_PROFILES[key], readings: demoReadings(key) }
+      : emptyBucket();
+    for (const run of Object.values(this.data.runs)) {
+      if (run.userId === userId) {
+        delete this.data.runs[run.runId];
+        delete this.data.events[run.runId];
+      }
+    }
+    this.persist();
+  }
+}
+
+/** Trigram similarity in the spirit of pg_trgm so local search behaves like production. */
+export function similarity(a: string, b: string): number {
+  if (!a) return 1;
+  if (b.includes(a)) return 0.6 + 0.4 * (a.length / b.length);
+  const ta = trigrams(a);
+  const tb = trigrams(b);
+  if (ta.size === 0 || tb.size === 0) return 0;
+  let shared = 0;
+  for (const t of ta) if (tb.has(t)) shared++;
+  return shared / (ta.size + tb.size - shared);
+}
+
+function trigrams(s: string): Set<string> {
+  const padded = `  ${s.replace(/[^a-z0-9 ]/g, "")} `;
+  const out = new Set<string>();
+  for (let i = 0; i + 3 <= padded.length; i++) out.add(padded.slice(i, i + 3));
+  return out;
+}

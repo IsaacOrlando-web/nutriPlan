@@ -1,0 +1,31 @@
+{
+  "userId": "00000000-0000-4000-8000-00000000a1e1",
+  "name": "Alex",
+  "language": "en",
+  "sex": "male",
+  "age": 22,
+  "heightCm": 180,
+  "weightKg": 89.3,
+  "activityLevel": "light",
+  "goal": "lose",
+  "goalRateKgPerWeek": 0.5,
+  "conditions": [],
+  "medications": [],
+  "allergies": [
+    "peanut"
+  ],
+  "restrictions": [],
+  "likes": [
+    "chicken",
+    "mexican",
+    "rice bowls",
+    "eggs",
+    "salmon"
+  ],
+  "dislikes": [
+    "mushrooms",
+    "cottage cheese"
+  ],
+  "weeklyBudgetUsd": 50,
+  "mealsPerDay": 3
+}

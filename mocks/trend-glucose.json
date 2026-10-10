@@ -1,0 +1,154 @@
+{
+  "type": "glucose_fasting",
+  "points": [
+    {
+      "date": "2026-09-19",
+      "raw": 119,
+      "filtered": 119,
+      "lower": 105.1,
+      "upper": 132.9
+    },
+    {
+      "date": "2026-09-20",
+      "raw": 135,
+      "filtered": 130.9,
+      "lower": 114,
+      "upper": 147.8
+    },
+    {
+      "date": "2026-09-21",
+      "raw": 137,
+      "filtered": 137.9,
+      "lower": 121,
+      "upper": 154.9
+    },
+    {
+      "date": "2026-09-22",
+      "raw": 123,
+      "filtered": 131.1,
+      "lower": 115.2,
+      "upper": 146.9
+    },
+    {
+      "date": "2026-09-23",
+      "raw": 130,
+      "filtered": 131.5,
+      "lower": 116.7,
+      "upper": 146.3
+    },
+    {
+      "date": "2026-09-24",
+      "raw": 122,
+      "filtered": 127.6,
+      "lower": 113.6,
+      "upper": 141.6
+    },
+    {
+      "date": "2026-09-25",
+      "raw": 126,
+      "filtered": 127.1,
+      "lower": 113.8,
+      "upper": 140.4
+    },
+    {
+      "date": "2026-09-26",
+      "raw": 131,
+      "filtered": 128.8,
+      "lower": 116.1,
+      "upper": 141.6
+    },
+    {
+      "date": "2026-09-27",
+      "raw": 128,
+      "filtered": 128.8,
+      "lower": 116.5,
+      "upper": 141.2
+    },
+    {
+      "date": "2026-09-28",
+      "raw": 128,
+      "filtered": 128.7,
+      "lower": 116.7,
+      "upper": 140.8
+    },
+    {
+      "date": "2026-09-29",
+      "raw": 127,
+      "filtered": 128.3,
+      "lower": 116.5,
+      "upper": 140.1
+    },
+    {
+      "date": "2026-09-30",
+      "raw": 121,
+      "filtered": 125.8,
+      "lower": 114.1,
+      "upper": 137.5
+    },
+    {
+      "date": "2026-10-01",
+      "raw": 134,
+      "filtered": 128.5,
+      "lower": 116.9,
+      "upper": 140.1
+    },
+    {
+      "date": "2026-10-02",
+      "raw": 130,
+      "filtered": 129.2,
+      "lower": 117.6,
+      "upper": 140.7
+    },
+    {
+      "date": "2026-10-03",
+      "raw": 124,
+      "filtered": 127.6,
+      "lower": 116.1,
+      "upper": 139.1
+    },
+    {
+      "date": "2026-10-04",
+      "raw": 124,
+      "filtered": 126.3,
+      "lower": 114.8,
+      "upper": 137.8
+    },
+    {
+      "date": "2026-10-05",
+      "raw": 134,
+      "filtered": 128.8,
+      "lower": 117.3,
+      "upper": 140.3
+    },
+    {
+      "date": "2026-10-06",
+      "raw": 142,
+      "filtered": 133.5,
+      "lower": 122,
+      "upper": 144.9
+    },
+    {
+      "date": "2026-10-07",
+      "raw": 147,
+      "filtered": 138.8,
+      "lower": 127.3,
+      "upper": 150.3
+    },
+    {
+      "date": "2026-10-08",
+      "raw": 152,
+      "filtered": 144.5,
+      "lower": 133.1,
+      "upper": 156
+    },
+    {
+      "date": "2026-10-09",
+      "raw": 164,
+      "filtered": 152.9,
+      "lower": 141.4,
+      "upper": 164.3
+    }
+  ],
+  "slopePerWeek": 25.31,
+  "alert": "rising"
+}

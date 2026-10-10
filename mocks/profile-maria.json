@@ -1,0 +1,34 @@
+{
+  "userId": "00000000-0000-4000-8000-0000000a7a1a",
+  "name": "Maria",
+  "language": "en",
+  "sex": "female",
+  "age": 45,
+  "heightCm": 163,
+  "weightKg": 82,
+  "activityLevel": "light",
+  "goal": "maintain",
+  "goalRateKgPerWeek": 0,
+  "conditions": [
+    "type2_diabetes",
+    "hypertension"
+  ],
+  "medications": [
+    "metformin",
+    "amlodipine"
+  ],
+  "allergies": [],
+  "restrictions": [],
+  "likes": [
+    "beans",
+    "chicken",
+    "mexican",
+    "soups",
+    "fruit"
+  ],
+  "dislikes": [
+    "sardines"
+  ],
+  "weeklyBudgetUsd": 70,
+  "mealsPerDay": 4
+}

@@ -1,0 +1,12 @@
+{
+  "action": "replan",
+  "reason": "Fasting glucose trend is rising (about +15 mg/dL per week). Tomorrow's meals get lower glycemic load.",
+  "runId": "maria-run-0002",
+  "alerts": [
+    {
+      "level": "warning",
+      "title": "Glucose trending up",
+      "body": "Four mornings in a row above your usual range. Tomorrow's carbs are spread out more evenly. If this continues, contact your care team."
+    }
+  ]
+}

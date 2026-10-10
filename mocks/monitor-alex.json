@@ -1,0 +1,16 @@
+{
+  "action": "replan",
+  "reason": "Weight has stalled for 14 days while intake stayed on plan. Real metabolism looks lower than estimated.",
+  "runId": "alex-run-0002",
+  "alerts": [
+    {
+      "level": "info",
+      "title": "Plan updated",
+      "body": "Monitor lowered your calorie target by 150 kcal and asked Chef for a fresh week."
+    }
+  ],
+  "tdee": {
+    "mean": 2495,
+    "sd": 239
+  }
+}

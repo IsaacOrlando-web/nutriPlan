@@ -1,0 +1,43 @@
+{
+  "minCaloriesPerDay": 1500,
+  "minFiberG": 29,
+  "maxAddedSugarG": 52,
+  "maxSodiumMgPerDay": 2300,
+  "maxSatFatPct": 10,
+  "excludedFoodTags": [
+    "peanut"
+  ],
+  "reasons": [
+    {
+      "rule": "min_fiber",
+      "why": "About 14 g of fiber per 1,000 kcal supports digestion, fullness and heart health.",
+      "source": "Dietary Guidelines for Americans, 2020-2025 (https://www.dietaryguidelines.gov/sites/default/files/2020-12/Dietary_Guidelines_for_Americans_2020-2025.pdf)"
+    },
+    {
+      "rule": "max_added_sugar",
+      "why": "Added sugar under 10% of calories leaves room for nutrient dense food.",
+      "source": "Dietary Guidelines for Americans, 2020-2025 (https://www.dietaryguidelines.gov/sites/default/files/2020-12/Dietary_Guidelines_for_Americans_2020-2025.pdf)"
+    },
+    {
+      "rule": "max_sodium",
+      "why": "Sodium under 2,300 mg a day lowers the risk of high blood pressure.",
+      "source": "Dietary Guidelines for Americans, 2020-2025 (https://www.dietaryguidelines.gov/sites/default/files/2020-12/Dietary_Guidelines_for_Americans_2020-2025.pdf)"
+    },
+    {
+      "rule": "max_sat_fat",
+      "why": "Saturated fat under 10% of calories protects your heart.",
+      "source": "Dietary Guidelines for Americans, 2020-2025 (https://www.dietaryguidelines.gov/sites/default/files/2020-12/Dietary_Guidelines_for_Americans_2020-2025.pdf)"
+    },
+    {
+      "rule": "min_calories",
+      "why": "Eating below this floor makes it hard to get enough nutrients and is not safe without medical supervision.",
+      "source": "NIH NHLBI, Aim for a Healthy Weight: low calorie diets (https://www.nhlbi.nih.gov/health/educational/lose_wt/eat/calories.htm)"
+    },
+    {
+      "rule": "allergies_excluded",
+      "why": "Foods you are allergic to are removed in code before any meal is planned.",
+      "source": "Dietary Guidelines for Americans, 2020-2025 (https://www.dietaryguidelines.gov/sites/default/files/2020-12/Dietary_Guidelines_for_Americans_2020-2025.pdf)"
+    }
+  ],
+  "summary": "Alex's plan rules: At least 1500 kcal and 29 g fiber a day, under 2300 mg sodium, under 52 g added sugar, saturated fat under 10% of calories. Never: peanut."
+}

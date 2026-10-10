@@ -1,0 +1,437 @@
+[
+  {
+    "readingId": "seed-maria-g-0",
+    "userId": "00000000-0000-4000-8000-0000000a7a1a",
+    "type": "glucose_fasting",
+    "value": 119,
+    "unit": "mg/dL",
+    "takenAt": "2026-09-19T12:00:00.000Z"
+  },
+  {
+    "readingId": "seed-maria-w-0",
+    "userId": "00000000-0000-4000-8000-0000000a7a1a",
+    "type": "weight",
+    "value": 81.9,
+    "unit": "kg",
+    "takenAt": "2026-09-19T12:30:00.000Z"
+  },
+  {
+    "readingId": "seed-maria-bp-0",
+    "userId": "00000000-0000-4000-8000-0000000a7a1a",
+    "type": "bp",
+    "value": 131,
+    "value2": 81,
+    "unit": "mmHg",
+    "takenAt": "2026-09-19T20:00:00.000Z"
+  },
+  {
+    "readingId": "seed-maria-g-1",
+    "userId": "00000000-0000-4000-8000-0000000a7a1a",
+    "type": "glucose_fasting",
+    "value": 135,
+    "unit": "mg/dL",
+    "takenAt": "2026-09-20T12:00:00.000Z"
+  },
+  {
+    "readingId": "seed-maria-w-1",
+    "userId": "00000000-0000-4000-8000-0000000a7a1a",
+    "type": "weight",
+    "value": 82.1,
+    "unit": "kg",
+    "takenAt": "2026-09-20T12:30:00.000Z"
+  },
+  {
+    "readingId": "seed-maria-g-2",
+    "userId": "00000000-0000-4000-8000-0000000a7a1a",
+    "type": "glucose_fasting",
+    "value": 137,
+    "unit": "mg/dL",
+    "takenAt": "2026-09-21T12:00:00.000Z"
+  },
+  {
+    "readingId": "seed-maria-w-2",
+    "userId": "00000000-0000-4000-8000-0000000a7a1a",
+    "type": "weight",
+    "value": 81.9,
+    "unit": "kg",
+    "takenAt": "2026-09-21T12:30:00.000Z"
+  },
+  {
+    "readingId": "seed-maria-bp-2",
+    "userId": "00000000-0000-4000-8000-0000000a7a1a",
+    "type": "bp",
+    "value": 128,
+    "value2": 84,
+    "unit": "mmHg",
+    "takenAt": "2026-09-21T20:00:00.000Z"
+  },
+  {
+    "readingId": "seed-maria-g-3",
+    "userId": "00000000-0000-4000-8000-0000000a7a1a",
+    "type": "glucose_fasting",
+    "value": 123,
+    "unit": "mg/dL",
+    "takenAt": "2026-09-22T12:00:00.000Z"
+  },
+  {
+    "readingId": "seed-maria-w-3",
+    "userId": "00000000-0000-4000-8000-0000000a7a1a",
+    "type": "weight",
+    "value": 82.4,
+    "unit": "kg",
+    "takenAt": "2026-09-22T12:30:00.000Z"
+  },
+  {
+    "readingId": "seed-maria-g-4",
+    "userId": "00000000-0000-4000-8000-0000000a7a1a",
+    "type": "glucose_fasting",
+    "value": 130,
+    "unit": "mg/dL",
+    "takenAt": "2026-09-23T12:00:00.000Z"
+  },
+  {
+    "readingId": "seed-maria-w-4",
+    "userId": "00000000-0000-4000-8000-0000000a7a1a",
+    "type": "weight",
+    "value": 82.2,
+    "unit": "kg",
+    "takenAt": "2026-09-23T12:30:00.000Z"
+  },
+  {
+    "readingId": "seed-maria-bp-4",
+    "userId": "00000000-0000-4000-8000-0000000a7a1a",
+    "type": "bp",
+    "value": 133,
+    "value2": 84,
+    "unit": "mmHg",
+    "takenAt": "2026-09-23T20:00:00.000Z"
+  },
+  {
+    "readingId": "seed-maria-g-5",
+    "userId": "00000000-0000-4000-8000-0000000a7a1a",
+    "type": "glucose_fasting",
+    "value": 122,
+    "unit": "mg/dL",
+    "takenAt": "2026-09-24T12:00:00.000Z"
+  },
+  {
+    "readingId": "seed-maria-w-5",
+    "userId": "00000000-0000-4000-8000-0000000a7a1a",
+    "type": "weight",
+    "value": 82,
+    "unit": "kg",
+    "takenAt": "2026-09-24T12:30:00.000Z"
+  },
+  {
+    "readingId": "seed-maria-g-6",
+    "userId": "00000000-0000-4000-8000-0000000a7a1a",
+    "type": "glucose_fasting",
+    "value": 126,
+    "unit": "mg/dL",
+    "takenAt": "2026-09-25T12:00:00.000Z"
+  },
+  {
+    "readingId": "seed-maria-w-6",
+    "userId": "00000000-0000-4000-8000-0000000a7a1a",
+    "type": "weight",
+    "value": 82.2,
+    "unit": "kg",
+    "takenAt": "2026-09-25T12:30:00.000Z"
+  },
+  {
+    "readingId": "seed-maria-bp-6",
+    "userId": "00000000-0000-4000-8000-0000000a7a1a",
+    "type": "bp",
+    "value": 134,
+    "value2": 89,
+    "unit": "mmHg",
+    "takenAt": "2026-09-25T20:00:00.000Z"
+  },
+  {
+    "readingId": "seed-maria-g-7",
+    "userId": "00000000-0000-4000-8000-0000000a7a1a",
+    "type": "glucose_fasting",
+    "value": 131,
+    "unit": "mg/dL",
+    "takenAt": "2026-09-26T12:00:00.000Z"
+  },
+  {
+    "readingId": "seed-maria-w-7",
+    "userId": "00000000-0000-4000-8000-0000000a7a1a",
+    "type": "weight",
+    "value": 82.1,
+    "unit": "kg",
+    "takenAt": "2026-09-26T12:30:00.000Z"
+  },
+  {
+    "readingId": "seed-maria-g-8",
+    "userId": "00000000-0000-4000-8000-0000000a7a1a",
+    "type": "glucose_fasting",
+    "value": 128,
+    "unit": "mg/dL",
+    "takenAt": "2026-09-27T12:00:00.000Z"
+  },
+  {
+    "readingId": "seed-maria-w-8",
+    "userId": "00000000-0000-4000-8000-0000000a7a1a",
+    "type": "weight",
+    "value": 82.2,
+    "unit": "kg",
+    "takenAt": "2026-09-27T12:30:00.000Z"
+  },
+  {
+    "readingId": "seed-maria-bp-8",
+    "userId": "00000000-0000-4000-8000-0000000a7a1a",
+    "type": "bp",
+    "value": 139,
+    "value2": 80,
+    "unit": "mmHg",
+    "takenAt": "2026-09-27T20:00:00.000Z"
+  },
+  {
+    "readingId": "seed-maria-g-9",
+    "userId": "00000000-0000-4000-8000-0000000a7a1a",
+    "type": "glucose_fasting",
+    "value": 128,
+    "unit": "mg/dL",
+    "takenAt": "2026-09-28T12:00:00.000Z"
+  },
+  {
+    "readingId": "seed-maria-w-9",
+    "userId": "00000000-0000-4000-8000-0000000a7a1a",
+    "type": "weight",
+    "value": 82.2,
+    "unit": "kg",
+    "takenAt": "2026-09-28T12:30:00.000Z"
+  },
+  {
+    "readingId": "seed-maria-g-10",
+    "userId": "00000000-0000-4000-8000-0000000a7a1a",
+    "type": "glucose_fasting",
+    "value": 127,
+    "unit": "mg/dL",
+    "takenAt": "2026-09-29T12:00:00.000Z"
+  },
+  {
+    "readingId": "seed-maria-w-10",
+    "userId": "00000000-0000-4000-8000-0000000a7a1a",
+    "type": "weight",
+    "value": 82.2,
+    "unit": "kg",
+    "takenAt": "2026-09-29T12:30:00.000Z"
+  },
+  {
+    "readingId": "seed-maria-bp-10",
+    "userId": "00000000-0000-4000-8000-0000000a7a1a",
+    "type": "bp",
+    "value": 143,
+    "value2": 89,
+    "unit": "mmHg",
+    "takenAt": "2026-09-29T20:00:00.000Z"
+  },
+  {
+    "readingId": "seed-maria-g-11",
+    "userId": "00000000-0000-4000-8000-0000000a7a1a",
+    "type": "glucose_fasting",
+    "value": 121,
+    "unit": "mg/dL",
+    "takenAt": "2026-09-30T12:00:00.000Z"
+  },
+  {
+    "readingId": "seed-maria-w-11",
+    "userId": "00000000-0000-4000-8000-0000000a7a1a",
+    "type": "weight",
+    "value": 82.4,
+    "unit": "kg",
+    "takenAt": "2026-09-30T12:30:00.000Z"
+  },
+  {
+    "readingId": "seed-maria-g-12",
+    "userId": "00000000-0000-4000-8000-0000000a7a1a",
+    "type": "glucose_fasting",
+    "value": 134,
+    "unit": "mg/dL",
+    "takenAt": "2026-10-01T12:00:00.000Z"
+  },
+  {
+    "readingId": "seed-maria-w-12",
+    "userId": "00000000-0000-4000-8000-0000000a7a1a",
+    "type": "weight",
+    "value": 82.2,
+    "unit": "kg",
+    "takenAt": "2026-10-01T12:30:00.000Z"
+  },
+  {
+    "readingId": "seed-maria-bp-12",
+    "userId": "00000000-0000-4000-8000-0000000a7a1a",
+    "type": "bp",
+    "value": 131,
+    "value2": 84,
+    "unit": "mmHg",
+    "takenAt": "2026-10-01T20:00:00.000Z"
+  },
+  {
+    "readingId": "seed-maria-g-13",
+    "userId": "00000000-0000-4000-8000-0000000a7a1a",
+    "type": "glucose_fasting",
+    "value": 130,
+    "unit": "mg/dL",
+    "takenAt": "2026-10-02T12:00:00.000Z"
+  },
+  {
+    "readingId": "seed-maria-w-13",
+    "userId": "00000000-0000-4000-8000-0000000a7a1a",
+    "type": "weight",
+    "value": 82.2,
+    "unit": "kg",
+    "takenAt": "2026-10-02T12:30:00.000Z"
+  },
+  {
+    "readingId": "seed-maria-g-14",
+    "userId": "00000000-0000-4000-8000-0000000a7a1a",
+    "type": "glucose_fasting",
+    "value": 124,
+    "unit": "mg/dL",
+    "takenAt": "2026-10-03T12:00:00.000Z"
+  },
+  {
+    "readingId": "seed-maria-w-14",
+    "userId": "00000000-0000-4000-8000-0000000a7a1a",
+    "type": "weight",
+    "value": 82.3,
+    "unit": "kg",
+    "takenAt": "2026-10-03T12:30:00.000Z"
+  },
+  {
+    "readingId": "seed-maria-bp-14",
+    "userId": "00000000-0000-4000-8000-0000000a7a1a",
+    "type": "bp",
+    "value": 131,
+    "value2": 86,
+    "unit": "mmHg",
+    "takenAt": "2026-10-03T20:00:00.000Z"
+  },
+  {
+    "readingId": "seed-maria-g-15",
+    "userId": "00000000-0000-4000-8000-0000000a7a1a",
+    "type": "glucose_fasting",
+    "value": 124,
+    "unit": "mg/dL",
+    "takenAt": "2026-10-04T12:00:00.000Z"
+  },
+  {
+    "readingId": "seed-maria-w-15",
+    "userId": "00000000-0000-4000-8000-0000000a7a1a",
+    "type": "weight",
+    "value": 82.1,
+    "unit": "kg",
+    "takenAt": "2026-10-04T12:30:00.000Z"
+  },
+  {
+    "readingId": "seed-maria-g-16",
+    "userId": "00000000-0000-4000-8000-0000000a7a1a",
+    "type": "glucose_fasting",
+    "value": 134,
+    "unit": "mg/dL",
+    "takenAt": "2026-10-05T12:00:00.000Z"
+  },
+  {
+    "readingId": "seed-maria-w-16",
+    "userId": "00000000-0000-4000-8000-0000000a7a1a",
+    "type": "weight",
+    "value": 82.2,
+    "unit": "kg",
+    "takenAt": "2026-10-05T12:30:00.000Z"
+  },
+  {
+    "readingId": "seed-maria-bp-16",
+    "userId": "00000000-0000-4000-8000-0000000a7a1a",
+    "type": "bp",
+    "value": 131,
+    "value2": 88,
+    "unit": "mmHg",
+    "takenAt": "2026-10-05T20:00:00.000Z"
+  },
+  {
+    "readingId": "seed-maria-g-17",
+    "userId": "00000000-0000-4000-8000-0000000a7a1a",
+    "type": "glucose_fasting",
+    "value": 142,
+    "unit": "mg/dL",
+    "takenAt": "2026-10-06T12:00:00.000Z"
+  },
+  {
+    "readingId": "seed-maria-w-17",
+    "userId": "00000000-0000-4000-8000-0000000a7a1a",
+    "type": "weight",
+    "value": 82.5,
+    "unit": "kg",
+    "takenAt": "2026-10-06T12:30:00.000Z"
+  },
+  {
+    "readingId": "seed-maria-g-18",
+    "userId": "00000000-0000-4000-8000-0000000a7a1a",
+    "type": "glucose_fasting",
+    "value": 147,
+    "unit": "mg/dL",
+    "takenAt": "2026-10-07T12:00:00.000Z"
+  },
+  {
+    "readingId": "seed-maria-w-18",
+    "userId": "00000000-0000-4000-8000-0000000a7a1a",
+    "type": "weight",
+    "value": 82.6,
+    "unit": "kg",
+    "takenAt": "2026-10-07T12:30:00.000Z"
+  },
+  {
+    "readingId": "seed-maria-bp-18",
+    "userId": "00000000-0000-4000-8000-0000000a7a1a",
+    "type": "bp",
+    "value": 140,
+    "value2": 84,
+    "unit": "mmHg",
+    "takenAt": "2026-10-07T20:00:00.000Z"
+  },
+  {
+    "readingId": "seed-maria-g-19",
+    "userId": "00000000-0000-4000-8000-0000000a7a1a",
+    "type": "glucose_fasting",
+    "value": 152,
+    "unit": "mg/dL",
+    "takenAt": "2026-10-08T12:00:00.000Z"
+  },
+  {
+    "readingId": "seed-maria-w-19",
+    "userId": "00000000-0000-4000-8000-0000000a7a1a",
+    "type": "weight",
+    "value": 82.8,
+    "unit": "kg",
+    "takenAt": "2026-10-08T12:30:00.000Z"
+  },
+  {
+    "readingId": "seed-maria-g-20",
+    "userId": "00000000-0000-4000-8000-0000000a7a1a",
+    "type": "glucose_fasting",
+    "value": 164,
+    "unit": "mg/dL",
+    "takenAt": "2026-10-09T12:00:00.000Z"
+  },
+  {
+    "readingId": "seed-maria-w-20",
+    "userId": "00000000-0000-4000-8000-0000000a7a1a",
+    "type": "weight",
+    "value": 82.5,
+    "unit": "kg",
+    "takenAt": "2026-10-09T12:30:00.000Z"
+  },
+  {
+    "readingId": "seed-maria-bp-20",
+    "userId": "00000000-0000-4000-8000-0000000a7a1a",
+    "type": "bp",
+    "value": 134,
+    "value2": 92,
+    "unit": "mmHg",
+    "takenAt": "2026-10-09T20:00:00.000Z"
+  }
+]

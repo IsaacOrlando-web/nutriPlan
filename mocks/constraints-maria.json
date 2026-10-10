@@ -1,0 +1,59 @@
+{
+  "minCaloriesPerDay": 1200,
+  "minFiberG": 28,
+  "maxAddedSugarG": 25,
+  "maxSodiumMgPerDay": 1500,
+  "maxSatFatPct": 6,
+  "excludedFoodTags": [],
+  "reasons": [
+    {
+      "rule": "min_fiber",
+      "why": "About 14 g of fiber per 1,000 kcal supports digestion, fullness and heart health.",
+      "source": "Dietary Guidelines for Americans, 2020-2025 (https://www.dietaryguidelines.gov/sites/default/files/2020-12/Dietary_Guidelines_for_Americans_2020-2025.pdf)"
+    },
+    {
+      "rule": "max_added_sugar",
+      "why": "Stricter added sugar limit (5% of calories) for diabetes.",
+      "source": "American Diabetes Association, Standards of Care in Diabetes (Section 5: Facilitating Positive Health Behaviors) (https://diabetesjournals.org/care/issue/48/Supplement_1)"
+    },
+    {
+      "rule": "max_sodium",
+      "why": "The DASH plan limits sodium to 1,500 mg a day to lower blood pressure.",
+      "source": "NHLBI, DASH Eating Plan (https://www.nhlbi.nih.gov/education/dash-eating-plan)"
+    },
+    {
+      "rule": "max_sat_fat",
+      "why": "Saturated fat under 6% of calories for people with high blood pressure.",
+      "source": "American Heart Association, Saturated Fat (https://www.heart.org/en/healthy-living/healthy-eating/eat-smart/fats/saturated-fats)"
+    },
+    {
+      "rule": "min_calories",
+      "why": "Eating below this floor makes it hard to get enough nutrients and is not safe without medical supervision.",
+      "source": "NIH NHLBI, Aim for a Healthy Weight: low calorie diets (https://www.nhlbi.nih.gov/health/educational/lose_wt/eat/calories.htm)"
+    },
+    {
+      "rule": "allergies_excluded",
+      "why": "Foods you are allergic to are removed in code before any meal is planned.",
+      "source": "Dietary Guidelines for Americans, 2020-2025 (https://www.dietaryguidelines.gov/sites/default/files/2020-12/Dietary_Guidelines_for_Americans_2020-2025.pdf)"
+    },
+    {
+      "rule": "max_carbs_per_meal",
+      "why": "Spreading carbs evenly, about 45 g per meal, keeps blood sugar steadier.",
+      "source": "American Diabetes Association, Standards of Care in Diabetes (Section 5: Facilitating Positive Health Behaviors) (https://diabetesjournals.org/care/issue/48/Supplement_1)"
+    },
+    {
+      "rule": "max_glycemic_load_per_meal",
+      "why": "A glycemic load of 20 or less per meal avoids sharp glucose spikes.",
+      "source": "American Diabetes Association, Standards of Care in Diabetes (Section 5: Facilitating Positive Health Behaviors) (https://diabetesjournals.org/care/issue/48/Supplement_1)"
+    },
+    {
+      "rule": "min_potassium",
+      "why": "At least 3,500 mg of potassium a day from food helps balance sodium.",
+      "source": "NHLBI, DASH Eating Plan (https://www.nhlbi.nih.gov/education/dash-eating-plan)"
+    }
+  ],
+  "summary": "Maria's plan rules: At least 1200 kcal and 28 g fiber a day, under 1500 mg sodium, under 25 g added sugar, saturated fat under 6% of calories, at most 45 g carbs per meal, glycemic load 20 or less per meal, at least 3500 mg potassium.",
+  "maxCarbsPerMealG": 45,
+  "maxGlycemicLoadPerMeal": 20,
+  "minPotassiumMgPerDay": 3500
+}
