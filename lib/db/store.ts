@@ -124,6 +124,8 @@ export interface Store {
 
   // Weekly meal planner (/plan): one record per user and Monday, plus per user settings and favorites.
   getPlannerWeek(userId: string, weekStartDate: string): Promise<PlannerWeekRecord | null>;
+  /** Saved week plans whose Monday is in [fromWeek, toWeek] (inclusive), ascending by Monday. */
+  listPlannerWeekPlans(userId: string, fromWeek: string, toWeek: string): Promise<WeeklyMealPlan[]>;
   savePlannerWeekPlan(userId: string, plan: WeeklyMealPlan): Promise<void>;
   savePlannerWeekState(userId: string, weekStartDate: string, state: PlannerWeekState): Promise<void>;
   getPlannerSettings(userId: string): Promise<PlannerSettings | null>;

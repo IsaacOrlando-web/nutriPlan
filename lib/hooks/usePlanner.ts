@@ -19,6 +19,15 @@ export function mondayOf(iso: string = todayIso()): string {
   return d.toISOString().slice(0, 10);
 }
 
+/** Dish titles of every saved day in a YYYY-MM month, for the calendar in the corner of /plan. */
+export function usePlannerMonth(month: string) {
+  return useQuery({
+    queryKey: keys.plannerMonth(month),
+    queryFn: () => api.planner.month(month),
+    placeholderData: (prev) => prev,
+  });
+}
+
 /** Saved recipe week (plan is null until the first generation). */
 export function useWeekPlan(weekStart: string) {
   return useQuery({ queryKey: keys.plannerWeek(weekStart), queryFn: () => api.planner.week(weekStart) });
@@ -26,7 +35,7 @@ export function useWeekPlan(weekStart: string) {
 
 function useStoreWeek() {
   const qc = useQueryClient();
-  return (plan: WeeklyMealPlan) =>
+  return (plan: WeeklyMealPlan) => {
     qc.setQueryData<WeekPlanResponse>(keys.plannerWeek(plan.weekStartDate), (prev) => ({
       plan,
       state: prev?.state ?? {
@@ -34,6 +43,9 @@ function useStoreWeek() {
         shopping: { checked: {}, quantityOverrides: {}, removed: [], customItems: [] },
       },
     }));
+    // The month calendar lists dish titles, so any saved week can change it.
+    void qc.invalidateQueries({ queryKey: keys.plannerMonthRoot });
+  };
 }
 
 /** Writes 21 new recipes for the week. The previous plan stays on screen (and on the server) if it fails. */

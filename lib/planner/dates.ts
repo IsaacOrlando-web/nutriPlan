@@ -97,3 +97,32 @@ export function formatLongDate(date: string): string {
 export function dayOfMonth(date: string): number {
   return Number(date.slice(8, 10));
 }
+
+const ISO_MONTH = /^\d{4}-(0[1-9]|1[0-2])$/;
+
+/** True for a month in YYYY-MM form. */
+export function isIsoMonth(value: string): boolean {
+  return ISO_MONTH.test(value);
+}
+
+/** First and last date (YYYY-MM-DD) of a YYYY-MM month. */
+export function monthBounds(month: string): { first: string; last: string } {
+  const [y, m] = month.split("-").map(Number);
+  return { first: `${month}-01`, last: toIsoDate(new Date(Date.UTC(y, m, 0))) };
+}
+
+/** The month before or after `month` (YYYY-MM). */
+export function shiftMonth(month: string, delta: number): string {
+  const [y, m] = month.split("-").map(Number);
+  return toIsoDate(new Date(Date.UTC(y, m - 1 + delta, 1))).slice(0, 7);
+}
+
+/** Calendar grid for a month: whole Monday to Sunday weeks covering it (35 or 42 dates, sometimes 28). */
+export function monthGrid(month: string): string[] {
+  const { first, last } = monthBounds(month);
+  const start = weekStartOf(first);
+  const end = addDays(weekStartOf(last), 6);
+  const dates: string[] = [];
+  for (let d = start; d <= end; d = addDays(d, 1)) dates.push(d);
+  return dates;
+}

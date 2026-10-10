@@ -1,18 +1,29 @@
 "use client";
 
-import { Lightbulb, Loader2, RefreshCw, ShoppingCart, Sparkles } from "lucide-react";
+import {
+  CalendarDays,
+  ChevronLeft,
+  ChevronRight,
+  Lightbulb,
+  Loader2,
+  RefreshCw,
+  ShoppingCart,
+  Sparkles,
+} from "lucide-react";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { type ReactNode, useEffect, useState } from "react";
 import { toast } from "sonner";
 import { EmptyState } from "@/components/common/EmptyState";
 import { ErrorState } from "@/components/common/ErrorState";
 import { LoadingState } from "@/components/common/LoadingState";
 import { PageHeader } from "@/components/common/PageHeader";
 import { BudgetSlider } from "@/components/meals/BudgetSlider";
+import { MonthSchedule, monthOfWeek } from "@/components/meals/MonthSchedule";
 import { RecipeCard } from "@/components/meals/RecipeCard";
 import { RecipeSheet } from "@/components/meals/RecipeSheet";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { useBudgetCurve } from "@/lib/hooks/useBudgetCurve";
 import { usePlan } from "@/lib/hooks/usePlan";
 import {
@@ -23,6 +34,7 @@ import {
   useWeekPlan,
 } from "@/lib/hooks/usePlanner";
 import { useProfile } from "@/lib/hooks/useProfile";
+import { addDays, formatWeekRange, weekStartOf } from "@/lib/planner/dates";
 import { cn, fmtDate, fmtUsd, todayIso } from "@/lib/utils";
 import type { MealPlan, PlannerDay, PlannerMealType, Recipe, WeeklyMealPlan } from "@/types/contracts";
 
@@ -30,13 +42,53 @@ const MEAL_TYPES: PlannerMealType[] = ["breakfast", "lunch", "dinner"];
 const errorMessage = (err: unknown, fallback: string) => (err instanceof Error ? err.message : fallback);
 
 export default function PlanPage() {
-  const weekStart = mondayOf();
+  const today = todayIso();
+  const currentWeek = mondayOf(today);
+  const [weekStart, setWeekStart] = useState(currentWeek);
+  const [focusDate, setFocusDate] = useState(today);
+  const [month, setMonth] = useState(() => today.slice(0, 7));
+  const [monthOpen, setMonthOpen] = useState(false);
   const week = useWeekPlan(weekStart);
   const agentPlan = usePlan();
   const profile = useProfile();
   const generate = useGenerateWeek();
   const agentRegen = useRegenerateAgentPlan();
   const plan = week.data?.plan ?? null;
+  const isCurrentWeek = weekStart === currentWeek;
+
+  /** Opens the week that contains `date` with that day selected (from the calendar or the week arrows). */
+  const openDate = (date: string) => {
+    setWeekStart(weekStartOf(date));
+    setFocusDate(date);
+    setMonth(date.slice(0, 7));
+    setMonthOpen(false);
+  };
+  const openWeek = (monday: string) => {
+    setWeekStart(monday);
+    setFocusDate(monday === currentWeek ? today : monday);
+    setMonth(monthOfWeek(monday));
+  };
+
+  const calendar = (className?: string) => (
+    <MonthSchedule
+      month={month}
+      onMonthChange={setMonth}
+      weekStart={weekStart}
+      focusDate={focusDate}
+      today={today}
+      onPickDate={openDate}
+      className={className}
+    />
+  );
+  const weekSwitcher = (
+    <WeekSwitcher
+      weekStart={weekStart}
+      isCurrentWeek={isCurrentWeek}
+      onChange={openWeek}
+      onToday={() => openDate(today)}
+      onOpenMonth={() => setMonthOpen(true)}
+    />
+  );
 
   // One click refreshes both: the recipes (planner) and the agents' optimizer plan behind the grocery list,
   // weekly cost, budget tradeoff and "What would change". They run in parallel and settle independently.
@@ -44,11 +96,12 @@ export default function PlanPage() {
     generate.mutate(
       { weekStartDate: weekStart },
       {
-        onSuccess: () => toast.success("Fresh recipes for the whole week."),
+        onSuccess: () => toast.success(`Fresh recipes for ${formatWeekRange(weekStart)}.`),
         onError: (err) => toast.error(errorMessage(err, "Could not generate the week.")),
       },
     );
-    if (!agentRegen.isPending)
+    // The agents' optimizer plan (grocery list, budget) is about this week only; other weeks just get recipes.
+    if (isCurrentWeek && !agentRegen.isPending)
       agentRegen.mutate(undefined, {
         onSuccess: () => toast.success("Grocery list and budget updated."),
         onError: (err) => toast.error(errorMessage(err, "Could not update the grocery list and budget.")),
@@ -57,47 +110,71 @@ export default function PlanPage() {
 
   return (
     <div data-testid="plan-screen" className="space-y-6">
-      {week.isLoading && <PlanSkeleton />}
-      {week.error && <ErrorState error={week.error} onRetry={() => void week.refetch()} />}
-      {!week.isLoading && !week.error && !plan && (
-        <>
-          <PageHeader
-            title="Your week"
-            subtitle="Seven days of breakfasts, lunches and dinners, built around your rules."
-          />
-          {generate.isPending ? (
-            <GeneratingWeek />
-          ) : (
-            <EmptyState
-              title="No plan yet"
-              body="Chef writes 21 recipes that respect your allergies, restrictions and budget."
-              action={
-                <div className="flex flex-col items-center gap-2">
-                  <Button data-testid="plan-build" onClick={regenerate}>
-                    <Sparkles aria-hidden="true" />
-                    Generate my week
-                  </Button>
-                  <Link
-                    href="/onboarding"
-                    className="text-sm text-ink-muted underline-offset-4 hover:underline"
-                  >
-                    Answer a few questions first
-                  </Link>
-                </div>
-              }
+      <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_18rem] lg:items-start lg:gap-6">
+        <div className="min-w-0 space-y-6">
+          {week.isLoading && <PlanSkeleton />}
+          {week.error && <ErrorState error={week.error} onRetry={() => void week.refetch()} />}
+          {!week.isLoading && !week.error && !plan && (
+            <>
+              <PageHeader
+                title={isCurrentWeek ? "Your week" : "Plan a week"}
+                subtitle="Seven days of breakfasts, lunches and dinners, built around your rules."
+              />
+              {weekSwitcher}
+              {generate.isPending ? (
+                <GeneratingWeek />
+              ) : (
+                <EmptyState
+                  title={isCurrentWeek ? "No plan yet" : "No plan for this week yet"}
+                  body="Chef writes 21 recipes that respect your allergies, restrictions and budget."
+                  action={
+                    <div className="flex flex-col items-center gap-2">
+                      <Button data-testid="plan-build" onClick={regenerate}>
+                        <Sparkles aria-hidden="true" />
+                        Generate my week
+                      </Button>
+                      {isCurrentWeek && (
+                        <Link
+                          href="/onboarding"
+                          className="text-sm text-ink-muted underline-offset-4 hover:underline"
+                        >
+                          Answer a few questions first
+                        </Link>
+                      )}
+                    </div>
+                  }
+                />
+              )}
+            </>
+          )}
+          {plan && (
+            <WeekView
+              key={plan.weekStartDate}
+              plan={plan}
+              isCurrentWeek={isCurrentWeek}
+              focusDate={focusDate}
+              onFocusDate={setFocusDate}
+              weekSwitcher={weekSwitcher}
+              regenerating={generate.isPending}
+              onRegenerate={regenerate}
+              agentRunId={agentPlan.data?.runId}
             />
           )}
-        </>
-      )}
-      {plan && (
-        <WeekView
-          plan={plan}
-          regenerating={generate.isPending}
-          onRegenerate={regenerate}
-          agentRunId={agentPlan.data?.runId}
-        />
-      )}
-      {agentPlan.data && agentPlan.data.days.length > 0 ? (
+        </div>
+        {calendar("hidden lg:sticky lg:top-6 lg:block")}
+      </div>
+
+      <Sheet open={monthOpen} onOpenChange={setMonthOpen}>
+        <SheetContent side="bottom" className="gap-4 lg:hidden">
+          <SheetHeader>
+            <SheetTitle>Month schedule</SheetTitle>
+            <SheetDescription>Every week you generate is saved. Tap a day to open it.</SheetDescription>
+          </SheetHeader>
+          {calendar("shadow-none ring-0")}
+        </SheetContent>
+      </Sheet>
+
+      {!isCurrentWeek ? null : agentPlan.data && agentPlan.data.days.length > 0 ? (
         <BudgetSection
           plan={agentPlan.data}
           budget={profile.data?.profile.weeklyBudgetUsd}
@@ -139,29 +216,103 @@ function GeneratingWeek() {
   );
 }
 
+function WeekSwitcher({
+  weekStart,
+  isCurrentWeek,
+  onChange,
+  onToday,
+  onOpenMonth,
+}: {
+  weekStart: string;
+  isCurrentWeek: boolean;
+  onChange: (monday: string) => void;
+  onToday: () => void;
+  onOpenMonth: () => void;
+}) {
+  return (
+    <div className="flex items-center gap-1" data-testid="plan-week-switcher">
+      <Button
+        variant="ghost"
+        size="icon"
+        className="h-8 w-8"
+        data-testid="plan-week-prev"
+        aria-label="Previous week"
+        onClick={() => onChange(addDays(weekStart, -7))}
+      >
+        <ChevronLeft aria-hidden="true" />
+      </Button>
+      <p className="min-w-0 text-sm font-medium tabular-nums" aria-live="polite">
+        {formatWeekRange(weekStart)}
+      </p>
+      <Button
+        variant="ghost"
+        size="icon"
+        className="h-8 w-8"
+        data-testid="plan-week-next"
+        aria-label="Next week"
+        onClick={() => onChange(addDays(weekStart, 7))}
+      >
+        <ChevronRight aria-hidden="true" />
+      </Button>
+      {!isCurrentWeek && (
+        <Button variant="link" size="sm" className="px-1" onClick={onToday}>
+          This week
+        </Button>
+      )}
+      <Button
+        variant="outline"
+        size="sm"
+        className="ml-auto lg:hidden"
+        data-testid="plan-month-open"
+        onClick={onOpenMonth}
+      >
+        <CalendarDays aria-hidden="true" />
+        Month
+      </Button>
+    </div>
+  );
+}
+
 function WeekView({
   plan,
+  isCurrentWeek,
+  focusDate,
+  onFocusDate,
+  weekSwitcher,
   regenerating,
   onRegenerate,
   agentRunId,
 }: {
   plan: WeeklyMealPlan;
+  isCurrentWeek: boolean;
+  focusDate: string;
+  onFocusDate: (date: string) => void;
+  weekSwitcher: ReactNode;
   regenerating: boolean;
   onRegenerate: () => void;
   agentRunId?: string;
 }) {
   const today = todayIso();
-  const [selected, setSelected] = useState(() =>
+  const [selected, setSelectedIndex] = useState(() =>
     Math.max(
       0,
-      plan.days.findIndex((d) => d.date === today),
+      plan.days.findIndex((d) => d.date === focusDate),
     ),
   );
+  const setSelected = (i: number) => {
+    setSelectedIndex(i);
+    if (plan.days[i]) onFocusDate(plan.days[i].date);
+  };
+  // A tap on the month calendar inside this same week moves the day tab too.
+  useEffect(() => {
+    const i = plan.days.findIndex((d) => d.date === focusDate);
+    if (i >= 0) setSelectedIndex(i);
+  }, [focusDate, plan.days]);
   const [openRecipe, setOpenRecipe] = useState<Recipe | null>(null);
   const [swapping, setSwapping] = useState<PlannerMealType | null>(null);
   const swap = useReplaceRecipe();
   useEffect(() => {
-    if (selected >= plan.days.length) setSelected(0);
+    if (selected >= plan.days.length) setSelectedIndex(0);
   }, [plan.days.length, selected]);
   const day = plan.days[selected] ?? plan.days[0];
 
@@ -189,7 +340,7 @@ function WeekView({
   return (
     <>
       <PageHeader
-        title="Your week"
+        title={isCurrentWeek ? "Your week" : "Saved week"}
         subtitle={`Week of ${fmtDate(plan.weekStartDate, { month: "long", day: "numeric" })}. Tap a dish for the recipe, or swap it for another.`}
         actions={
           <>
@@ -207,7 +358,7 @@ function WeekView({
               )}
               {regenerating ? "Regenerating…" : "Regenerate week"}
             </Button>
-            {agentRunId && (
+            {agentRunId && isCurrentWeek && (
               <Button asChild variant="outline" size="sm">
                 <Link href={`/agents/${agentRunId}`}>
                   <Sparkles aria-hidden="true" />
@@ -224,6 +375,8 @@ function WeekView({
           </>
         }
       />
+
+      {weekSwitcher}
 
       <section className="space-y-4" aria-labelledby="pick-a-day" aria-busy={regenerating}>
         <h2 id="pick-a-day" className="sr-only">

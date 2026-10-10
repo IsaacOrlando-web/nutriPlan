@@ -8,8 +8,18 @@ export { newId, nowIso } from "./store";
 
 const globalRef = globalThis as unknown as { __nutriplanStore?: Store };
 
+/** True when a store cached before a hot reload lacks methods added to MemoryStore since (dev only). */
+function isStale(store: Store): boolean {
+  if (!(store instanceof Object) || store.constructor?.name !== MemoryStore.name) return false;
+  return Object.getOwnPropertyNames(MemoryStore.prototype).some(
+    (m) => typeof (store as unknown as Record<string, unknown>)[m] !== "function",
+  );
+}
+
 export function getStore(): Store {
-  if (globalRef.__nutriplanStore) return globalRef.__nutriplanStore;
+  const cached = globalRef.__nutriplanStore;
+  // A file-backed store reloads from disk, so rebuilding it after a hot reload keeps every saved record.
+  if (cached && !(isStale(cached) && process.env.MEMORY_STORE_FILE !== "none")) return cached;
   const file =
     process.env.MEMORY_STORE_FILE === "none"
       ? null

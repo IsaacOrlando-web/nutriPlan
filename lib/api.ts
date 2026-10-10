@@ -27,6 +27,7 @@
 //   POST /api/monitor/run             MonitorResult
 //   POST /api/plan/rate               { mealName, liked }
 //   GET  /api/meal-plans?weekStart=   WeekPlanResponse                   (weekly recipe planner)
+//   GET  /api/meal-plans/month?month= PlannerMonthResponse               (month calendar of saved weeks)
 //   POST /api/meal-plans/generate     GenerateWeekRequest -> GenerateWeekResponse
 //   POST /api/recipes/generate        ReplaceRecipeRequest -> ReplaceRecipeResponse (swap one recipe)
 //   PATCH /api/meal-plans/state       UpdateWeekStateRequest -> PlannerWeekState (grocery ticks)
@@ -60,6 +61,7 @@ import type {
   KrogerStatus,
   MealPlan,
   MonitorResult,
+  PlannerMonthResponse,
   PlannerWeekState,
   PhotoLogResult,
   ProfileBundle,
@@ -77,6 +79,8 @@ import type {
   WeekPlanResponse,
   WeeklyMealPlan,
 } from "@/types/contracts";
+import { localIsoDate, weekStartOf } from "@/lib/planner/dates";
+import { buildMonthSchedule } from "@/lib/planner/month";
 
 export interface BudgetCurveParams {
   min?: number;
@@ -198,8 +202,9 @@ const mocks = {
     import(`@/mocks/weekly-plan-${u}.json`).then((m) => m.default as WeeklyMealPlan),
 };
 
-// Mock weekly planner: one in-memory week per demo user so swaps and regenerations stick for the session.
-const mockWeeks = new Map<MockUser, WeeklyMealPlan>();
+// Mock weekly planner: one in-memory week per demo user and Monday, so every generated week sticks for the session.
+// Only the current week is seeded; other weeks stay empty until generated (the month calendar shows the difference).
+const mockWeeks = new Map<string, WeeklyMealPlan>();
 const mockWeekStates = new Map<string, PlannerWeekState>();
 const emptyWeekState = (): PlannerWeekState => ({
   completed: {},
@@ -213,17 +218,33 @@ function shiftIsoDate(iso: string, days: number): string {
   return d.toISOString().slice(0, 10);
 }
 
-async function mockWeek(u: MockUser, weekStart: string): Promise<WeeklyMealPlan> {
-  const current = mockWeeks.get(u);
-  if (current?.weekStartDate === weekStart) return current;
-  const base = structuredClone(current ?? (await mocks.weeklyPlan(u)));
+async function seedMockWeek(u: MockUser, weekStart: string): Promise<WeeklyMealPlan> {
+  const base = structuredClone(await mocks.weeklyPlan(u));
   const week: WeeklyMealPlan = {
     ...base,
+    id: `${u}-week-${weekStart}`,
     weekStartDate: weekStart,
     days: base.days.map((d, i) => ({ ...d, date: shiftIsoDate(weekStart, i) })),
   };
-  mockWeeks.set(u, week);
+  mockWeeks.set(`${u}:${weekStart}`, week);
   return week;
+}
+
+/** Saved mock week, or null; the current week is seeded on first read. */
+async function mockSavedWeek(u: MockUser, weekStart: string): Promise<WeeklyMealPlan | null> {
+  const saved = mockWeeks.get(`${u}:${weekStart}`);
+  if (saved) return saved;
+  return weekStart === weekStartOf(localIsoDate(new Date())) ? seedMockWeek(u, weekStart) : null;
+}
+
+async function mockWeek(u: MockUser, weekStart: string): Promise<WeeklyMealPlan> {
+  return (await mockSavedWeek(u, weekStart)) ?? seedMockWeek(u, weekStart);
+}
+
+async function mockMonth(u: MockUser, month: string): Promise<PlannerMonthResponse> {
+  await mockSavedWeek(u, weekStartOf(localIsoDate(new Date())));
+  const plans = [...mockWeeks.entries()].filter(([k]) => k.startsWith(`${u}:`)).map(([, p]) => p);
+  return buildMonthSchedule(month, plans);
 }
 
 const MOCK_MEAL_TYPES = ["breakfast", "lunch", "dinner"] as const;
@@ -240,7 +261,7 @@ async function mockRegenerateWeek(u: MockUser, weekStart: string): Promise<Weekl
       return { date: d.date, breakfast: from.breakfast, lunch: from.lunch, dinner: from.dinner };
     }),
   };
-  mockWeeks.set(u, next);
+  mockWeeks.set(`${u}:${weekStart}`, next);
   return next;
 }
 
@@ -264,7 +285,7 @@ async function mockReplaceRecipe(u: MockUser, req: ReplaceRecipeRequest): Promis
     ...week,
     days: week.days.map((d) => (d.date === req.date ? { ...d, [req.mealType]: recipe } : d)),
   };
-  mockWeeks.set(u, plan);
+  mockWeeks.set(`${u}:${req.weekStartDate}`, plan);
   return { recipe, plan };
 }
 
@@ -476,10 +497,13 @@ export const api = {
     week: (weekStart: string): Promise<WeekPlanResponse> =>
       USE_MOCKS
         ? mock(async (u) => ({
-            plan: await mockWeek(u, weekStart),
+            plan: await mockSavedWeek(u, weekStart),
             state: mockWeekStates.get(`${u}:${weekStart}`) ?? emptyWeekState(),
           }))
         : request(`/api/meal-plans?weekStart=${weekStart}`),
+    /** Dish titles of every saved day in a YYYY-MM month (the planner calendar). */
+    month: (month: string): Promise<PlannerMonthResponse> =>
+      USE_MOCKS ? mock((u) => mockMonth(u, month)) : request(`/api/meal-plans/month?month=${month}`),
     generateWeek: (body: GenerateWeekRequest): Promise<GenerateWeekResponse> =>
       USE_MOCKS
         ? mock(async (u) => ({ plan: await mockRegenerateWeek(u, body.weekStartDate) }))

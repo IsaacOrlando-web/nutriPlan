@@ -9,7 +9,14 @@ import type { PlannerWeekState, WeeklyMealPlan } from "@/types/contracts";
 
 const ALEX = DEMO_USER_IDS.alex;
 const WEEK = "2026-10-12";
-const plan = (id: string): WeeklyMealPlan => ({ id, userId: ALEX, weekStartDate: WEEK, language: "en", createdAt: "2026-10-10T00:00:00.000Z", days: [] });
+const plan = (id: string): WeeklyMealPlan => ({
+  id,
+  userId: ALEX,
+  weekStartDate: WEEK,
+  language: "en",
+  createdAt: "2026-10-10T00:00:00.000Z",
+  days: [],
+});
 const state: PlannerWeekState = {
   completed: { "2026-10-12:lunch": true },
   shopping: { checked: {}, quantityOverrides: {}, removed: [], customItems: [] },
@@ -27,6 +34,18 @@ describe("MemoryStore planner", () => {
     expect(await store.getPlannerWeek(ALEX, "2026-10-19")).toBeNull();
   });
 
+  it("lists saved week plans in a Monday range, ascending, skipping state-only weeks", async () => {
+    const store = new MemoryStore(null);
+    const at = (weekStartDate: string): WeeklyMealPlan => ({ ...plan(weekStartDate), weekStartDate });
+    await store.savePlannerWeekPlan(ALEX, at("2026-10-26"));
+    await store.savePlannerWeekPlan(ALEX, at("2026-10-05"));
+    await store.savePlannerWeekPlan(ALEX, at("2026-11-02"));
+    await store.savePlannerWeekState(ALEX, "2026-10-19", state);
+    const listed = await store.listPlannerWeekPlans(ALEX, "2026-09-28", "2026-10-26");
+    expect(listed.map((p) => p.weekStartDate)).toEqual(["2026-10-05", "2026-10-26"]);
+    expect(await store.listPlannerWeekPlans(DEMO_USER_IDS.maria, "2026-09-28", "2026-10-26")).toEqual([]);
+  });
+
   it("returns copies so callers cannot mutate stored data", async () => {
     const store = new MemoryStore(null);
     await store.savePlannerWeekPlan(ALEX, plan("p1"));
@@ -38,7 +57,16 @@ describe("MemoryStore planner", () => {
   it("stores settings and clears everything on reset", async () => {
     const store = new MemoryStore(null);
     const settings = {
-      preferences: { servings: 3, dietaryPreferences: [], excludedIngredients: [], preferredCuisines: [], maxPreparationMinutes: null, availableIngredients: [], kitchenEquipment: [], language: "en" as const },
+      preferences: {
+        servings: 3,
+        dietaryPreferences: [],
+        excludedIngredients: [],
+        preferredCuisines: [],
+        maxPreparationMinutes: null,
+        availableIngredients: [],
+        kitchenEquipment: [],
+        language: "en" as const,
+      },
       favorites: [],
       selectedWeek: WEEK,
     };

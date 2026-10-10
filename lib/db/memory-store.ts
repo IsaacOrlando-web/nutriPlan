@@ -410,6 +410,13 @@ export class MemoryStore implements Store {
     const rec = this.data.users[userId]?.plannerWeeks?.[weekStartDate];
     return rec ? structuredClone(rec) : null;
   }
+  async listPlannerWeekPlans(userId: string, fromWeek: string, toWeek: string) {
+    const weeks = this.data.users[userId]?.plannerWeeks ?? {};
+    return Object.keys(weeks)
+      .filter((w) => w >= fromWeek && w <= toWeek && weeks[w].plan)
+      .sort()
+      .map((w) => structuredClone(weeks[w].plan as WeeklyMealPlan));
+  }
   async savePlannerWeekPlan(userId: string, plan: WeeklyMealPlan) {
     const weeks = (this.bucket(userId).plannerWeeks ??= {});
     const prev = weeks[plan.weekStartDate];

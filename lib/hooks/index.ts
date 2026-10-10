@@ -4,6 +4,7 @@ export { useProfile, useSaveProfile } from "./useProfile";
 export { usePlan, useGeneratePlan, useRateMeal } from "./usePlan";
 export {
   useWeekPlan,
+  usePlannerMonth,
   useGenerateWeek,
   useReplaceRecipe,
   useRegenerateAgentPlan,

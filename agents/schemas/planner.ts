@@ -3,7 +3,7 @@
 // no ids: code adds ids, maps ingredients to foods and computes nutrition and cost with /math.
 // Request schemas validate every route body with bounded strings and arrays.
 import { z } from "zod";
-import { isIsoDate, isMonday } from "@/lib/planner/dates";
+import { isIsoDate, isIsoMonth, isMonday } from "@/lib/planner/dates";
 
 export const PLANNER_MEAL_TYPES = ["breakfast", "lunch", "dinner"] as const;
 export const INGREDIENT_CATEGORIES = [
@@ -149,6 +149,10 @@ export const UpdateWeekStateRequestSchema = z
   .strict();
 
 export const WeekQuerySchema = z.object({ weekStart: MondaySchema });
+
+export const MonthQuerySchema = z.object({
+  month: z.string().refine(isIsoMonth, "must be a month in YYYY-MM form"),
+});
 
 /** A full Recipe as stored and returned by the API (used to validate favorites sent back by the client). */
 export const StoredRecipeSchema = LlmRecipeSchema.extend({

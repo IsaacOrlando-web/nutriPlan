@@ -8,6 +8,8 @@ export const keys = {
   curve: ["plan", "curve"] as const,
   curvePlanAt: (budget: number) => ["plan", "curve", "at", budget] as const,
   plannerWeek: (weekStart: string) => ["planner", "week", weekStart] as const,
+  plannerMonth: (month: string) => ["planner", "month", month] as const,
+  plannerMonthRoot: ["planner", "month"] as const,
   agentRun: (runId: string) => ["agentRun", runId] as const,
   foodSearch: (q: string) => ["foods", "search", q] as const,
   logs: (date?: string) => ["logs", date ?? "all"] as const,

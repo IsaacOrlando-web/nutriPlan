@@ -2,6 +2,7 @@
 // Thin store helpers so routes stay small; allergies, restrictions and dislikes are read from the profile and are
 // never stored or edited here.
 import type {
+  PlannerMonthResponse,
   PlannerPreferences,
   PlannerSettings,
   PlannerSettingsResponse,
@@ -12,6 +13,7 @@ import type {
 } from "@/types/contracts";
 import type { Store } from "@/lib/db/store";
 import { emptyShoppingState } from "@/math/shopping";
+import { buildMonthSchedule, monthWeekRange } from "@/lib/planner/month";
 import { loadUserBundle } from "../tools/backend";
 import { defaultSettings } from "./index";
 
@@ -83,6 +85,17 @@ export async function getWeek(
 ): Promise<WeekPlanResponse> {
   const rec = await store.getPlannerWeek(userId, weekStartDate);
   return { plan: rec?.plan ?? null, state: rec?.state ?? emptyWeekState() };
+}
+
+/** Dish titles of every saved day in a YYYY-MM month, for the planner calendar. */
+export async function getMonthSchedule(
+  store: Store,
+  userId: string,
+  month: string,
+): Promise<PlannerMonthResponse> {
+  const { fromWeek, toWeek } = monthWeekRange(month);
+  const plans = await store.listPlannerWeekPlans(userId, fromWeek, toWeek);
+  return buildMonthSchedule(month, plans);
 }
 
 /** Merges completed flags and replaces the shopping state when given. */

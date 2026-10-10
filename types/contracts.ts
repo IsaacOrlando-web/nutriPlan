@@ -521,6 +521,24 @@ export interface WeekPlanResponse {
   state: PlannerWeekState;
 }
 
+/** One planned day in the month schedule: dish titles only, so the calendar stays light. */
+export interface PlannerMonthDay {
+  date: string; // YYYY-MM-DD
+  weekStartDate: string; // Monday of the saved week this day belongs to
+  breakfast: string;
+  lunch: string;
+  dinner: string;
+}
+
+/** GET /api/meal-plans/month?month=YYYY-MM */
+export interface PlannerMonthResponse {
+  month: string; // YYYY-MM
+  /** Mondays of saved weeks that overlap the month. */
+  plannedWeeks: string[];
+  /** Only days inside the month that have a saved plan, ascending. */
+  days: PlannerMonthDay[];
+}
+
 /** Optional per-request preference overrides; the server merges them with stored preferences and the profile. */
 export interface PlannerPreferenceOverrides {
   language?: Language;

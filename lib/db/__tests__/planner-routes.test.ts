@@ -7,6 +7,7 @@ import { DEMO_USER_IDS } from "@/lib/db/seed/demo-users";
 import type {
   GenerateWeekResponse,
   PlannerApiError,
+  PlannerMonthResponse,
   PlannerSettingsResponse,
   PlannerWeekState,
   Recipe,
@@ -125,6 +126,39 @@ async function getWeek(week = WEEK) {
   const { GET } = await import("@/app/api/meal-plans/route");
   return GET(req(`/api/meal-plans?weekStart=${week}`), ctx);
 }
+
+describe("GET /api/meal-plans/month", () => {
+  const month = async (m: string, cookie?: string | null) => {
+    const { GET } = await import("@/app/api/meal-plans/month/route");
+    return GET(req(`/api/meal-plans/month?month=${m}`, { cookie }), ctx);
+  };
+
+  it("requires a session and a YYYY-MM month", async () => {
+    expect((await month("2026-10", null)).status).toBe(401);
+    expect((await month("2026-13")).status).toBe(400);
+    expect((await month("2026-10-12")).status).toBe(400);
+  });
+
+  it("lists the dishes of every saved week that overlaps the month", async () => {
+    expect(await (await month("2026-10")).json()).toEqual({ month: "2026-10", plannedWeeks: [], days: [] });
+    await generate({ weekStartDate: WEEK });
+    await generate({ weekStartDate: "2026-10-26" });
+    const october = (await (await month("2026-10")).json()) as PlannerMonthResponse;
+    expect(october.plannedWeeks).toEqual([WEEK, "2026-10-26"]);
+    expect(october.days).toHaveLength(13); // Oct 12-18 and Oct 26-31
+    const saved = (await (await getWeek(WEEK)).json()) as WeekPlanResponse;
+    expect(october.days[0]).toEqual({
+      date: WEEK,
+      weekStartDate: WEEK,
+      breakfast: saved.plan!.days[0].breakfast.title,
+      lunch: saved.plan!.days[0].lunch.title,
+      dinner: saved.plan!.days[0].dinner.title,
+    });
+    const november = (await (await month("2026-11")).json()) as PlannerMonthResponse;
+    expect(november.plannedWeeks).toEqual(["2026-10-26"]);
+    expect(november.days.map((d) => d.date)).toEqual(["2026-11-01"]);
+  });
+});
 
 describe("GET /api/meal-plans", () => {
   it("requires a session and a Monday", async () => {
