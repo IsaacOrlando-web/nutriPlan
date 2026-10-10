@@ -29,6 +29,17 @@ export interface AgentLogRecord {
   ms: number;
 }
 
+export interface AppUser {
+  userId: string;
+  email: string;
+  name: string;
+  passwordHash: string;
+  emailVerified: boolean;
+  verificationTokenHash: string | null;
+  verificationExpiresAt: string | null;
+  createdAt: string;
+}
+
 export interface MealRating {
   mealName: string;
   liked: boolean;
@@ -42,6 +53,14 @@ export interface FoodSearchOptions {
 
 export interface Store {
   readonly kind: "memory" | "supabase";
+
+  // Auth identities
+  createUser(user: AppUser): Promise<void>;
+  getUserByEmail(email: string): Promise<AppUser | null>;
+  findUserByVerificationToken(tokenHash: string): Promise<AppUser | null>;
+  getUser(userId: string): Promise<AppUser | null>;
+  updateUser(user: AppUser): Promise<void>;
+  deleteUser(userId: string): Promise<void>;
 
   // Profile bundle
   getProfile(userId: string): Promise<UserProfile | null>;

@@ -15,7 +15,7 @@ import type {
   Reading,
   UserProfile,
 } from "@/types/contracts";
-import type { AgentLogRecord, FoodSearchOptions, MealRating, Store } from "./store";
+import type { AgentLogRecord, AppUser, FoodSearchOptions, MealRating, Store } from "./store";
 import { DEMO_PROFILES, demoReadings, type DemoUserKey } from "./seed/demo-users";
 
 type Row = Record<string, unknown>;
@@ -23,6 +23,61 @@ type Row = Record<string, unknown>;
 export class SupabaseStore implements Store {
   readonly kind = "supabase" as const;
   constructor(private readonly db: SupabaseClient) {}
+
+  async createUser(user: AppUser) {
+    const { error } = await this.db.from("app_users").insert({
+      user_id: user.userId,
+      email: user.email,
+      name: user.name,
+      password_hash: user.passwordHash,
+      email_verified: user.emailVerified,
+      verification_token_hash: user.verificationTokenHash,
+      verification_expires_at: user.verificationExpiresAt,
+      created_at: user.createdAt,
+      updated_at: new Date().toISOString(),
+    });
+    if (error) throw new Error(`[supabase] app_users insert: ${error.message}`);
+  }
+  async getUserByEmail(email: string) {
+    const { data, error } = await this.db.from("app_users").select("*").eq("email", email.trim().toLowerCase()).maybeSingle();
+    if (error) throw new Error(`[supabase] app_users lookup: ${error.message}`);
+    return data ? toAppUser(data as Row) : null;
+  }
+  async getUser(userId: string) {
+    const { data, error } = await this.db.from("app_users").select("*").eq("user_id", userId).maybeSingle();
+    if (error) throw new Error(`[supabase] app_users lookup: ${error.message}`);
+    return data ? toAppUser(data as Row) : null;
+  }
+  async findUserByVerificationToken(tokenHash: string) {
+    const { data, error } = await this.db
+      .from("app_users")
+      .select("*")
+      .eq("verification_token_hash", tokenHash)
+      .maybeSingle();
+    if (error) throw new Error(`[supabase] app_users verification lookup: ${error.message}`);
+    return data ? toAppUser(data as Row) : null;
+  }
+  async updateUser(user: AppUser) {
+    const { error } = await this.db
+      .from("app_users")
+      .update({
+        email: user.email,
+        name: user.name,
+        password_hash: user.passwordHash,
+        email_verified: user.emailVerified,
+        verification_token_hash: user.verificationTokenHash,
+        verification_expires_at: user.verificationExpiresAt,
+        updated_at: new Date().toISOString(),
+      })
+      .eq("user_id", user.userId);
+    if (error) throw new Error(`[supabase] app_users update: ${error.message}`);
+  }
+  async deleteUser(userId: string) {
+    for (const table of ["meal_plans", "food_logs", "readings", "meal_ratings", "agent_runs", "medical_constraints", "daily_targets", "tdee_posteriors", "app_users"]) {
+      const { error } = await this.db.from(table).delete().eq("user_id", userId);
+      if (error) throw new Error(`[supabase] delete ${table}: ${error.message}`);
+    }
+  }
 
   private async one<T>(table: string, match: Record<string, unknown>): Promise<T | null> {
     const { data, error } = await this.db.from(table).select("data").match(match).maybeSingle();
@@ -290,7 +345,7 @@ export class SupabaseStore implements Store {
     return (data ?? []).map((r: Row) => r.user_id as string);
   }
   async resetUser(userId: string) {
-    for (const table of ["meal_plans", "food_logs", "readings", "meal_ratings", "agent_runs", "medical_constraints", "daily_targets", "tdee_posteriors"]) {
+    for (const table of ["meal_plans", "food_logs", "readings", "meal_ratings", "agent_runs", "medical_constraints", "daily_targets", "tdee_posteriors", "app_users"]) {
       const { error } = await this.db.from(table).delete().eq("user_id", userId);
       if (error) throw new Error(`[supabase] reset ${table}: ${error.message}`);
     }
@@ -310,5 +365,18 @@ function toRun(r: Row): AgentRun {
     reason: (r.reason as string | null) ?? null,
     status: r.status as AgentRunStatus,
     createdAt: new Date(r.created_at as string).toISOString(),
+  };
+}
+
+function toAppUser(row: Row): AppUser {
+  return {
+    userId: row.user_id as string,
+    email: row.email as string,
+    name: row.name as string,
+    passwordHash: row.password_hash as string,
+    emailVerified: row.email_verified as boolean,
+    verificationTokenHash: (row.verification_token_hash as string | null) ?? null,
+    verificationExpiresAt: (row.verification_expires_at as string | null) ?? null,
+    createdAt: new Date(row.created_at as string).toISOString(),
   };
 }

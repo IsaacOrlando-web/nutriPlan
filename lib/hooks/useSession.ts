@@ -11,7 +11,7 @@ export function useSession() {
 export function useLogin() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: (identifier: string) => api.auth.login(identifier),
+    mutationFn: (input: { email: string; password: string }) => api.auth.login(input.email, input.password),
     onSuccess: () => qc.clear(),
   });
 }

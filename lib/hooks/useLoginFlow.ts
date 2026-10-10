@@ -15,11 +15,12 @@ export function useLoginFlow(redirectTo = "/") {
   const [pending, setPending] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const login = async (identifier: string) => {
+  const login = async (identifier: string, password = "demo1234") => {
+    const email = identifier.includes("@") ? identifier : `${identifier}@demo.nutriplan.app`;
     setPending(identifier);
     setError(null);
     try {
-      const session = await api.auth.login(identifier);
+      const session = await api.auth.login(email, password);
       if (USE_MOCKS) setCookie(SESSION_COOKIE, `mock-${session.userId ?? "alex"}`);
       qc.clear();
       router.push(redirectTo);

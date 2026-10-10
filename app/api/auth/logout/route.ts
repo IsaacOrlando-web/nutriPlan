@@ -1,4 +1,4 @@
-// POST /api/auth/logout -> 204. Clears the local cookie (and signs out of Supabase Auth). Owner: Backend.
+// POST /api/auth/logout -> 204. Clears the JWT cookie.
 import { NextResponse, type NextRequest } from "next/server";
 import { SESSION_COOKIE, authMode } from "@/lib/auth/session";
 import { handler } from "@/lib/api/http";
@@ -17,6 +17,7 @@ export const POST = handler(async (_req: NextRequest) => {
     }
   }
   const res = new NextResponse(null, { status: 204 });
-  res.cookies.set(SESSION_COOKIE, "", { path: "/", maxAge: 0 });
+  res.cookies.set(SESSION_COOKIE, "", { httpOnly: true, path: "/", maxAge: 0 });
+  res.cookies.set("np_uid", "", { path: "/", maxAge: 0 });
   return res;
 });

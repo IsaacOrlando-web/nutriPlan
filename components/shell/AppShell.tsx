@@ -1,6 +1,5 @@
 "use client";
 
-import { SignOutButton } from "@clerk/nextjs";
 import {
   Camera,
   Home,
@@ -19,8 +18,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useProfile } from "@/lib/hooks/useProfile";
 import { useLoginFlow } from "@/lib/hooks/useLoginFlow";
 import { cn } from "@/lib/utils";
-
-const clerkEnabled = Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY);
 
 interface NavItem {
   key: "dashboard" | "plan" | "log" | "trends" | "coach";
@@ -186,26 +183,14 @@ function ProfileLink({ name, loading, compact }: { name?: string; loading: boole
           >
             My profile
           </Link>
-          {clerkEnabled ? (
-            <SignOutButton redirectUrl="/welcome">
-              <button
-                type="button"
-                role="menuitem"
-                className="block w-full rounded-md px-3 py-2 text-left text-sm text-danger hover:bg-danger-soft"
-              >
-                Sign out
-              </button>
-            </SignOutButton>
-          ) : (
-            <button
-              type="button"
-              role="menuitem"
-              onClick={() => void logout()}
-              className="block w-full rounded-md px-3 py-2 text-left text-sm text-danger hover:bg-danger-soft"
-            >
-              Sign out
-            </button>
-          )}
+          <button
+            type="button"
+            role="menuitem"
+            onClick={() => void logout()}
+            className="block w-full rounded-md px-3 py-2 text-left text-sm text-danger hover:bg-danger-soft"
+          >
+            Sign out
+          </button>
         </div>
       )}
     </div>

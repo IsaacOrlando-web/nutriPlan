@@ -24,7 +24,7 @@ const COPY = {
     submit: "Log in",
     switchPrompt: "New here?",
     switchLink: "Create an account",
-    switchHref: "/signup",
+    switchHref: "/welcome",
   },
   signup: {
     title: "Create your account",

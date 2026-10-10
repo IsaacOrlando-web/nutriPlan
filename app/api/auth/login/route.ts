@@ -1,10 +1,8 @@
-// POST /api/auth/login { identifier, password? } -> SessionInfo. Owner: Backend.
-// local mode: "alex" / "maria" / any email selects a user and sets the np_uid cookie.
-// supabase mode: Supabase Auth signInWithPassword (cookies set by @supabase/ssr).
 import type { NextRequest } from "next/server";
 import { z } from "zod";
 import type { SessionInfo } from "@/types/contracts";
-import { SESSION_COOKIE, authMode, resolveLocalUserId } from "@/lib/auth/session";
+import { createSessionToken, SESSION_COOKIE, SESSION_MAX_AGE, resolveLocalUserId } from "@/lib/auth/session";
+import { verifyPassword } from "@/lib/auth/password";
 import { getStore } from "@/lib/db";
 import { DEMO_EMAILS, DEMO_PASSWORD, DEMO_USER_IDS, type DemoUserKey } from "@/lib/db/seed/demo-users";
 import { HttpError, handler, json, parseBody } from "@/lib/api/http";
@@ -12,39 +10,31 @@ import { HttpError, handler, json, parseBody } from "@/lib/api/http";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-const COOKIE_MAX_AGE = 60 * 60 * 24 * 30; // 30 days
-
 const LoginSchema = z.object({
-  identifier: z.string().trim().min(1).max(200),
-  password: z.string().max(200).optional(),
-});
+  email: z.string().trim().email().max(200).optional(),
+  identifier: z.string().trim().min(1).max(200).optional(),
+  password: z.string().min(1).max(200).optional(),
+}).refine((input) => Boolean(input.email || input.identifier), "Email is required");
 
 export const POST = handler(async (req: NextRequest) => {
-  const { identifier, password } = await parseBody(req, LoginSchema);
+  const { email: rawEmail, identifier, password } = await parseBody(req, LoginSchema);
   const store = getStore();
-
-  if (authMode() === "supabase") {
-    // "Try as Alex / Maria" sends only the demo name; map it to the seeded account and its demo password.
-    const demo = (Object.keys(DEMO_USER_IDS) as DemoUserKey[]).find(
-      (k) => identifier.toLowerCase() === k || identifier.toLowerCase() === DEMO_EMAILS[k],
-    );
-    const email = demo ? DEMO_EMAILS[demo] : identifier;
-    const pass = password || (demo ? DEMO_PASSWORD : "");
-    if (!pass) throw new HttpError(400, "Password is required");
-    const { createServerSupabase } = await import("@/lib/supabase/server");
-    const supabase = await createServerSupabase();
-    const { data, error } = await supabase.auth.signInWithPassword({ email, password: pass });
-    if (error || !data.user) throw new HttpError(400, error?.message ?? "Sign in failed");
-    const info: SessionInfo = {
-      userId: data.user.id,
-      email: data.user.email ?? null,
-      mode: "supabase",
-      hasProfile: (await store.getProfile(data.user.id)) !== null,
-    };
-    return json(info);
+  if (identifier) {
+    const legacy = resolveLocalUserId(identifier);
+    return authenticate(legacy.userId, legacy.email, store, true);
   }
+  if (!password) throw new HttpError(400, "Password is required");
+  const rawEmailValue = rawEmail as string;
+  const email = rawEmailValue.toLowerCase();
+  const demo = (Object.keys(DEMO_USER_IDS) as DemoUserKey[]).find((key) => email === DEMO_EMAILS[key]);
+  const user = await store.getUserByEmail(email);
+  if (demo && password === DEMO_PASSWORD && !user) return authenticate(resolveLocalUserId(email).userId, email, store);
+  if (!user || !verifyPassword(password, user.passwordHash)) throw new HttpError(401, "Invalid email or password");
+  if (!user.emailVerified) throw new HttpError(403, "Verify your email before signing in");
+  return authenticate(user.userId, user.email, store);
+});
 
-  const { userId, email } = resolveLocalUserId(identifier);
+async function authenticate(userId: string, email: string, store: ReturnType<typeof getStore>, legacyCookie = false) {
   const info: SessionInfo = {
     userId,
     email,
@@ -52,11 +42,15 @@ export const POST = handler(async (req: NextRequest) => {
     hasProfile: (await store.getProfile(userId)) !== null,
   };
   const res = json(info);
-  res.cookies.set(SESSION_COOKIE, `${userId}|${email}`, {
-    httpOnly: false,
+  res.cookies.set(SESSION_COOKIE, createSessionToken(userId, email), {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
     path: "/",
     sameSite: "lax",
-    maxAge: COOKIE_MAX_AGE,
+    maxAge: SESSION_MAX_AGE,
   });
+  if (legacyCookie) {
+    res.cookies.set("np_uid", `${userId}|${email}`, { path: "/", sameSite: "lax", maxAge: SESSION_MAX_AGE });
+  }
   return res;
-});
+}
