@@ -53,7 +53,7 @@ const NAV: NavItem[] = [
   { key: "coach", label: "Coach", href: "/coach", icon: MessageCircle, match: (p) => p.startsWith("/coach") },
 ];
 
-export function AppShell({ children }: { children: ReactNode }) {
+export function AppShell({ children, isFormCompleted = true }: { children: ReactNode; isFormCompleted?: boolean }) {
   const pathname = usePathname();
   const profile = useProfile();
   const name = profile.data?.profile.name;
@@ -72,7 +72,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           NutriPlan AI
         </Link>
         <nav className="flex flex-1 flex-col gap-1 px-3">
-          {NAV.map((item) => {
+          {isFormCompleted && NAV.map((item) => {
             const active = item.match(pathname);
             return (
               <Link
@@ -124,7 +124,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         aria-label="Main navigation"
         className="pb-safe fixed inset-x-0 bottom-0 z-30 grid grid-cols-5 border-t bg-surface-raised/95 backdrop-blur lg:hidden"
       >
-        {NAV.map((item) => {
+        {isFormCompleted && NAV.map((item) => {
           const active = item.match(pathname);
           return (
             <Link

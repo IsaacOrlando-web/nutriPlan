@@ -23,7 +23,7 @@ export function useLoginFlow(redirectTo = "/") {
       const session = await api.auth.login(email, password);
       if (USE_MOCKS) setCookie(SESSION_COOKIE, `mock-${session.userId ?? "alex"}`);
       qc.clear();
-      router.push(redirectTo);
+      router.push(session.hasProfile ? redirectTo : "/onboarding");
       router.refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : String(err));

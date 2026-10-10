@@ -2251,8 +2251,8 @@
     },
     {
       "constraint": "max_carbs_per_meal",
-      "value": 75.091,
-      "humanText": "A carb cap 5 g looser would allow ranchero eggs with black beans. Doctor keeps it at 45 g per meal"
+      "value": 88.223,
+      "humanText": "A carb cap 5 g looser would allow tilapia tacos with cabbage slaw. Doctor keeps it at 45 g per meal"
     }
   ],
   "bestEffort": false

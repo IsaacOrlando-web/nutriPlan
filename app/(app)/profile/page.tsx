@@ -1,11 +1,12 @@
 "use client";
 
-import { useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { LogOut, Pencil, RotateCcw, Users } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
+import OnboardingFlow from "@/components/onboarding/OnboardingFlow";
 import { ErrorState } from "@/components/common/ErrorState";
 import { LoadingState } from "@/components/common/LoadingState";
 import { PageHeader } from "@/components/common/PageHeader";
@@ -14,10 +15,11 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { api, getMockUser, setMockUser, USE_MOCKS } from "@/lib/api";
+import { api, getMockUser, isApiRequestError, setMockUser, USE_MOCKS } from "@/lib/api";
 import { useLoginFlow } from "@/lib/hooks/useLoginFlow";
 import { useProfile } from "@/lib/hooks/useProfile";
 import { cn, setCookie } from "@/lib/utils";
+import { keys } from "@/lib/hooks/keys";
 
 type DemoUser = "alex" | "maria";
 const DEMO_NAME: Record<DemoUser, string> = { alex: "Alex", maria: "Maria" };
@@ -26,8 +28,10 @@ export default function ProfilePage() {
   const router = useRouter();
   const qc = useQueryClient();
   const profile = useProfile();
+  const session = useQuery({ queryKey: keys.session, queryFn: api.auth.session });
   const { logout } = useLoginFlow();
   const [busy, setBusy] = useState<string | null>(null);
+  const missingProfile = isApiRequestError(profile.error, 404);
   const currentDemo: DemoUser = USE_MOCKS
     ? getMockUser()
     : profile.data?.profile.name.toLowerCase().includes("maria")
@@ -65,6 +69,9 @@ export default function ProfilePage() {
       setBusy(null);
     }
   };
+
+  if (missingProfile && !profile.data) return <OnboardingFlow forceBlank />;
+  const isDemoUser = session.data?.email?.endsWith("@demo.nutriplan.app") ?? false;
 
   return (
     <div data-testid="profile-screen" className="space-y-6">
@@ -124,7 +131,7 @@ export default function ProfilePage() {
         </Card>
       )}
 
-      <Card>
+      {isDemoUser && <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-base">
             <Users className="h-5 w-5 text-ink-muted" aria-hidden="true" />
@@ -166,7 +173,7 @@ export default function ProfilePage() {
             Reset demo data
           </Button>
         </CardContent>
-      </Card>
+      </Card>}
 
       <Button
         variant="ghost"

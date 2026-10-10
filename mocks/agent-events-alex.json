@@ -167,7 +167,7 @@
       "tool": "optimizePlan",
       "solve": 1,
       "poolSize": 33,
-      "solveMs": 4598,
+      "solveMs": 2974,
       "brief": {
         "count": 6,
         "feasible": true,
@@ -249,18 +249,18 @@
     "runId": "alex-run-0001",
     "agent": "orchestrator",
     "kind": "proposal",
-    "text": "Second solve used 3 of Chef's 6 new meals; protein deviation went from 23 g to 8 g. Solved in 6.1 s.",
+    "text": "Second solve used 4 of Chef's 6 new meals; protein deviation went from 23 g to 6 g. Solved in 6.1 s.",
     "at": "2026-10-09T15:00:16.800Z",
     "data": {
       "solve": 2,
-      "usedColumns": 3,
+      "usedColumns": 4,
       "offeredColumns": 6,
       "kept": true,
       "proteinDeviationBeforeG": 23,
-      "proteinDeviationAfterG": 8,
+      "proteinDeviationAfterG": 6,
       "weeklyCostBeforeUsd": 49.93,
-      "weeklyCostAfterUsd": 49.73,
-      "solveMs": 6103,
+      "weeklyCostAfterUsd": 49.9,
+      "solveMs": 6072,
       "solveSec": 6.1,
       "shadowPricesMs": 0
     }
@@ -293,14 +293,14 @@
     "runId": "alex-run-0001",
     "agent": "budget",
     "kind": "proposal",
-    "text": "Budget is the binding constraint: $49.73 of your $50 is working. Every extra dollar buys variety.",
+    "text": "Budget is the binding constraint: $49.90 of your $50 is working. Every extra dollar buys variety.",
     "at": "2026-10-09T15:00:21.000Z",
     "data": {
       "bindingConstraints": [
         "weekly_budget",
         "min_fiber"
       ],
-      "weeklyCostUsd": 49.73
+      "weeklyCostUsd": 49.9
     }
   },
   {
@@ -308,11 +308,11 @@
     "runId": "alex-run-0001",
     "agent": "budget",
     "kind": "proposal",
-    "text": "Grocery list ready: 24 items, $49.73 total.",
+    "text": "Grocery list ready: 24 items, $49.90 total.",
     "at": "2026-10-09T15:00:22.400Z",
     "data": {
       "items": 24,
-      "weeklyCostUsd": 49.73
+      "weeklyCostUsd": 49.9
     }
   },
   {
@@ -328,7 +328,7 @@
     "runId": "alex-run-0001",
     "agent": "orchestrator",
     "kind": "decision",
-    "text": "Plan v1 approved: 7 days, $49.73, zero rule violations.",
+    "text": "Plan v1 approved: 7 days, $49.90, zero rule violations.",
     "at": "2026-10-09T15:00:25.200Z",
     "data": {
       "planId": "alex-plan-0001",
@@ -336,10 +336,10 @@
       "bestEffort": false,
       "concededAny": false,
       "timingMs": {
-        "firstSolveMs": 4602,
+        "firstSolveMs": 2976,
         "chefColumnsMs": 1,
-        "elapsedBeforeSecondSolveMs": 4610,
-        "secondSolveMs": 6104,
+        "elapsedBeforeSecondSolveMs": 2980,
+        "secondSolveMs": 6074,
         "shadowPricesMs": 0,
         "shadowPricesDeferred": 1
       }

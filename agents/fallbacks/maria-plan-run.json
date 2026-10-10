@@ -234,7 +234,7 @@
         "tool": "optimizePlan",
         "solve": 1,
         "poolSize": 34,
-        "solveMs": 1571,
+        "solveMs": 966,
         "brief": {
           "count": 6,
           "feasible": true,
@@ -326,7 +326,7 @@
       "runId": "maria-run-0001",
       "agent": "orchestrator",
       "kind": "proposal",
-      "text": "Second solve used 3 of Chef's 6 new meals; weekly cost went from $72.76 to $69.04, inside the $70. Solved in 1.9 s.",
+      "text": "Second solve used 3 of Chef's 6 new meals; weekly cost went from $72.76 to $69.04, inside the $70. Solved in 1.6 s.",
       "at": "2026-10-09T15:00:19.600Z",
       "data": {
         "solve": 2,
@@ -337,9 +337,9 @@
         "proteinDeviationAfterG": 28,
         "weeklyCostBeforeUsd": 72.76,
         "weeklyCostAfterUsd": 69.04,
-        "solveMs": 1883,
-        "solveSec": 1.9,
-        "shadowPricesMs": 8199
+        "solveMs": 1568,
+        "solveSec": 1.6,
+        "shadowPricesMs": 12501
       }
     },
     {
@@ -413,11 +413,11 @@
         "bestEffort": false,
         "concededAny": false,
         "timingMs": {
-          "firstSolveMs": 1574,
+          "firstSolveMs": 968,
           "chefColumnsMs": 1,
-          "elapsedBeforeSecondSolveMs": 1579,
-          "secondSolveMs": 1887,
-          "shadowPricesMs": 8199
+          "elapsedBeforeSecondSolveMs": 971,
+          "secondSolveMs": 1569,
+          "shadowPricesMs": 12501
         }
       }
     }
@@ -2675,8 +2675,8 @@
       },
       {
         "constraint": "max_carbs_per_meal",
-        "value": 75.091,
-        "humanText": "A carb cap 5 g looser would allow ranchero eggs with black beans. Doctor keeps it at 45 g per meal"
+        "value": 88.223,
+        "humanText": "A carb cap 5 g looser would allow tilapia tacos with cabbage slaw. Doctor keeps it at 45 g per meal"
       }
     ],
     "bestEffort": false

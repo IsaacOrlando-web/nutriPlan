@@ -5,7 +5,7 @@
   "reason": "Onboarding plan",
   "runId": "alex-run-0001",
   "startDate": "2026-10-10",
-  "weeklyCostUsd": 49.73,
+  "weeklyCostUsd": 49.9,
   "days": [
     {
       "date": "2026-10-10",
@@ -688,8 +688,8 @@
             {
               "foodId": "black_beans",
               "name": "Black beans, cooked",
-              "servings": 1,
-              "grams": 86
+              "servings": 2,
+              "grams": 172
             },
             {
               "foodId": "fresh_salsa",
@@ -699,18 +699,18 @@
             }
           ],
           "totals": {
-            "calories": 382,
-            "proteinG": 23.8,
-            "carbsG": 46.9,
-            "fatG": 11.6,
-            "fiberG": 11.5,
-            "sugarG": 2.6,
+            "calories": 495,
+            "proteinG": 31.4,
+            "carbsG": 67.2,
+            "fatG": 12,
+            "fiberG": 19,
+            "sugarG": 2.9,
             "addedSugarG": 0,
-            "satFatG": 3.4,
-            "sodiumMg": 227,
-            "potassiumMg": 678,
-            "glycemicLoad": 13.3,
-            "costUsd": 1.4
+            "satFatG": 3.5,
+            "sodiumMg": 229,
+            "potassiumMg": 983,
+            "glycemicLoad": 17.2,
+            "costUsd": 1.66
           },
           "explanation": [
             {
@@ -719,77 +719,77 @@
             },
             {
               "agent": "doctor",
-              "text": "23.8 g protein and 11.5 g fiber keep you full while losing fat safely."
+              "text": "31.4 g protein and 19 g fiber keep you full while losing fat safely."
             },
             {
               "agent": "budget",
-              "text": "$1.40 for this meal, 31% of today's sodium."
+              "text": "$1.66 for this meal, 22% of today's sodium."
             }
           ]
         },
         {
-          "mealId": "2026-10-13_lunch_chicken_beans_rice",
+          "mealId": "2026-10-13_lunch_teriyaki_chicken_bowl__xp",
           "type": "lunch",
-          "name": "Chicken with pinto beans and rice",
-          "cuisine": "Latin",
+          "name": "Ginger soy chicken rice bowl, extra chicken thigh",
+          "cuisine": "Asian",
           "recipeSteps": [
-            "Season chicken with garlic and cumin, then bake",
-            "Warm beans and rice",
-            "Serve with a cabbage lime slaw"
+            "Sear chicken thigh pieces",
+            "Steam broccoli",
+            "Toss chicken with soy sauce and ginger, serve over rice"
           ],
-          "prepMinutes": 25,
+          "prepMinutes": 20,
           "items": [
             {
               "foodId": "chicken_thigh",
               "name": "Chicken thigh, skinless, roasted",
-              "servings": 2,
-              "grams": 200
-            },
-            {
-              "foodId": "pinto_beans",
-              "name": "Pinto beans, cooked",
-              "servings": 2,
-              "grams": 172
+              "servings": 3,
+              "grams": 300
             },
             {
               "foodId": "white_rice",
               "name": "White rice, cooked",
-              "servings": 1,
-              "grams": 93
+              "servings": 2,
+              "grams": 186
             },
             {
-              "foodId": "cabbage",
-              "name": "Cabbage, shredded",
+              "foodId": "broccoli",
+              "name": "Broccoli, cooked",
               "servings": 1,
-              "grams": 89
+              "grams": 91
+            },
+            {
+              "foodId": "soy_sauce",
+              "name": "Soy sauce, low sodium",
+              "servings": 1,
+              "grams": 9
             }
           ],
           "totals": {
-            "calories": 807,
-            "proteinG": 71.1,
-            "carbsG": 76.5,
-            "fatG": 23.4,
-            "fiberG": 18.1,
-            "sugarG": 3.5,
+            "calories": 905,
+            "proteinG": 85.9,
+            "carbsG": 59.5,
+            "fatG": 33.6,
+            "fiberG": 3.8,
+            "sugarG": 1.5,
             "addedSugarG": 0,
-            "satFatG": 6.3,
-            "sodiumMg": 209,
-            "potassiumMg": 1414,
-            "glycemicLoad": 30.7,
-            "costUsd": 2.32
+            "satFatG": 9.3,
+            "sodiumMg": 624,
+            "potassiumMg": 1070,
+            "glycemicLoad": 38.1,
+            "costUsd": 3.01
           },
           "explanation": [
             {
               "agent": "chef",
-              "text": "Chicken with pinto beans and rice: Latin flavors you said you like, 25 minutes of prep."
+              "text": "Ginger soy chicken rice bowl, extra chicken thigh: Asian flavors you said you like, 20 minutes of prep."
             },
             {
               "agent": "doctor",
-              "text": "71.1 g protein and 18.1 g fiber keep you full while losing fat safely."
+              "text": "85.9 g protein and 3.8 g fiber keep you full while losing fat safely."
             },
             {
               "agent": "budget",
-              "text": "$2.32 for this meal, 29% of today's sodium."
+              "text": "$3.01 for this meal, 59% of today's sodium."
             }
           ]
         },
@@ -808,8 +808,8 @@
             {
               "foodId": "chicken_thigh",
               "name": "Chicken thigh, skinless, roasted",
-              "servings": 3,
-              "grams": 300
+              "servings": 2,
+              "grams": 200
             },
             {
               "foodId": "brown_rice",
@@ -825,18 +825,18 @@
             }
           ],
           "totals": {
-            "calories": 912,
-            "proteinG": 85.7,
+            "calories": 703,
+            "proteinG": 59.7,
             "carbsG": 60.1,
-            "fatG": 35,
+            "fatG": 24.1,
             "fiberG": 7.1,
             "sugarG": 4.9,
             "addedSugarG": 0,
-            "satFatG": 9.7,
-            "sodiumMg": 294,
-            "potassiumMg": 1071,
+            "satFatG": 6.7,
+            "sodiumMg": 199,
+            "potassiumMg": 831,
             "glycemicLoad": 32.6,
-            "costUsd": 3.2
+            "costUsd": 2.4
           },
           "explanation": [
             {
@@ -845,28 +845,28 @@
             },
             {
               "agent": "doctor",
-              "text": "85.7 g protein and 7.1 g fiber keep you full while losing fat safely."
+              "text": "59.7 g protein and 7.1 g fiber keep you full while losing fat safely."
             },
             {
               "agent": "budget",
-              "text": "$3.20 for this meal, 40% of today's sodium."
+              "text": "$2.40 for this meal, 19% of today's sodium."
             }
           ]
         }
       ],
       "dayTotals": {
-        "calories": 2101,
-        "proteinG": 180.6,
-        "carbsG": 183.5,
-        "fatG": 70,
-        "fiberG": 36.7,
-        "sugarG": 11,
+        "calories": 2103,
+        "proteinG": 177,
+        "carbsG": 186.8,
+        "fatG": 69.7,
+        "fiberG": 29.9,
+        "sugarG": 9.3,
         "addedSugarG": 0,
-        "satFatG": 19.4,
-        "sodiumMg": 730,
-        "potassiumMg": 3163,
-        "glycemicLoad": 76.6,
-        "costUsd": 6.92
+        "satFatG": 19.5,
+        "sodiumMg": 1052,
+        "potassiumMg": 2884,
+        "glycemicLoad": 87.9,
+        "costUsd": 7.07
       }
     },
     {
@@ -933,7 +933,230 @@
           ]
         },
         {
-          "mealId": "2026-10-14_lunch_chicken_beans_rice__xp",
+          "mealId": "2026-10-14_lunch_chicken_beans_rice",
+          "type": "lunch",
+          "name": "Chicken with pinto beans and rice",
+          "cuisine": "Latin",
+          "recipeSteps": [
+            "Season chicken with garlic and cumin, then bake",
+            "Warm beans and rice",
+            "Serve with a cabbage lime slaw"
+          ],
+          "prepMinutes": 25,
+          "items": [
+            {
+              "foodId": "chicken_thigh",
+              "name": "Chicken thigh, skinless, roasted",
+              "servings": 2,
+              "grams": 200
+            },
+            {
+              "foodId": "pinto_beans",
+              "name": "Pinto beans, cooked",
+              "servings": 2,
+              "grams": 172
+            },
+            {
+              "foodId": "white_rice",
+              "name": "White rice, cooked",
+              "servings": 2,
+              "grams": 186
+            },
+            {
+              "foodId": "cabbage",
+              "name": "Cabbage, shredded",
+              "servings": 1,
+              "grams": 89
+            }
+          ],
+          "totals": {
+            "calories": 928,
+            "proteinG": 73.7,
+            "carbsG": 102.7,
+            "fatG": 23.7,
+            "fiberG": 18.4,
+            "sugarG": 3.6,
+            "addedSugarG": 0,
+            "satFatG": 6.4,
+            "sodiumMg": 210,
+            "potassiumMg": 1446,
+            "glycemicLoad": 49.6,
+            "costUsd": 2.39
+          },
+          "explanation": [
+            {
+              "agent": "chef",
+              "text": "Chicken with pinto beans and rice: Latin flavors you said you like, 25 minutes of prep."
+            },
+            {
+              "agent": "doctor",
+              "text": "73.7 g protein and 18.4 g fiber keep you full while losing fat safely."
+            },
+            {
+              "agent": "budget",
+              "text": "$2.39 for this meal, 25% of today's sodium."
+            }
+          ]
+        },
+        {
+          "mealId": "2026-10-14_dinner_one_pot_chicken_rice__xp",
+          "type": "dinner",
+          "name": "One-pot chicken and rice, extra chicken thigh",
+          "cuisine": "Latin",
+          "recipeSteps": [
+            "Brown chicken",
+            "Saute pepper and onion, add rice and broth",
+            "Nestle chicken and vegetables, simmer covered 20 minutes"
+          ],
+          "prepMinutes": 40,
+          "items": [
+            {
+              "foodId": "chicken_thigh",
+              "name": "Chicken thigh, skinless, roasted",
+              "servings": 3,
+              "grams": 300
+            },
+            {
+              "foodId": "white_rice",
+              "name": "White rice, cooked",
+              "servings": 2,
+              "grams": 186
+            },
+            {
+              "foodId": "mixed_veg",
+              "name": "Mixed vegetables, frozen, cooked",
+              "servings": 1,
+              "grams": 91
+            },
+            {
+              "foodId": "bell_pepper",
+              "name": "Bell pepper",
+              "servings": 1,
+              "grams": 119
+            },
+            {
+              "foodId": "onion",
+              "name": "Onion",
+              "servings": 1,
+              "grams": 55
+            }
+          ],
+          "totals": {
+            "calories": 982,
+            "proteinG": 87.5,
+            "carbsG": 76.5,
+            "fatG": 33.9,
+            "fiberG": 8.2,
+            "sugarG": 10.3,
+            "addedSugarG": 0,
+            "satFatG": 9.2,
+            "sodiumMg": 326,
+            "potassiumMg": 1270,
+            "glycemicLoad": 41.8,
+            "costUsd": 3.78
+          },
+          "explanation": [
+            {
+              "agent": "chef",
+              "text": "One-pot chicken and rice, extra chicken thigh: Latin flavors you said you like, 40 minutes of prep."
+            },
+            {
+              "agent": "doctor",
+              "text": "87.5 g protein and 8.2 g fiber keep you full while losing fat safely."
+            },
+            {
+              "agent": "budget",
+              "text": "$3.78 for this meal, 39% of today's sodium."
+            }
+          ]
+        }
+      ],
+      "dayTotals": {
+        "calories": 2141,
+        "proteinG": 178.6,
+        "carbsG": 194.6,
+        "fatG": 68.3,
+        "fiberG": 29.2,
+        "sugarG": 15.8,
+        "addedSugarG": 0.8,
+        "satFatG": 19,
+        "sodiumMg": 846,
+        "potassiumMg": 3103,
+        "glycemicLoad": 100.1,
+        "costUsd": 7.14
+      }
+    },
+    {
+      "date": "2026-10-15",
+      "meals": [
+        {
+          "mealId": "2026-10-15_breakfast_cactus_egg_scramble",
+          "type": "breakfast",
+          "name": "Cactus and egg scramble",
+          "cuisine": "Mexican",
+          "recipeSteps": [
+            "Saute cactus until tender",
+            "Add eggs and scramble together",
+            "Serve with warm tortillas and salsa"
+          ],
+          "prepMinutes": 12,
+          "items": [
+            {
+              "foodId": "eggs",
+              "name": "Eggs, whole",
+              "servings": 2,
+              "grams": 100
+            },
+            {
+              "foodId": "cactus",
+              "name": "Cactus paddles, cooked",
+              "servings": 1,
+              "grams": 75
+            },
+            {
+              "foodId": "corn_tortilla",
+              "name": "Corn tortilla",
+              "servings": 2,
+              "grams": 52
+            },
+            {
+              "foodId": "fresh_salsa",
+              "name": "Fresh tomato salsa",
+              "servings": 1,
+              "grams": 60
+            }
+          ],
+          "totals": {
+            "calories": 280,
+            "proteinG": 17.2,
+            "carbsG": 28.9,
+            "fatG": 11.2,
+            "fiberG": 5.5,
+            "sugarG": 3.3,
+            "addedSugarG": 0,
+            "satFatG": 3.3,
+            "sodiumMg": 240,
+            "potassiumMg": 519,
+            "glycemicLoad": 9.5,
+            "costUsd": 1.56
+          },
+          "explanation": [
+            {
+              "agent": "chef",
+              "text": "Cactus and egg scramble: Mexican flavors you said you like, 12 minutes of prep."
+            },
+            {
+              "agent": "doctor",
+              "text": "17.2 g protein and 5.5 g fiber keep you full while losing fat safely."
+            },
+            {
+              "agent": "budget",
+              "text": "$1.56 for this meal, 32% of today's sodium."
+            }
+          ]
+        },
+        {
+          "mealId": "2026-10-15_lunch_chicken_beans_rice__xp",
           "type": "lunch",
           "name": "Chicken with pinto beans and rice, extra chicken thigh",
           "cuisine": "Latin",
@@ -994,21 +1217,21 @@
             },
             {
               "agent": "budget",
-              "text": "$3.19 for this meal, 36% of today's sodium."
+              "text": "$3.19 for this meal, 41% of today's sodium."
             }
           ]
         },
         {
-          "mealId": "2026-10-14_dinner_one_pot_chicken_rice",
+          "mealId": "2026-10-15_dinner_chicken_rice_greenbeans",
           "type": "dinner",
-          "name": "One-pot chicken and rice",
-          "cuisine": "Latin",
+          "name": "Chicken thigh with rice and green beans",
+          "cuisine": "American",
           "recipeSteps": [
-            "Brown chicken",
-            "Saute pepper and onion, add rice and broth",
-            "Nestle chicken and vegetables, simmer covered 20 minutes"
+            "Roast chicken thighs",
+            "Steam green beans",
+            "Serve with rice"
           ],
-          "prepMinutes": 40,
+          "prepMinutes": 30,
           "items": [
             {
               "foodId": "chicken_thigh",
@@ -1017,80 +1240,68 @@
               "grams": 200
             },
             {
-              "foodId": "white_rice",
-              "name": "White rice, cooked",
+              "foodId": "brown_rice",
+              "name": "Brown rice, cooked",
               "servings": 2,
-              "grams": 186
+              "grams": 196
             },
             {
-              "foodId": "mixed_veg",
-              "name": "Mixed vegetables, frozen, cooked",
+              "foodId": "green_beans",
+              "name": "Green beans, cooked",
               "servings": 1,
-              "grams": 91
-            },
-            {
-              "foodId": "bell_pepper",
-              "name": "Bell pepper",
-              "servings": 1,
-              "grams": 119
-            },
-            {
-              "foodId": "onion",
-              "name": "Onion",
-              "servings": 1,
-              "grams": 55
+              "grams": 125
             }
           ],
           "totals": {
-            "calories": 773,
-            "proteinG": 61.5,
-            "carbsG": 76.5,
-            "fatG": 23,
-            "fiberG": 8.2,
-            "sugarG": 10.3,
+            "calories": 703,
+            "proteinG": 59.7,
+            "carbsG": 60.1,
+            "fatG": 24.1,
+            "fiberG": 7.1,
+            "sugarG": 4.9,
             "addedSugarG": 0,
-            "satFatG": 6.2,
-            "sodiumMg": 231,
-            "potassiumMg": 1030,
-            "glycemicLoad": 41.8,
-            "costUsd": 2.98
+            "satFatG": 6.7,
+            "sodiumMg": 199,
+            "potassiumMg": 831,
+            "glycemicLoad": 32.6,
+            "costUsd": 2.4
           },
           "explanation": [
             {
               "agent": "chef",
-              "text": "One-pot chicken and rice: Latin flavors you said you like, 40 minutes of prep."
+              "text": "Chicken thigh with rice and green beans: American flavors you said you like, 30 minutes of prep."
             },
             {
               "agent": "doctor",
-              "text": "61.5 g protein and 8.2 g fiber keep you full while losing fat safely."
+              "text": "59.7 g protein and 7.1 g fiber keep you full while losing fat safely."
             },
             {
               "agent": "budget",
-              "text": "$2.98 for this meal, 27% of today's sodium."
+              "text": "$2.40 for this meal, 27% of today's sodium."
             }
           ]
         }
       ],
       "dayTotals": {
-        "calories": 2141,
-        "proteinG": 178.6,
-        "carbsG": 194.6,
-        "fatG": 68.3,
-        "fiberG": 29.2,
-        "sugarG": 15.8,
-        "addedSugarG": 0.8,
-        "satFatG": 19,
-        "sodiumMg": 846,
-        "potassiumMg": 3103,
-        "glycemicLoad": 100.1,
-        "costUsd": 7.14
+        "calories": 2120,
+        "proteinG": 176.6,
+        "carbsG": 191.7,
+        "fatG": 69.9,
+        "fiberG": 31,
+        "sugarG": 11.8,
+        "addedSugarG": 0,
+        "satFatG": 19.4,
+        "sodiumMg": 744,
+        "potassiumMg": 3036,
+        "glycemicLoad": 91.7,
+        "costUsd": 7.15
       }
     },
     {
-      "date": "2026-10-15",
+      "date": "2026-10-16",
       "meals": [
         {
-          "mealId": "2026-10-15_breakfast_bean_breakfast_burrito",
+          "mealId": "2026-10-16_breakfast_bean_breakfast_burrito",
           "type": "breakfast",
           "name": "Egg and black bean breakfast burrito",
           "cuisine": "Mexican",
@@ -1162,7 +1373,7 @@
           ]
         },
         {
-          "mealId": "2026-10-15_lunch_teriyaki_chicken_bowl__xp",
+          "mealId": "2026-10-16_lunch_teriyaki_chicken_bowl__xp",
           "type": "lunch",
           "name": "Ginger soy chicken rice bowl, extra chicken thigh",
           "cuisine": "Asian",
@@ -1228,7 +1439,7 @@
           ]
         },
         {
-          "mealId": "2026-10-15_dinner_steak_rice_beans",
+          "mealId": "2026-10-16_dinner_steak_rice_beans",
           "type": "dinner",
           "name": "Grilled steak with rice and beans",
           "cuisine": "Mexican",
@@ -1308,228 +1519,9 @@
         "glycemicLoad": 97.5,
         "costUsd": 7.39
       }
-    },
-    {
-      "date": "2026-10-16",
-      "meals": [
-        {
-          "mealId": "2026-10-16_breakfast_avocado_egg_toast",
-          "type": "breakfast",
-          "name": "Avocado toast with eggs",
-          "cuisine": "American",
-          "recipeSteps": [
-            "Toast bread",
-            "Mash avocado on toast",
-            "Top with eggs cooked your way and tomato slices"
-          ],
-          "prepMinutes": 8,
-          "items": [
-            {
-              "foodId": "ww_bread",
-              "name": "Whole wheat bread",
-              "servings": 1,
-              "grams": 32
-            },
-            {
-              "foodId": "avocado",
-              "name": "Avocado",
-              "servings": 1,
-              "grams": 50
-            },
-            {
-              "foodId": "eggs",
-              "name": "Eggs, whole",
-              "servings": 2,
-              "grams": 100
-            }
-          ],
-          "totals": {
-            "calories": 304,
-            "proteinG": 17.6,
-            "carbsG": 18.6,
-            "fatG": 18,
-            "fiberG": 5.3,
-            "sugarG": 2.2,
-            "addedSugarG": 0.8,
-            "satFatG": 4.4,
-            "sodiumMg": 290,
-            "potassiumMg": 462,
-            "glycemicLoad": 8.8,
-            "costUsd": 1.18
-          },
-          "explanation": [
-            {
-              "agent": "chef",
-              "text": "Avocado toast with eggs: American flavors you said you like, 8 minutes of prep."
-            },
-            {
-              "agent": "doctor",
-              "text": "17.6 g protein and 5.3 g fiber keep you full while losing fat safely."
-            },
-            {
-              "agent": "budget",
-              "text": "$1.18 for this meal, 41% of today's sodium."
-            }
-          ]
-        },
-        {
-          "mealId": "2026-10-16_lunch_chicken_burrito_bowl",
-          "type": "lunch",
-          "name": "Chicken burrito bowl",
-          "cuisine": "Mexican",
-          "recipeSteps": [
-            "Season and grill chicken, then slice",
-            "Warm rice and beans",
-            "Build bowl with corn, salsa and avocado"
-          ],
-          "prepMinutes": 20,
-          "items": [
-            {
-              "foodId": "chicken_breast",
-              "name": "Chicken breast, roasted",
-              "servings": 2,
-              "grams": 200
-            },
-            {
-              "foodId": "brown_rice",
-              "name": "Brown rice, cooked",
-              "servings": 3,
-              "grams": 294
-            },
-            {
-              "foodId": "black_beans",
-              "name": "Black beans, cooked",
-              "servings": 2,
-              "grams": 172
-            },
-            {
-              "foodId": "fresh_salsa",
-              "name": "Fresh tomato salsa",
-              "servings": 1,
-              "grams": 60
-            }
-          ],
-          "totals": {
-            "calories": 931,
-            "proteinG": 85.8,
-            "carbsG": 118.6,
-            "fatG": 11.1,
-            "fiberG": 20.4,
-            "sugarG": 2.6,
-            "addedSugarG": 0,
-            "satFatG": 3.1,
-            "sodiumMg": 223,
-            "potassiumMg": 1513,
-            "glycemicLoad": 56,
-            "costUsd": 3.43
-          },
-          "explanation": [
-            {
-              "agent": "chef",
-              "text": "Chicken burrito bowl: Mexican flavors you said you like, 20 minutes of prep."
-            },
-            {
-              "agent": "doctor",
-              "text": "85.8 g protein and 20.4 g fiber keep you full while losing fat safely."
-            },
-            {
-              "agent": "budget",
-              "text": "$3.43 for this meal, 31% of today's sodium."
-            }
-          ]
-        },
-        {
-          "mealId": "2026-10-16_dinner_chicken_rice_greenbeans",
-          "type": "dinner",
-          "name": "Chicken thigh with rice and green beans",
-          "cuisine": "American",
-          "recipeSteps": [
-            "Roast chicken thighs",
-            "Steam green beans",
-            "Serve with rice"
-          ],
-          "prepMinutes": 30,
-          "items": [
-            {
-              "foodId": "chicken_thigh",
-              "name": "Chicken thigh, skinless, roasted",
-              "servings": 2,
-              "grams": 200
-            },
-            {
-              "foodId": "brown_rice",
-              "name": "Brown rice, cooked",
-              "servings": 2,
-              "grams": 196
-            },
-            {
-              "foodId": "green_beans",
-              "name": "Green beans, cooked",
-              "servings": 1,
-              "grams": 125
-            },
-            {
-              "foodId": "olive_oil",
-              "name": "Olive oil",
-              "servings": 1,
-              "grams": 14
-            }
-          ],
-          "totals": {
-            "calories": 827,
-            "proteinG": 59.7,
-            "carbsG": 60.1,
-            "fatG": 38.1,
-            "fiberG": 7.1,
-            "sugarG": 4.9,
-            "addedSugarG": 0,
-            "satFatG": 8.6,
-            "sodiumMg": 199,
-            "potassiumMg": 831,
-            "glycemicLoad": 32.6,
-            "costUsd": 2.52
-          },
-          "explanation": [
-            {
-              "agent": "chef",
-              "text": "Chicken thigh with rice and green beans: American flavors you said you like, 30 minutes of prep."
-            },
-            {
-              "agent": "doctor",
-              "text": "59.7 g protein and 7.1 g fiber keep you full while losing fat safely."
-            },
-            {
-              "agent": "budget",
-              "text": "$2.52 for this meal, 28% of today's sodium."
-            }
-          ]
-        }
-      ],
-      "dayTotals": {
-        "calories": 2062,
-        "proteinG": 163.1,
-        "carbsG": 197.3,
-        "fatG": 67.2,
-        "fiberG": 32.8,
-        "sugarG": 9.7,
-        "addedSugarG": 0.8,
-        "satFatG": 16.1,
-        "sodiumMg": 712,
-        "potassiumMg": 2806,
-        "glycemicLoad": 97.4,
-        "costUsd": 7.13
-      }
     }
   ],
   "groceryList": [
-    {
-      "foodId": "avocado",
-      "name": "Avocado",
-      "quantityG": 50,
-      "quantityLabel": "50 g (about 1 x 1/3 avocado)",
-      "costUsd": 0.45,
-      "storeSection": "produce"
-    },
     {
       "foodId": "bell_pepper",
       "name": "Bell pepper",
@@ -1541,9 +1533,9 @@
     {
       "foodId": "broccoli",
       "name": "Broccoli, cooked",
-      "quantityG": 91,
-      "quantityLabel": "91 g (about 1 x 1 cup)",
-      "costUsd": 0.41,
+      "quantityG": 182,
+      "quantityLabel": "182 g (about 2 x 1 cup)",
+      "costUsd": 0.82,
       "storeSection": "produce"
     },
     {
@@ -1552,6 +1544,14 @@
       "quantityG": 445,
       "quantityLabel": "445 g (about 5 x 1 cup shredded)",
       "costUsd": 0.8,
+      "storeSection": "produce"
+    },
+    {
+      "foodId": "cactus",
+      "name": "Cactus paddles, cooked",
+      "quantityG": 75,
+      "quantityLabel": "75 g (about 1 x 1/2 cup)",
+      "costUsd": 0.41,
       "storeSection": "produce"
     },
     {
@@ -1589,17 +1589,17 @@
     {
       "foodId": "chicken_breast",
       "name": "Chicken breast, roasted",
-      "quantityG": 500,
-      "quantityLabel": "500 g (about 5 x 1 palm-size piece (100 g))",
-      "costUsd": 5.5,
+      "quantityG": 300,
+      "quantityLabel": "300 g (about 3 x 1 palm-size piece (100 g))",
+      "costUsd": 3.3,
       "storeSection": "protein"
     },
     {
       "foodId": "chicken_thigh",
       "name": "Chicken thigh, skinless, roasted",
-      "quantityG": 2500,
-      "quantityLabel": "2500 g (about 25 x 1 thigh (100 g))",
-      "costUsd": 20,
+      "quantityG": 2800,
+      "quantityLabel": "2800 g (about 28 x 1 thigh (100 g))",
+      "costUsd": 22.4,
       "storeSection": "protein"
     },
     {
@@ -1629,33 +1629,33 @@
     {
       "foodId": "brown_rice",
       "name": "Brown rice, cooked",
-      "quantityG": 1274,
-      "quantityLabel": "1274 g (about 13 x 1/2 cup cooked)",
-      "costUsd": 1.53,
+      "quantityG": 980,
+      "quantityLabel": "980 g (about 10 x 1/2 cup cooked)",
+      "costUsd": 1.18,
       "storeSection": "grains"
     },
     {
       "foodId": "corn_tortilla",
       "name": "Corn tortilla",
-      "quantityG": 182,
-      "quantityLabel": "182 g (about 7 x 1 tortilla (6 in))",
-      "costUsd": 0.82,
+      "quantityG": 234,
+      "quantityLabel": "234 g (about 9 x 1 tortilla (6 in))",
+      "costUsd": 1.05,
       "storeSection": "grains"
     },
     {
       "foodId": "white_rice",
       "name": "White rice, cooked",
-      "quantityG": 1209,
-      "quantityLabel": "1209 g (about 13 x 1/2 cup cooked)",
-      "costUsd": 0.97,
+      "quantityG": 1488,
+      "quantityLabel": "1488 g (about 16 x 1/2 cup cooked)",
+      "costUsd": 1.19,
       "storeSection": "grains"
     },
     {
       "foodId": "ww_bread",
       "name": "Whole wheat bread",
-      "quantityG": 96,
-      "quantityLabel": "96 g (about 3 x 1 slice)",
-      "costUsd": 0.53,
+      "quantityG": 64,
+      "quantityLabel": "64 g (about 2 x 1 slice)",
+      "costUsd": 0.35,
       "storeSection": "grains"
     },
     {
@@ -1669,9 +1669,9 @@
     {
       "foodId": "black_beans",
       "name": "Black beans, cooked",
-      "quantityG": 774,
-      "quantityLabel": "774 g (about 9 x 1/2 cup cooked)",
-      "costUsd": 2.32,
+      "quantityG": 688,
+      "quantityLabel": "688 g (about 8 x 1/2 cup cooked)",
+      "costUsd": 2.06,
       "storeSection": "pantry"
     },
     {
@@ -1685,9 +1685,9 @@
     {
       "foodId": "olive_oil",
       "name": "Olive oil",
-      "quantityG": 28,
-      "quantityLabel": "28 g (about 2 x 1 tbsp)",
-      "costUsd": 0.25,
+      "quantityG": 14,
+      "quantityLabel": "14 g (about 1 x 1 tbsp)",
+      "costUsd": 0.13,
       "storeSection": "pantry"
     },
     {
@@ -1701,9 +1701,9 @@
     {
       "foodId": "soy_sauce",
       "name": "Soy sauce, low sodium",
-      "quantityG": 9,
-      "quantityLabel": "9 g (about 1 x 1/2 tbsp)",
-      "costUsd": 0.05,
+      "quantityG": 18,
+      "quantityLabel": "18 g (about 2 x 1/2 tbsp)",
+      "costUsd": 0.11,
       "storeSection": "pantry"
     },
     {

@@ -1,8 +1,9 @@
 "use client";
 
-import { MailCheck } from "lucide-react";
-import { useState } from "react";
+import { AlertCircle, MailCheck } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { api } from "@/lib/api";
+import { clearDraft } from "@/components/onboarding/onboardingSchema";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -25,10 +26,25 @@ export function AuthModal() {
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
+  const resetForm = () => {
+    setMode("login");
+    setName("");
+    setEmail("");
+    setPassword("");
+    setMessage(null);
+    setError(null);
+    setBusy(false);
+  };
+
   const reset = (nextMode: "login" | "signup") => {
     setMode(nextMode);
     setMessage(null);
     setError(null);
+  };
+
+  const handleOpenChange = (nextOpen: boolean) => {
+    setOpen(nextOpen);
+    if (!nextOpen) resetForm();
   };
 
   const submit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -39,15 +55,16 @@ export function AuthModal() {
     try {
       if (mode === "signup") {
         const response = await api.auth.signup({ name, email, password });
+        clearDraft();
         if (response.authenticated) {
-          window.location.assign("/");
+          window.location.assign("/profile");
           return;
         }
         setMessage(response.message);
         setPassword("");
       } else {
-        await api.auth.login(email, password);
-        window.location.assign("/");
+        const session = await api.auth.login(email, password);
+        window.location.assign(session.hasProfile ? "/" : "/onboarding");
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Authentication failed");
@@ -57,7 +74,7 @@ export function AuthModal() {
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <div className="flex items-center gap-3 text-sm">
         <DialogTrigger asChild>
           <button
@@ -125,6 +142,12 @@ function AuthForm({
   setPassword: (value: string) => void;
   switchMode: () => void;
 }) {
+  const errorRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (error) errorRef.current?.focus();
+  }, [error]);
+
   return (
     <>
       <DialogHeader>
@@ -169,7 +192,22 @@ function AuthForm({
           <Label htmlFor="auth-password">Password</Label>
           <Input id="auth-password" type="password" minLength={8} value={password} onChange={(event) => setPassword(event.target.value)} required />
         </div>
-        {error && <p role="alert" className="rounded-md border border-danger/20 bg-danger-soft px-3 py-2 text-sm text-danger">{error}</p>}
+        {error && (
+          <div
+            ref={errorRef}
+            role="alert"
+            aria-live="assertive"
+            tabIndex={-1}
+            data-testid="auth-error"
+            className="flex gap-2 rounded-md border border-danger/30 bg-danger-soft px-3 py-3 text-sm text-danger outline-none focus:ring-2 focus:ring-danger/30"
+          >
+            <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
+            <span>
+              <strong className="font-semibold">Could not create your account.</strong>
+              <span className="mt-1 block">{error}</span>
+            </span>
+          </div>
+        )}
         <Button type="submit" className="w-full" disabled={busy}>
           {busy ? "Please wait..." : mode === "login" ? "Sign in" : "Sign up"}
         </Button>

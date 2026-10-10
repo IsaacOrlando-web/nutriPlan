@@ -79,6 +79,12 @@ export class ApiRequestError extends Error {
   }
 }
 
+export function isApiRequestError(error: unknown, status?: number): error is ApiRequestError {
+  if (!error || typeof error !== "object" || !("status" in error)) return false;
+  const errorStatus = (error as { status?: unknown }).status;
+  return typeof errorStatus === "number" && (status === undefined || errorStatus === status);
+}
+
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
   const res = await fetch(path, {
     ...init,

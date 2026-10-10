@@ -132,6 +132,28 @@ export function onboardingDefaults(bundle?: ProfileBundle | null): OnboardingVal
   };
 }
 
+export function blankOnboardingDefaults(): Partial<OnboardingValues> {
+  return {
+    name: "",
+    language: "en",
+    sex: undefined,
+    age: undefined,
+    heightCm: undefined,
+    weightKg: undefined,
+    activityLevel: undefined,
+    goal: undefined,
+    goalRateKgPerWeek: undefined,
+    conditions: [],
+    medications: [],
+    allergies: [],
+    restrictions: [],
+    likes: [],
+    dislikes: [],
+    weeklyBudgetUsd: undefined,
+    mealsPerDay: undefined,
+  };
+}
+
 export function toProfileInput(values: OnboardingValues): Omit<UserProfile, "userId"> {
   return {
     ...values,
