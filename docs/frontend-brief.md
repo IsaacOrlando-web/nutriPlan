@@ -4,7 +4,7 @@ Read `/app/CLAUDE.md`, the `nutriplan-ui` skill and spec section 11 before start
 
 ## What you own
 
-`/app/(app)`, `/app/(auth)`, `/app/layout.tsx`, `/app/globals.css`, `/components`, `/lib/api.ts`, `/lib/hooks`, `/mocks`, `/i18n`, `/public`, `tailwind.config.ts`. The welcome page lives at `/app/(auth)/welcome`.
+`/app/(app)`, `/app/(auth)`, `/app/layout.tsx`, `/app/globals.css`, `/components`, `/lib/api.ts`, `/lib/hooks`, `/mocks`, `/public`, `tailwind.config.ts`. The welcome page lives at `/app/(auth)/welcome`.
 
 ## What exists already
 
@@ -15,23 +15,22 @@ Read `/app/CLAUDE.md`, the `nutriplan-ui` skill and spec section 11 before start
 | `tailwind.config.ts`, `components.json` | Real. Tokens, agent colors, animations, shadcn new-york style, slate base. `app/globals.css` with the shadcn CSS variables is yours to create.                                                                                                 |
 | `/types/contracts.ts`                   | Locked. Every prop type comes from here.                                                                                                                                                                                                       |
 | `/app/api/*`                            | Being built by Backend and Agents. Until they land, run on mocks.                                                                                                                                                                              |
-| `/i18n`, `/components`, screens         | Not started. Yours. `next.config.mjs` expects `./i18n/request.ts` (next-intl plugin).                                                                                                                                                          |
+| `/components`, screens                  | Not started. Yours.                                                                                                                                                                                                                            |
 
 ## Day 1 tasks (in order)
 
-1. `app/layout.tsx` with Inter (`--font-inter`), next-intl provider, TanStack Query provider, Toaster (sonner), `globals.css` with shadcn variables mapped to the tokens.
-2. `i18n/request.ts`, `i18n/en.json`, `i18n/es.json` with namespaces per screen. Locale from cookie `NEXT_LOCALE` (default `en`); `lang-switch` sets it.
-3. shadcn primitives in `/components/ui` (button, card, dialog, select, slider, tabs, progress, skeleton, input, label, checkbox, avatar, separator) using the installed Radix packages. No new dependencies.
-4. Shell: phone bottom tabs and laptop left rail with `nav-*` test ids; `/welcome` with `cta-start` and `cta-maria` that call `api.auth.login("alex" | "maria")` and go to `/dashboard`.
-5. Screens on mocks in demo order: welcome, onboarding (+ "Your plan rules" `rules-screen`), Agent Room, dashboard, plan (+ why sheet, budget slider), grocery, photo log, reading, trends, coach, profile.
-6. Reusable components from the skill list; `Disclaimer` on health screens.
-7. Four states on every screen (`/states`), both languages (`/translate`), screenshots at 390 and 1440 (`/screen`).
+1. `app/layout.tsx` with Inter (`--font-inter`), TanStack Query provider, Toaster (sonner), `globals.css` with shadcn variables mapped to the tokens.
+2. shadcn primitives in `/components/ui` (button, card, dialog, select, slider, tabs, progress, skeleton, input, label, checkbox, avatar, separator) using the installed Radix packages. No new dependencies.
+3. Shell: phone bottom tabs and laptop left rail with `nav-*` test ids; `/welcome` with `cta-start` and `cta-maria` that call `api.auth.login("alex" | "maria")` and go to `/` (the dashboard).
+4. Screens on mocks in demo order: welcome, onboarding (+ "Your plan rules" `rules-screen`), Agent Room, dashboard, plan (+ why sheet, budget slider), grocery, photo log, reading, trends, coach, profile.
+5. Reusable components from the skill list; `Disclaimer` on health screens.
+6. Four states on every screen (`/states`), screenshots at 390 and 1440 (`/screen`).
 
 ## Definition of done
 
 - Every screen renders on `NEXT_PUBLIC_USE_MOCKS=true` and on the memory backend with no code change.
 - All test ids in `/app/CLAUDE.md` exist and `NEXT_PUBLIC_USE_MOCKS=true npm run test:e2e` passes for both projects.
-- No hex colors, no string literals in JSX, no `fetch` outside `/lib/api.ts`.
+- No hex colors, no `fetch` outside `/lib/api.ts`. English only UI (D-009).
 - `npm run typecheck && npm run lint` clean.
 - Agent Room looks alive: bubbles stream in, objection shakes, concession pulses, `plan-ready` appears after the decision.
 

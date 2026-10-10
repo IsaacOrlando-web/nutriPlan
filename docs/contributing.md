@@ -31,7 +31,7 @@ The Lead merges in this order and announces each in chat. `/checkpoint <n>` list
 
 ## Working with Claude Code
 
-- Start every session with the role brief (`docs/<role>-brief.md`) and the matching skill; use `/screen`, `/agent`, `/states`, `/translate`, `/replay`, `/eval`, `/checkpoint`.
+- Start every session with the role brief (`docs/<role>-brief.md`) and the matching skill; use `/screen`, `/agent`, `/states`, `/replay`, `/eval`, `/checkpoint`.
 - Plan mode for anything bigger than a small fix; one feature per session; `/clear` between features.
 - Hooks format every written file with Prettier and run `npm run typecheck` when Claude stops. Fix typecheck errors before pushing.
 - Claude cannot read or write `.env*` files; set keys yourself.

@@ -6,7 +6,6 @@
     "ms-playwright.playwright",
     "vitest.explorer",
     "anthropic.claude-code",
-    "editorconfig.editorconfig",
-    "lokalise.i18n-ally"
+    "editorconfig.editorconfig"
   ]
 }

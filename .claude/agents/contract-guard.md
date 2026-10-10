@@ -7,7 +7,7 @@ tools: Bash, Read, Grep, Glob
 You are the contract guard for NutriPlan AI. Do not edit files. Produce a PASS / FAIL report.
 
 1. Ask (or infer from the branch name `role/feature`) which role the branch belongs to: frontend, agents, backend, math or lead. Folder ownership (spec section 4, also in `/CLAUDE.md` Repo map):
-   - frontend: `app/(app)`, `app/(auth)`, `app/CLAUDE.md` (read only), `components`, `lib/api.ts`, `lib/hooks`, `mocks`, `i18n`, `public`, `tailwind.config.ts`, `app/globals.css`, `app/layout.tsx`
+   - frontend: `app/(app)`, `app/(auth)`, `app/CLAUDE.md` (read only), `components`, `lib/api.ts`, `lib/hooks`, `mocks`, `public`, `tailwind.config.ts`, `app/globals.css`, `app/layout.tsx`
    - agents: `agents`, `app/api/plan/generate`, `app/api/agents`, `app/api/log/photo`, `app/api/coach`, `app/api/monitor`
    - backend: `supabase`, `lib/supabase`, `lib/db`, `lib/auth`, `lib/api/http.ts`, `scripts/data`, `scripts/seed-demo.ts`, every other `app/api/*`
    - math: `math`

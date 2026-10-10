@@ -40,7 +40,7 @@ screens -> lib/hooks -> lib/api.ts -> /app/api/* -> lib/db Store -> memory (.dat
 
 | Layer                      | Folder                                                   | Owner                                                                     | Notes                                                                   |
 | -------------------------- | -------------------------------------------------------- | ------------------------------------------------------------------------- | ----------------------------------------------------------------------- |
-| Screens, components, hooks | `/app/(app)`, `/app/(auth)`, `/components`, `/lib/hooks` | Frontend                                                                  | Four states, next-intl, tokens only                                     |
+| Screens, components, hooks | `/app/(app)`, `/app/(auth)`, `/components`, `/lib/hooks` | Frontend                                                                  | Four states, tokens only                                                |
 | Data gateway               | `/lib/api.ts`                                            | Frontend                                                                  | Mock switch, SSE subscribe, 600 ms fake delay                           |
 | Route handlers             | `/app/api/*`                                             | Backend (most), Agents (plan/generate, agents, log/photo, coach, monitor) | `handler`, Zod validation, `{ error }` bodies                           |
 | Session                    | `/lib/auth/session.ts`                                   | Backend                                                                   | `AUTH_MODE=local` cookie or Supabase Auth                               |

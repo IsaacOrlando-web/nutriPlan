@@ -11,8 +11,6 @@
     ["cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"],
     ["cn\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)"]
   ],
-  "i18n-ally.localesPaths": ["i18n"],
-  "i18n-ally.keystyle": "nested",
   "files.exclude": { "**/.next": true, "**/tsconfig.tsbuildinfo": true },
   "search.exclude": {
     "**/node_modules": true,

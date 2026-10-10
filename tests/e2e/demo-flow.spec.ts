@@ -130,7 +130,7 @@ test.describe("NutriPlan demo flow", () => {
           await type.selectOption("weight");
         } else {
           await type.click();
-          await clickIfVisible(page.getByRole("option", { name: /weight|peso/i }));
+          await clickIfVisible(page.getByRole("option", { name: /weight/i }));
         }
       }
     }
@@ -154,43 +154,21 @@ test.describe("NutriPlan demo flow", () => {
     const glucoseTab = page
       .getByTestId("trend-tab-glucose")
       .or(page.getByTestId("trend-tab-glucose_fasting"))
-      .or(page.getByRole("tab", { name: /glucose|glucosa/i }));
+      .or(page.getByRole("tab", { name: /glucose/i }));
     await clickIfVisible(glucoseTab);
     await expect(page.getByTestId("trend-chart").first()).toBeVisible({ timeout: NAV_TIMEOUT });
-    await expect(page.getByTestId("trend-alert").first()).toContainText(
-      /rising|subiendo|al alza|en aumento/i,
-      {
-        timeout: NAV_TIMEOUT,
-      },
-    );
+    await expect(page.getByTestId("trend-alert").first()).toContainText(/rising/i, { timeout: NAV_TIMEOUT });
   });
 
-  test("Spanish: language switch translates the dashboard", async ({ page }) => {
+  test("Profile: demo user switch to Maria changes the profile", async ({ page }) => {
     await loginAs(page, "alex");
     await page.goto("/profile");
     await expect(page.getByTestId("profile-screen")).toBeVisible({ timeout: NAV_TIMEOUT });
-
-    // lang-switch is a button group with lang-en / lang-es; keep fallbacks for a select or a toggle.
-    const sw = page.getByTestId("lang-switch");
+    const sw = page.getByTestId("demo-user-switch");
     await expect(sw).toBeVisible();
-    if (!(await clickIfVisible(page.getByTestId("lang-es"), 2_000))) {
-      const tag = await sw.evaluate((el) => el.tagName.toLowerCase());
-      if (tag === "select") {
-        await sw.selectOption("es");
-      } else {
-        await sw.click();
-        await clickIfVisible(page.getByRole("option", { name: /espa[nñ]ol|^es$/i }), 1_500);
-        await clickIfVisible(page.getByRole("menuitem", { name: /espa[nñ]ol|^es$/i }), 1_500);
-      }
+    if (!(await clickIfVisible(page.getByTestId("demo-user-maria"), 2_000))) {
+      await clickIfVisible(sw.getByRole("button", { name: /maria/i }), 2_000);
     }
-
-    await page.goto(DASHBOARD);
-    await expect(page.getByTestId("dashboard")).toBeVisible({ timeout: NAV_TIMEOUT });
-    await expect(page.getByTestId("dashboard")).toContainText(
-      /Hoy|Panel|Calor[ií]as|Comida|Restante|Objetivo|Hola/i,
-      {
-        timeout: NAV_TIMEOUT,
-      },
-    );
+    await expect(page.getByTestId("profile-screen")).toContainText(/maria/i, { timeout: NAV_TIMEOUT });
   });
 });

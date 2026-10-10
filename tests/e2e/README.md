@@ -18,8 +18,8 @@ Useful flags: `-- --project=laptop` or `--project=phone`, `-- --headed`, `-- --u
 2. Agent Room: budget slider keyboard change -> `/agents/<runId>` -> objection and concession events -> plan ready.
 3. Reading: weight 89.2 -> Monitor result.
 4. Trends: chart and alert visible on the weight tab.
-5. Maria: glucose tab (`trend-tab-glucose`) shows "rising" (en) or "subiendo" (es).
-6. Spanish: `lang-es` inside `lang-switch` changes dashboard text.
+5. Maria: glucose tab (`trend-tab-glucose`) shows "rising".
+6. Profile: `demo-user-maria` inside `demo-user-switch` switches the demo user.
 
 ## Assumptions the Frontend must keep (matches the current implementation)
 
@@ -27,7 +27,7 @@ Useful flags: `-- --project=laptop` or `--project=phone`, `-- --headed`, `-- --u
 - `budget-slider` is the Radix slider root (thumb has `role="slider"`); a keyboard step commits (debounced 500 ms) and navigates to `/agents/<runId>`.
 - `reading-type` is a native `<select>` with `ReadingType` values.
 - Trend tabs are `trend-tab-weight`, `trend-tab-glucose`, `trend-tab-bp`; `trend-alert` contains the alert word.
-- `lang-switch` is a group containing `lang-en` and `lang-es` buttons; `demo-user-switch` contains `demo-user-alex` and `demo-user-maria`.
+- `demo-user-switch` contains `demo-user-alex` and `demo-user-maria`.
 - Navigation ids `nav-dashboard`, `nav-plan`, `nav-log`, `nav-trends`, `nav-coach`.
 
 Add new tests with `getByTestId`, generous timeouts and `>=` assertions where counts may vary.

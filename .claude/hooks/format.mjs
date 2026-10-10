@@ -6,7 +6,14 @@ import { existsSync } from "node:fs";
 import path from "node:path";
 
 const FORMATTABLE = /\.(ts|tsx|js|jsx|mjs|cjs|json|css|md|mdx|yml|yaml)$/i;
-const SKIP = [/(^|[\\/])\.env/i, /(^|[\\/])node_modules[\\/]/, /(^|[\\/])\.next[\\/]/, /(^|[\\/])mocks[\\/]/, /(^|[\\/])agents[\\/]fallbacks[\\/]/, /package-lock\.json$/];
+const SKIP = [
+  /(^|[\\/])\.env/i,
+  /(^|[\\/])node_modules[\\/]/,
+  /(^|[\\/])\.next[\\/]/,
+  /(^|[\\/])mocks[\\/]/,
+  /(^|[\\/])agents[\\/]fallbacks[\\/]/,
+  /package-lock\.json$/,
+];
 
 let raw = "";
 process.stdin.setEncoding("utf8");

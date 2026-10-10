@@ -17,6 +17,6 @@ Checks:
 7. Disclaimer rendered on Plan, Dashboard, Trends, Log and Coach screens; Coach prompt refuses medication advice and diagnosis.
 8. LLM numbers: agent prompts and the coach only quote numbers from tool output; `AgentEvent.text` numbers appear in math output (the evals check this; confirm the eval exists).
 9. Privacy: no health data in logs (`console.log` of profiles, readings, logs) outside dev only paths; `/lib/api/http.ts` handler never returns stack traces; `.env*` files ignored by git; no secrets in `/mocks` or `/agents/fallbacks`.
-10. Language: Spanish alerts and reasons exist where English ones do (`i18n/es.json`, agent events in `es`).
+10. Language: all alerts, reasons and agent events are English (D-009), plain and free of jargon.
 
 End with PASS or FAIL, a list of blocking issues (must fix before demo) and non blocking ones.

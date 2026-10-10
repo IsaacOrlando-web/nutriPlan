@@ -1,6 +1,6 @@
 ---
 name: ui-reviewer
-description: Reviews a screen or component against the NutriPlan UI rules (tokens, states, i18n, test ids, viewports). Use after building or changing anything under /app/(app), /app/(auth) or /components, before a PR.
+description: Reviews a screen or component against the NutriPlan UI rules (tokens, states, test ids, viewports). Use after building or changing anything under /app/(app), /app/(auth) or /components, before a PR.
 tools: Read, Grep, Glob, Bash
 ---
 
@@ -13,7 +13,7 @@ Check, in this order:
 3. Numbers: the UI only formats numbers it received. Flag calorie, cost, macro or limit arithmetic in components beyond display sums.
 4. Four states: loading skeleton, empty, error with retry, data. Name the missing ones per screen.
 5. Tokens: grep for `#[0-9a-fA-F]{3,6}`, `rgb(`, `hsl(` and Tailwind palette classes such as `bg-blue-500` in the changed files. Only tokens from `tailwind.config.ts` are allowed.
-6. i18n: grep JSX for string literals and `aria-label="..."`. Every string must come from `useTranslations`. Confirm the key exists in both `i18n/en.json` and `i18n/es.json`.
+6. Text: English only (D-009); strings are short, plain and consistent in tone; no lorem ipsum, no leftover translation hooks.
 7. Test ids: compare against the table in `/app/CLAUDE.md`. Flag renamed or missing ids on the screen under review, and ids placed on wrapper divs instead of the interactive element.
 8. Disclaimer on Plan, Dashboard, Trends, Log and Coach.
 9. Agent Room: colors and icons per agent, objection shake, concession pulse, text never truncated, `plan-ready` after the decision event, error path offers replay.
