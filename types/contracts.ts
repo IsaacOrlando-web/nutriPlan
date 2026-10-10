@@ -2,6 +2,7 @@
 // ALL shared types. Every role imports from here. Only the Lead edits this file.
 // Units: kilograms, centimeters, kcal, grams, milligrams, US dollars.
 
+
 export type Sex = "male" | "female";
 export type ActivityLevel = "sedentary" | "light" | "moderate" | "active" | "very_active";
 export type Goal = "lose" | "maintain" | "gain";
