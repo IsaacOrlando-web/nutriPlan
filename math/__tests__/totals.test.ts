@@ -7,7 +7,7 @@ describe("computeTotals", () => {
     const t = computeTotals([{ foodId: "chicken_breast", grams: 200 }], FOODS);
     expect(t.calories).toBe(330);
     expect(t.proteinG).toBe(62);
-    expect(t.costUsd).toBe(2.2);
+    expect(t.costUsd).toBe(Math.round(FOODS.chicken_breast.priceUsdPer100g * 200) / 100);
   });
 
   it("sums several foods", () => {

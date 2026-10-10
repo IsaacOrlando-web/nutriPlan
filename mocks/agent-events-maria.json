@@ -160,12 +160,12 @@
     "runId": "maria-run-0001",
     "agent": "budget",
     "kind": "objection",
-    "text": "Chicken breast, roasted alone eats $12.10 of the $70 across the pool. Lovely, so is rent. Once a week?",
+    "text": "Chicken thigh, skinless, roasted alone eats $10.53 of the $70 across the pool. Swap half of it for peanut butter?",
     "at": "2026-10-09T15:00:11.200Z",
     "data": {
-      "foodId": "chicken_breast",
-      "poolCostUsd": 12.1,
-      "swapFoodId": null
+      "foodId": "chicken_thigh",
+      "poolCostUsd": 10.53,
+      "swapFoodId": "peanut_butter"
     }
   },
   {
@@ -173,7 +173,7 @@
     "runId": "maria-run-0001",
     "agent": "chef",
     "kind": "concession",
-    "text": "Fine, I keep chicken breast once and lean on beans and eggs for the rest. Flavor stays.",
+    "text": "Fine, I keep chicken thigh once and lean on peanut butter for the rest. Flavor stays.",
     "at": "2026-10-09T15:00:12.600Z"
   },
   {
@@ -181,11 +181,11 @@
     "runId": "maria-run-0001",
     "agent": "doctor",
     "kind": "objection",
-    "text": "13 ideas push carbs or glycemic load past the per meal caps even at the smallest portion. Out.",
+    "text": "16 ideas push carbs or glycemic load past the per meal caps even at the smallest portion. Out.",
     "at": "2026-10-09T15:00:14.000Z",
     "data": {
       "tool": "reviewPool",
-      "removed": 13,
+      "removed": 16,
       "candidateIds": [
         "bean_breakfast_burrito",
         "pb_banana_oatmeal",
@@ -199,7 +199,10 @@
         "pork_loin_potatoes",
         "steak_rice_beans",
         "stuffed_peppers",
-        "chicken_sheet_pan"
+        "chicken_sheet_pan",
+        "chicken_beans_rice__peanut_butter",
+        "one_pot_chicken_rice__peanut_butter",
+        "chicken_cassava_salad__peanut_butter"
       ]
     }
   },
@@ -224,13 +227,13 @@
     "data": {
       "tool": "optimizePlan",
       "solve": 1,
-      "poolSize": 34,
-      "solveMs": 966,
+      "poolSize": 36,
+      "solveMs": 5269,
       "brief": {
         "count": 6,
         "feasible": true,
         "weeklyBudgetUsd": 70,
-        "weeklyCostUsd": 72.76,
+        "weeklyCostUsd": 71.15,
         "bindingConstraints": [
           "weekly_budget",
           "max_carbs_per_meal",
@@ -240,12 +243,12 @@
         "budgetBinding": true,
         "proteinTargetG": 145,
         "proteinShortDays": 3,
-        "proteinGapG": 20,
-        "sodiumSharePct": 63,
+        "proteinGapG": 22,
+        "sodiumSharePct": 57,
         "costPerType": {
-          "breakfast": 2.74,
-          "lunch": 3.06,
-          "dinner": 3.54,
+          "breakfast": 2.43,
+          "lunch": 3.05,
+          "dinner": 3.63,
           "snack": 1.06
         },
         "typeCounts": {
@@ -285,7 +288,7 @@
     "runId": "maria-run-0001",
     "agent": "chef",
     "kind": "proposal",
-    "text": "Brief received: 6 high-protein, low-carb meals under $2.25. First up: chicken with cassava and salad, extra chicken thigh.",
+    "text": "Brief received: 6 high-protein, low-carb meals under $2.25. First up: tofu broccoli stir fry.",
     "at": "2026-10-09T15:00:18.200Z",
     "data": {
       "brief": {
@@ -301,11 +304,11 @@
         }
       },
       "columns": [
-        "Chicken with cassava and salad, extra chicken thigh",
-        "Chicken thigh with rice and green beans, extra chicken thigh",
+        "Tofu broccoli stir fry",
         "Chipotle shredded chicken tostadas, extra chicken breast",
+        "Chicken with cassava and salad, extra chicken thigh",
         "Tofu edamame rice bowl",
-        "Ginger soy chicken rice bowl, extra chicken thigh",
+        "Chicken avocado sandwich, extra chicken breast",
         "Chicken and cactus tacos, extra chicken breast"
       ],
       "source": "templates",
@@ -317,20 +320,20 @@
     "runId": "maria-run-0001",
     "agent": "orchestrator",
     "kind": "proposal",
-    "text": "Second solve used 3 of Chef's 6 new meals; weekly cost went from $72.76 to $69.04, inside the $70. Solved in 1.6 s.",
+    "text": "Second solve used 5 of Chef's 6 new meals; weekly cost went from $71.15 to $67.03, inside the $70. Solved in 4.4 s.",
     "at": "2026-10-09T15:00:19.600Z",
     "data": {
       "solve": 2,
-      "usedColumns": 3,
+      "usedColumns": 5,
       "offeredColumns": 6,
       "kept": true,
-      "proteinDeviationBeforeG": 16,
-      "proteinDeviationAfterG": 28,
-      "weeklyCostBeforeUsd": 72.76,
-      "weeklyCostAfterUsd": 69.04,
-      "solveMs": 1568,
-      "solveSec": 1.6,
-      "shadowPricesMs": 12501
+      "proteinDeviationBeforeG": 14,
+      "proteinDeviationAfterG": 35,
+      "weeklyCostBeforeUsd": 71.15,
+      "weeklyCostAfterUsd": 67.03,
+      "solveMs": 4387,
+      "solveSec": 4.4,
+      "shadowPricesMs": 0
     }
   },
   {
@@ -361,54 +364,40 @@
     "runId": "maria-run-0001",
     "agent": "budget",
     "kind": "proposal",
-    "text": "Raising your budget by $5 would let Chef add tilapia tacos with cabbage slaw twice",
+    "text": "Grocery list ready: 37 items, $67.03 total.",
     "at": "2026-10-09T15:00:23.800Z",
     "data": {
-      "shadowPrice": {
-        "constraint": "weekly_budget",
-        "value": 43.812,
-        "humanText": "Raising your budget by $5 would let Chef add tilapia tacos with cabbage slaw twice"
-      }
+      "items": 37,
+      "weeklyCostUsd": 67.03
     }
   },
   {
     "eventId": "maria-ev-19",
     "runId": "maria-run-0001",
-    "agent": "budget",
+    "agent": "monitor",
     "kind": "proposal",
-    "text": "Grocery list ready: 36 items, $69.04 total.",
-    "at": "2026-10-09T15:00:25.200Z",
-    "data": {
-      "items": 36,
-      "weeklyCostUsd": 69.04
-    }
+    "text": "I will watch weight, glucose and logs daily and replan when the trend says so.",
+    "at": "2026-10-09T15:00:25.200Z"
   },
   {
     "eventId": "maria-ev-20",
     "runId": "maria-run-0001",
-    "agent": "monitor",
-    "kind": "proposal",
-    "text": "I will watch weight, glucose and logs daily and replan when the trend says so.",
-    "at": "2026-10-09T15:00:26.600Z"
-  },
-  {
-    "eventId": "maria-ev-21",
-    "runId": "maria-run-0001",
     "agent": "orchestrator",
     "kind": "decision",
-    "text": "Plan v1 approved: 7 days, $69.04, zero rule violations.",
-    "at": "2026-10-09T15:00:28.000Z",
+    "text": "Plan v1 approved: 7 days, $67.03, zero rule violations.",
+    "at": "2026-10-09T15:00:26.600Z",
     "data": {
       "planId": "maria-plan-0001",
       "version": 1,
       "bestEffort": false,
       "concededAny": false,
       "timingMs": {
-        "firstSolveMs": 968,
-        "chefColumnsMs": 1,
-        "elapsedBeforeSecondSolveMs": 971,
-        "secondSolveMs": 1569,
-        "shadowPricesMs": 12501
+        "firstSolveMs": 5274,
+        "chefColumnsMs": 7,
+        "elapsedBeforeSecondSolveMs": 5288,
+        "secondSolveMs": 4392,
+        "shadowPricesMs": 0,
+        "shadowPricesDeferred": 1
       }
     }
   }

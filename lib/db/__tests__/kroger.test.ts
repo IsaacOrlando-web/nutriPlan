@@ -6,8 +6,22 @@ import type { Food, MealPlan } from "@/types/contracts";
 import { MemoryStore } from "@/lib/db/memory-store";
 import { setStore } from "@/lib/db";
 import { DEMO_USER_IDS } from "@/lib/db/seed/demo-users";
-import { getAppToken, KrogerError, normalizeProduct, resetAppTokenCache, searchLocations } from "@/lib/kroger/client";
-import { matchFoodToKroger, parseSizeToGrams, scoreCandidate, searchTermFor, tokenize } from "@/lib/kroger/match";
+import {
+  getAppToken,
+  isInternalNode,
+  KrogerError,
+  normalizeProduct,
+  resetAppTokenCache,
+  searchLocations,
+} from "@/lib/kroger/client";
+import {
+  headToken,
+  matchFoodToKroger,
+  parseSizeToGrams,
+  scoreCandidate,
+  searchTermFor,
+  tokenize,
+} from "@/lib/kroger/match";
 import { mapPool, priceGroceryList, resetProductCache } from "@/lib/kroger/pricing";
 import { signState, STATE_COOKIE, verifyState } from "@/lib/kroger/state";
 import type { KrogerProduct } from "@/lib/kroger/types";
@@ -25,7 +39,14 @@ process.env.AUTH_MODE = "local";
 const ALEX = DEMO_USER_IDS.alex;
 const ALEX_COOKIE = `np_uid=${ALEX}|alex@demo.nutriplan.app`;
 const BASE = "https://kroger.test/v1";
-const ENV_KEYS = ["KROGER_CLIENT_ID", "KROGER_CLIENT_SECRET", "KROGER_REDIRECT_URI", "KROGER_API_BASE", "KROGER_LOCATION_ID", "KROGER_STATE_SECRET"];
+const ENV_KEYS = [
+  "KROGER_CLIENT_ID",
+  "KROGER_CLIENT_SECRET",
+  "KROGER_REDIRECT_URI",
+  "KROGER_API_BASE",
+  "KROGER_LOCATION_ID",
+  "KROGER_STATE_SECRET",
+];
 
 function configure(extra: Record<string, string> = {}) {
   process.env.KROGER_CLIENT_ID = "test-client-id";
@@ -46,58 +67,131 @@ const product = (p: Partial<KrogerProduct> & { description: string }): KrogerPro
 });
 
 const CHICKEN: KrogerProduct[] = [
-  product({ productId: "nuggets", upc: "0001111000001", description: "Chicken Breast Nuggets", brand: "Tyson", size: "20 oz", price: { regular: 5.99 } }),
-  product({ productId: "breast", upc: "0001111000002", description: "Boneless Skinless Chicken Breast", brand: "Kroger", size: "2 lb", price: { regular: 8.49 } }),
-  product({ productId: "thighs", upc: "0001111000003", description: "Chicken Thighs", brand: "Kroger", size: "1 lb", price: { regular: 4.99 } }),
-  product({ productId: "nopice", upc: "0001111000004", description: "Chicken Breast", brand: "Simple Truth", size: "1 lb" }),
+  product({
+    productId: "nuggets",
+    upc: "0001111000001",
+    description: "Chicken Breast Nuggets",
+    brand: "Tyson",
+    size: "20 oz",
+    price: { regular: 5.99 },
+  }),
+  product({
+    productId: "breast",
+    upc: "0001111000002",
+    description: "Boneless Skinless Chicken Breast",
+    brand: "Kroger",
+    size: "2 lb",
+    price: { regular: 8.49 },
+  }),
+  product({
+    productId: "thighs",
+    upc: "0001111000003",
+    description: "Chicken Thighs",
+    brand: "Kroger",
+    size: "1 lb",
+    price: { regular: 4.99 },
+  }),
+  product({
+    productId: "nopice",
+    upc: "0001111000004",
+    description: "Chicken Breast",
+    brand: "Simple Truth",
+    size: "1 lb",
+  }),
 ];
 const YOGURT: KrogerProduct[] = [
-  product({ productId: "chobani", upc: "0001111000011", description: "Vanilla Greek Yogurt", brand: "Chobani", size: "5.3 oz", price: { regular: 1.29 } }),
-  product({ productId: "kroger-yogurt", upc: "0001111000012", description: "Plain Nonfat Greek Yogurt", brand: "Kroger", size: "32 oz", price: { regular: 4.99, promo: 4.49 } }),
+  product({
+    productId: "chobani",
+    upc: "0001111000011",
+    description: "Vanilla Greek Yogurt",
+    brand: "Chobani",
+    size: "5.3 oz",
+    price: { regular: 1.29 },
+  }),
+  product({
+    productId: "kroger-yogurt",
+    upc: "0001111000012",
+    description: "Plain Nonfat Greek Yogurt",
+    brand: "Kroger",
+    size: "32 oz",
+    price: { regular: 4.99, promo: 4.49 },
+  }),
 ];
 const EGGS: KrogerProduct[] = [
-  product({ productId: "eggs", upc: "0001111000021", description: "Grade A Large Eggs", brand: "Kroger", size: "12 ct", price: { regular: 2.99 } }),
+  product({
+    productId: "eggs",
+    upc: "0001111000021",
+    description: "Grade A Large Eggs",
+    brand: "Kroger",
+    size: "12 ct",
+    price: { regular: 2.99 },
+  }),
 ];
 const FIXTURES: Record<string, KrogerProduct[]> = {
   "chicken breast": CHICKEN,
   "greek yogurt": YOGURT,
-  "eggs whole": EGGS,
-  "cactus paddles": [],
+  "large eggs dozen": EGGS,
+  nopales: [],
 };
 
 const food = (name: string, servingG = 100): Pick<Food, "name" | "servingG"> => ({ name, servingG });
 
 /** Fake Kroger API behind global fetch. Records calls and the maximum number in flight. */
-function fakeKroger(opts: { tokenStatus?: number; productStatus?: number; cartStatus?: number; delayMs?: number } = {}) {
+function fakeKroger(
+  opts: { tokenStatus?: number; productStatus?: number; cartStatus?: number; delayMs?: number } = {},
+) {
   const calls: { url: string; method: string; auth: string | null; body: string | null }[] = [];
   let inFlight = 0;
   let maxInFlight = 0;
   const fetchMock = vi.fn(async (input: string | URL | Request, init?: RequestInit) => {
     const url = typeof input === "string" ? input : input instanceof URL ? input.toString() : input.url;
     const headers = (init?.headers ?? {}) as Record<string, string>;
-    calls.push({ url, method: init?.method ?? "GET", auth: headers.Authorization ?? null, body: (init?.body as string) ?? null });
+    calls.push({
+      url,
+      method: init?.method ?? "GET",
+      auth: headers.Authorization ?? null,
+      body: (init?.body as string) ?? null,
+    });
     inFlight++;
     maxInFlight = Math.max(maxInFlight, inFlight);
     await new Promise((r) => setTimeout(r, opts.delayMs ?? 2));
     inFlight--;
     const u = new URL(url);
     const respond = (status: number, body?: unknown) =>
-      new Response(body === undefined ? null : JSON.stringify(body), { status, headers: { "content-type": "application/json" } });
+      new Response(body === undefined ? null : JSON.stringify(body), {
+        status,
+        headers: { "content-type": "application/json" },
+      });
     if (u.pathname.endsWith("/connect/oauth2/token")) {
-      if (opts.tokenStatus && opts.tokenStatus !== 200) return respond(opts.tokenStatus, { error: "invalid_client", error_description: "bad credentials" });
+      if (opts.tokenStatus && opts.tokenStatus !== 200)
+        return respond(opts.tokenStatus, { error: "invalid_client", error_description: "bad credentials" });
       const grant = new URLSearchParams(init?.body as string).get("grant_type");
-      return respond(200, { access_token: `tok-${grant}`, refresh_token: grant === "client_credentials" ? undefined : `ref-${grant}`, expires_in: 1800, token_type: "bearer" });
+      return respond(200, {
+        access_token: `tok-${grant}`,
+        refresh_token: grant === "client_credentials" ? undefined : `ref-${grant}`,
+        expires_in: 1800,
+        token_type: "bearer",
+      });
     }
     if (u.pathname.endsWith("/locations")) {
       return respond(200, {
         data: [
-          { locationId: "01400943", name: "Kroger Hyde Park", address: { addressLine1: "3760 Paxton Ave", city: "Cincinnati", state: "OH", zipCode: "45209" } },
-          { locationId: "01400376", name: "Kroger Corryville", address: { addressLine1: "1 W Corry St", city: "Cincinnati", state: "OH", zipCode: "45219" } },
+          {
+            locationId: "01400943",
+            name: "Kroger Hyde Park",
+            address: { addressLine1: "3760 Paxton Ave", city: "Cincinnati", state: "OH", zipCode: "45209" },
+          },
+          {
+            locationId: "01400376",
+            name: "Kroger Corryville",
+            address: { addressLine1: "1 W Corry St", city: "Cincinnati", state: "OH", zipCode: "45219" },
+          },
         ],
       });
     }
     if (u.pathname.endsWith("/products")) {
-      if (opts.productStatus && opts.productStatus !== 200) return respond(opts.productStatus, { errors: { reason: "boom" } });
+      if (opts.productStatus && opts.productStatus !== 200)
+        return respond(opts.productStatus, { errors: { reason: "boom" } });
       const term = u.searchParams.get("filter.term") ?? "";
       const data = (FIXTURES[term] ?? []).map((p) => ({
         productId: p.productId,
@@ -115,12 +209,25 @@ function fakeKroger(opts: { tokenStatus?: number; productStatus?: number; cartSt
   return { calls, maxInFlight: () => maxInFlight, fetchMock };
 }
 
-function req(path: string, init: { method?: string; body?: unknown; rawBody?: string; cookie?: string | null; headers?: Record<string, string> } = {}): NextRequest {
+function req(
+  path: string,
+  init: {
+    method?: string;
+    body?: unknown;
+    rawBody?: string;
+    cookie?: string | null;
+    headers?: Record<string, string>;
+  } = {},
+): NextRequest {
   const headers: Record<string, string> = { ...(init.headers ?? {}) };
   if (init.cookie !== null) headers.cookie = init.cookie ?? ALEX_COOKIE;
   if (init.body !== undefined || init.rawBody !== undefined) headers["content-type"] = "application/json";
   const body = init.rawBody ?? (init.body !== undefined ? JSON.stringify(init.body) : undefined);
-  return new NextRequest(new URL(`http://localhost${path}`), { method: init.method ?? "GET", ...(body !== undefined ? { body } : {}), headers });
+  return new NextRequest(new URL(`http://localhost${path}`), {
+    method: init.method ?? "GET",
+    ...(body !== undefined ? { body } : {}),
+    headers,
+  });
 }
 const ctx = { params: Promise.resolve({}) };
 
@@ -135,10 +242,38 @@ function planFor(userId: string): MealPlan {
     weeklyCostUsd: 60,
     days: [],
     groceryList: [
-      { foodId: "chicken_breast", name: "Chicken breast, roasted", quantityG: 1400, quantityLabel: "1.4 kg", costUsd: 15.4, storeSection: "protein" },
-      { foodId: "greek_yogurt", name: "Greek yogurt, plain, nonfat", quantityG: 1020, quantityLabel: "6 containers", costUsd: 6.1, storeSection: "dairy" },
-      { foodId: "eggs", name: "Eggs, whole", quantityG: 600, quantityLabel: "12 eggs", costUsd: 2.4, storeSection: "dairy" },
-      { foodId: "cactus", name: "Cactus paddles, cooked", quantityG: 300, quantityLabel: "2 cups", costUsd: 1.2, storeSection: "produce" },
+      {
+        foodId: "chicken_breast",
+        name: "Chicken breast, roasted",
+        quantityG: 1400,
+        quantityLabel: "1.4 kg",
+        costUsd: 15.4,
+        storeSection: "protein",
+      },
+      {
+        foodId: "greek_yogurt",
+        name: "Greek yogurt, plain, nonfat",
+        quantityG: 1020,
+        quantityLabel: "6 containers",
+        costUsd: 6.1,
+        storeSection: "dairy",
+      },
+      {
+        foodId: "eggs",
+        name: "Eggs, whole",
+        quantityG: 600,
+        quantityLabel: "12 eggs",
+        costUsd: 2.4,
+        storeSection: "dairy",
+      },
+      {
+        foodId: "cactus",
+        name: "Cactus paddles, cooked",
+        quantityG: 300,
+        quantityLabel: "2 cups",
+        costUsd: 1.2,
+        storeSection: "produce",
+      },
     ],
     shadowPrices: [],
     bestEffort: false,
@@ -227,7 +362,11 @@ describe("matchFoodToKroger", () => {
 
   it("skips candidates without a price or a parsable size", () => {
     expect(matchFoodToKroger(chicken, [CHICKEN[3]])).toBeNull();
-    expect(matchFoodToKroger(chicken, [product({ description: "Chicken Breast", size: "family pack", price: { regular: 9 } })])).toBeNull();
+    expect(
+      matchFoodToKroger(chicken, [
+        product({ description: "Chicken Breast", size: "family pack", price: { regular: 9 } }),
+      ]),
+    ).toBeNull();
   });
 
   it("returns null when nothing covers half of the food name", () => {
@@ -246,9 +385,100 @@ describe("matchFoodToKroger", () => {
   });
 
   it("breaks score ties by the cheaper price per 100 g", () => {
-    const a = product({ productId: "a", description: "Rolled Oats", size: "18 oz", price: { regular: 3.99 } });
-    const b = product({ productId: "b", description: "Rolled Oats", size: "42 oz", price: { regular: 5.49 } });
+    const a = product({
+      productId: "a",
+      description: "Rolled Oats",
+      size: "18 oz",
+      price: { regular: 3.99 },
+    });
+    const b = product({
+      productId: "b",
+      description: "Rolled Oats",
+      size: "42 oz",
+      price: { regular: 5.49 },
+    });
     expect(matchFoodToKroger(food("Rolled oats, dry", 40), [a, b])?.product.productId).toBe("b");
+  });
+
+  it("requires the head word: whole milk is not eggs, ground beef needs beef", () => {
+    expect(headToken(food("Eggs, whole"))).toBe("egg");
+    expect(headToken(food("Ground beef 90% lean, cooked"))).toBe("beef");
+    expect(headToken(food("Chicken breast, roasted"))).toBe("breast");
+    expect(headToken({ foodId: "cactus", name: "Cactus paddles, cooked" })).toBe("nopal");
+    const milk = product({
+      productId: "milk",
+      description: "Horizon Organic Vitamin D Whole Milk",
+      size: "1/2 gal",
+      price: { regular: 6.79 },
+    });
+    expect(scoreCandidate(food("Eggs, whole"), milk).score).toBe(0);
+    expect(matchFoodToKroger(food("Eggs, whole", 50), [milk])).toBeNull();
+    const nopales = product({
+      productId: "nop",
+      description: "Nopales Cactus Leaves",
+      size: "1 lb",
+      price: { regular: 2.49 },
+    });
+    expect(
+      matchFoodToKroger({ foodId: "cactus", name: "Cactus paddles, cooked", servingG: 75 }, [nopales])
+        ?.product.productId,
+    ).toBe("nop");
+  });
+
+  it("uses shelf search overrides by foodId and penalizes prepared entrees", () => {
+    expect(searchTermFor({ foodId: "eggs", name: "Eggs, whole" })).toBe("large eggs dozen");
+    expect(searchTermFor({ foodId: "unknown_food", name: "Eggs, whole" })).toBe("eggs whole");
+    const entree = product({
+      productId: "entree",
+      description: "Sea Cuisine Garlic & Herb Tilapia",
+      size: "9 oz",
+      price: { regular: 12.49 },
+    });
+    const plain = product({
+      productId: "plain",
+      description: "Tilapia Fillets",
+      size: "1 lb",
+      price: { regular: 6.99 },
+    });
+    expect(matchFoodToKroger(food("Tilapia, baked", 100), [entree, plain])?.product.productId).toBe("plain");
+    expect(scoreCandidate(food("Tilapia, baked"), entree).score).toBeLessThan(0.3);
+  });
+});
+
+describe("cooked yield and piece weights", () => {
+  it("prices dry rice per cooked gram and counted produce by piece weight", () => {
+    const rice = product({
+      productId: "rice",
+      description: "Brown Rice",
+      size: "14 oz",
+      price: { regular: 1.99 },
+    });
+    const m = matchFoodToKroger({ foodId: "brown_rice", name: "Brown rice, cooked", servingG: 98 }, [rice]);
+    expect(m?.packageGrams).toBe(1190.7); // 396.9 g dry x 3
+    expect(m?.pricePer100g).toBe(0.17);
+    const bunch = product({
+      productId: "sp",
+      description: "Spinach",
+      size: "1 ct",
+      price: { regular: 1.99 },
+    });
+    const s = matchFoodToKroger({ foodId: "spinach", name: "Spinach, raw", servingG: 30 }, [bunch]);
+    expect(s?.packageGrams).toBe(280);
+    expect(s?.pricePer100g).toBe(0.71);
+  });
+
+  it("reads '30 ct / 24.9 oz' as a total, not thirty bags", () => {
+    expect(parseSizeToGrams("30 ct / 24.9 oz", 26)).toBe(705.92);
+    expect(parseSizeToGrams("6 ct / 5.3 oz", 170)).toBe(901.53);
+  });
+});
+
+describe("isInternalNode", () => {
+  it("drops Kroger's warehouse and forecast rows but keeps stores", () => {
+    expect(isInternalNode("Harris Teeter - Spoke Forecast - HT Trans")).toBe(true);
+    expect(isInternalNode("Harris Teeter - - Unused Spoke")).toBe(true);
+    expect(isInternalNode("Kroger - Kroger On the Rhine")).toBe(false);
+    expect(isInternalNode(undefined)).toBe(false);
   });
 });
 
@@ -262,7 +492,13 @@ describe("normalizeProduct", () => {
       images: [{ perspective: "front", sizes: [{ size: "medium", url: "https://img/medium.jpg" }] }],
       items: [{ size: "1 gal", price: { regular: 3.29, promo: 0 }, fulfillment: { inStore: true } }],
     });
-    expect(p).toMatchObject({ productId: "0001111041700", size: "1 gal", price: { regular: 3.29, promo: undefined }, inStore: true, imageUrl: "https://img/medium.jpg" });
+    expect(p).toMatchObject({
+      productId: "0001111041700",
+      size: "1 gal",
+      price: { regular: 3.29, promo: undefined },
+      inStore: true,
+      imageUrl: "https://img/medium.jpg",
+    });
     expect(normalizeProduct({ productId: "x" })).toBeNull();
   });
 });
@@ -297,7 +533,11 @@ describe("client", () => {
     configure();
     fakeKroger();
     const locations = await searchLocations("45202");
-    expect(locations[0]).toEqual({ id: "01400943", name: "Kroger Hyde Park", address: "3760 Paxton Ave, Cincinnati, OH, 45209" });
+    expect(locations[0]).toEqual({
+      id: "01400943",
+      name: "Kroger Hyde Park",
+      address: "3760 Paxton Ave, Cincinnati, OH, 45209",
+    });
   });
 });
 
@@ -313,11 +553,17 @@ describe("priceGroceryList", () => {
     expect(res.matched).toBe(3);
     expect(res.unmatched).toEqual(["Cactus paddles, cooked"]);
     const byId = Object.fromEntries(res.items.map((i) => [i.foodId, i]));
-    expect(byId.chicken_breast.kroger).toMatchObject({ upc: "0001111000002", size: "2 lb", unitPriceUsd: 8.49, packagesNeeded: 2, lineUsd: 16.98 });
+    expect(byId.chicken_breast.kroger).toMatchObject({
+      upc: "0001111000002",
+      size: "2 lb",
+      unitPriceUsd: 8.49,
+      packagesNeeded: 3,
+      lineUsd: 25.47,
+    });
     expect(byId.greek_yogurt.kroger).toMatchObject({ packagesNeeded: 2, lineUsd: 8.98, unitPriceUsd: 4.49 });
     expect(byId.eggs.kroger).toMatchObject({ packagesNeeded: 1, lineUsd: 2.99 });
     expect(byId.cactus.kroger).toBeUndefined();
-    expect(res.totalUsd).toBe(28.95);
+    expect(res.totalUsd).toBe(37.44);
     // every GroceryItem field survives
     expect(byId.chicken_breast).toMatchObject({ quantityG: 1400, costUsd: 15.4, storeSection: "protein" });
     expect(api.calls.filter((c) => c.url.includes("/products")).length).toBe(4);
@@ -339,7 +585,16 @@ describe("priceGroceryList", () => {
     configure();
     const api = fakeKroger({ delayMs: 15 });
     const big = Array.from({ length: 12 }, (_, i) => ({ ...list[0], foodId: `f${i}`, name: `Food ${i}` }));
-    const foods = Object.fromEntries(big.map((g) => [g.foodId, { ...(store as unknown as { data: { foods: Record<string, Food> } }).data.foods.chicken_breast, foodId: g.foodId, name: `Chicken breast ${g.foodId}` }]));
+    const foods = Object.fromEntries(
+      big.map((g) => [
+        g.foodId,
+        {
+          ...(store as unknown as { data: { foods: Record<string, Food> } }).data.foods.chicken_breast,
+          foodId: g.foodId,
+          name: `Chicken breast ${g.foodId}`,
+        },
+      ]),
+    );
     await priceGroceryList(big, foods, "01400943");
     expect(api.maxInFlight()).toBeLessThanOrEqual(4);
     expect(api.maxInFlight()).toBeGreaterThan(1);
@@ -348,7 +603,9 @@ describe("priceGroceryList", () => {
   it("propagates configuration errors but swallows per-item upstream errors", async () => {
     const foods = await store.getFoods(list.map((g) => g.foodId));
     fakeKroger();
-    await expect(priceGroceryList(list, foods, "01400943")).rejects.toMatchObject({ code: "kroger_not_configured" });
+    await expect(priceGroceryList(list, foods, "01400943")).rejects.toMatchObject({
+      code: "kroger_not_configured",
+    });
     configure();
     fakeKroger({ productStatus: 500 });
     const res = await priceGroceryList(list, foods, "01400943");
@@ -374,7 +631,9 @@ describe("state", () => {
     expect(verifyState(state, "nonce-2")).toBeNull();
     expect(verifyState(`${state}x`, "nonce-1")).toBeNull();
     const [, nonce, sig] = state.split(".");
-    expect(verifyState(`${Buffer.from("someone-else").toString("base64url")}.${nonce}.${sig}`, "nonce-1")).toBeNull();
+    expect(
+      verifyState(`${Buffer.from("someone-else").toString("base64url")}.${nonce}.${sig}`, "nonce-1"),
+    ).toBeNull();
     expect(verifyState(undefined, "nonce-1")).toBeNull();
   });
 
@@ -392,8 +651,17 @@ describe("store kroger connection", () => {
   it("saves, reads and deletes", async () => {
     expect(await store.getKrogerConnection(ALEX)).toBeNull();
     await store.saveKrogerConnection(ALEX, { locationId: "1", locationName: "Kroger", zip: "45202" });
-    expect(await store.getKrogerConnection(ALEX)).toEqual({ locationId: "1", locationName: "Kroger", zip: "45202" });
-    await store.saveKrogerConnection(ALEX, { accessToken: "a", refreshToken: "r", expiresAt: "2030-01-01T00:00:00.000Z", locationId: "1" });
+    expect(await store.getKrogerConnection(ALEX)).toEqual({
+      locationId: "1",
+      locationName: "Kroger",
+      zip: "45202",
+    });
+    await store.saveKrogerConnection(ALEX, {
+      accessToken: "a",
+      refreshToken: "r",
+      expiresAt: "2030-01-01T00:00:00.000Z",
+      locationId: "1",
+    });
     expect((await store.getKrogerConnection(ALEX))?.accessToken).toBe("a");
     await store.deleteKrogerConnection(ALEX);
     expect(await store.getKrogerConnection(ALEX)).toBeNull();
@@ -414,7 +682,10 @@ describe("routes without credentials", () => {
 
     const locations = await locationsGet(req("/api/kroger/locations?zip=45202"), ctx);
     expect(locations.status).toBe(503);
-    expect(await locations.json()).toEqual({ error: expect.stringContaining("not configured"), code: "kroger_not_configured" });
+    expect(await locations.json()).toEqual({
+      error: expect.stringContaining("not configured"),
+      code: "kroger_not_configured",
+    });
 
     const price = await pricePost(req("/api/kroger/price", { method: "POST" }), ctx);
     expect(price.status).toBe(503);
@@ -430,24 +701,47 @@ describe("routes without credentials", () => {
 
     const browser = await connectGet(req("/api/kroger/connect", { headers: { accept: "text/html" } }), ctx);
     expect(browser.status).toBe(302);
-    expect(browser.headers.get("location")).toBe("http://localhost/grocery?kroger=error&reason=kroger_not_configured");
+    expect(browser.headers.get("location")).toBe(
+      "http://localhost/grocery?kroger=error&reason=kroger_not_configured",
+    );
   });
 
   it("validates the zip and saves a store without tokens", async () => {
     const bad = await locationsGet(req("/api/kroger/locations?zip=abc"), ctx);
     expect(bad.status).toBe(400);
-    const saved = await locationPost(req("/api/kroger/location", { method: "POST", body: { locationId: "01400943", name: "Kroger Hyde Park", zip: "45202" } }), ctx);
+    const saved = await locationPost(
+      req("/api/kroger/location", {
+        method: "POST",
+        body: { locationId: "01400943", name: "Kroger Hyde Park", zip: "45202" },
+      }),
+      ctx,
+    );
     expect(saved.status).toBe(200);
-    expect(await saved.json()).toEqual({ configured: false, connected: false, location: { id: "01400943", name: "Kroger Hyde Park" } });
-    expect(await store.getKrogerConnection(ALEX)).toEqual({ locationId: "01400943", locationName: "Kroger Hyde Park", zip: "45202" });
-    const invalid = await locationPost(req("/api/kroger/location", { method: "POST", body: { locationId: "", name: "x" } }), ctx);
+    expect(await saved.json()).toEqual({
+      configured: false,
+      connected: false,
+      location: { id: "01400943", name: "Kroger Hyde Park" },
+    });
+    expect(await store.getKrogerConnection(ALEX)).toEqual({
+      locationId: "01400943",
+      locationName: "Kroger Hyde Park",
+      zip: "45202",
+    });
+    const invalid = await locationPost(
+      req("/api/kroger/location", { method: "POST", body: { locationId: "", name: "x" } }),
+      ctx,
+    );
     expect(invalid.status).toBe(400);
   });
 
   it("status reports KROGER_LOCATION_ID as the default store", async () => {
     process.env.KROGER_LOCATION_ID = "01400943";
     const status = await statusGet(req("/api/kroger/status"), ctx);
-    expect(await status.json()).toEqual({ configured: false, connected: false, location: { id: "01400943", name: "Kroger" } });
+    expect(await status.json()).toEqual({
+      configured: false,
+      connected: false,
+      location: { id: "01400943", name: "Kroger" },
+    });
   });
 });
 
@@ -468,16 +762,27 @@ describe("routes with credentials (fake Kroger)", () => {
     expect(noStore.status).toBe(400);
     expect(await noStore.json()).toMatchObject({ code: "kroger_no_location" });
 
-    await locationPost(req("/api/kroger/location", { method: "POST", body: { locationId: "01400943", name: "Kroger Hyde Park" } }), ctx);
+    await locationPost(
+      req("/api/kroger/location", {
+        method: "POST",
+        body: { locationId: "01400943", name: "Kroger Hyde Park" },
+      }),
+      ctx,
+    );
     const noPlan = await pricePost(req("/api/kroger/price", { method: "POST" }), ctx);
     expect(noPlan.status).toBe(404);
 
     await store.savePlan(planFor(ALEX));
     const res = await pricePost(req("/api/kroger/price", { method: "POST" }), ctx);
     expect(res.status).toBe(200);
-    const body = (await res.json()) as { matched: number; totalUsd: number; unmatched: string[]; items: unknown[] };
+    const body = (await res.json()) as {
+      matched: number;
+      totalUsd: number;
+      unmatched: string[];
+      items: unknown[];
+    };
     expect(body.matched).toBe(3);
-    expect(body.totalUsd).toBe(28.95);
+    expect(body.totalUsd).toBe(37.44);
     expect(body.items).toHaveLength(4);
   });
 
@@ -498,20 +803,38 @@ describe("routes with credentials (fake Kroger)", () => {
     expect(verifyState(state, nonce)).toBe(ALEX);
 
     // wrong nonce -> error redirect, nothing stored
-    const bad = await callbackGet(req(`/api/kroger/callback?code=abc&state=${encodeURIComponent(state)}`, { cookie: `${ALEX_COOKIE}; ${STATE_COOKIE}=other` }), ctx);
+    const bad = await callbackGet(
+      req(`/api/kroger/callback?code=abc&state=${encodeURIComponent(state)}`, {
+        cookie: `${ALEX_COOKIE}; ${STATE_COOKIE}=other`,
+      }),
+      ctx,
+    );
     expect(bad.headers.get("location")).toBe("http://localhost/grocery?kroger=error&reason=kroger_bad_state");
     expect(await store.getKrogerConnection(ALEX)).toBeNull();
 
     // user denied at Kroger
-    const denied = await callbackGet(req(`/api/kroger/callback?error=access_denied&state=x`, { cookie: `${ALEX_COOKIE}; ${STATE_COOKIE}=${nonce}` }), ctx);
+    const denied = await callbackGet(
+      req(`/api/kroger/callback?error=access_denied&state=x`, {
+        cookie: `${ALEX_COOKIE}; ${STATE_COOKIE}=${nonce}`,
+      }),
+      ctx,
+    );
     expect(denied.headers.get("location")).toContain("kroger=error&reason=access_denied");
 
     // happy path
-    const ok = await callbackGet(req(`/api/kroger/callback?code=abc&state=${encodeURIComponent(state)}`, { cookie: `${ALEX_COOKIE}; ${STATE_COOKIE}=${nonce}` }), ctx);
+    const ok = await callbackGet(
+      req(`/api/kroger/callback?code=abc&state=${encodeURIComponent(state)}`, {
+        cookie: `${ALEX_COOKIE}; ${STATE_COOKIE}=${nonce}`,
+      }),
+      ctx,
+    );
     expect(ok.status).toBe(302);
     expect(ok.headers.get("location")).toBe("http://localhost/grocery?kroger=connected");
     const conn = await store.getKrogerConnection(ALEX);
-    expect(conn).toMatchObject({ accessToken: "tok-authorization_code", refreshToken: "ref-authorization_code" });
+    expect(conn).toMatchObject({
+      accessToken: "tok-authorization_code",
+      refreshToken: "ref-authorization_code",
+    });
     expect(Date.parse(conn!.expiresAt!)).toBeGreaterThan(Date.now());
     const status = await statusGet(req("/api/kroger/status"), ctx);
     expect(await status.json()).toMatchObject({ configured: true, connected: true });
@@ -535,7 +858,7 @@ describe("routes with credentials (fake Kroger)", () => {
     expect(cartCall.auth).toBe("Bearer tok-refresh_token");
     expect(JSON.parse(cartCall.body!)).toEqual({
       items: [
-        { upc: "0001111000002", quantity: 2, modality: "PICKUP" },
+        { upc: "0001111000002", quantity: 3, modality: "PICKUP" },
         { upc: "0001111000012", quantity: 2, modality: "PICKUP" },
         { upc: "0001111000021", quantity: 1, modality: "PICKUP" },
       ],
@@ -543,20 +866,44 @@ describe("routes with credentials (fake Kroger)", () => {
     expect((await store.getKrogerConnection(ALEX))?.accessToken).toBe("tok-refresh_token");
 
     // explicit items skip pricing
-    const explicit = await cartPost(req("/api/kroger/cart", { method: "POST", body: { items: [{ upc: "0001111041700", quantity: 3 }], modality: "DELIVERY" } }), ctx);
+    const explicit = await cartPost(
+      req("/api/kroger/cart", {
+        method: "POST",
+        body: { items: [{ upc: "0001111041700", quantity: 3 }], modality: "DELIVERY" },
+      }),
+      ctx,
+    );
     expect(await explicit.json()).toEqual({ added: 1, skipped: [] });
-    expect(JSON.parse(api.calls.at(-1)!.body!)).toEqual({ items: [{ upc: "0001111041700", quantity: 3, modality: "DELIVERY" }] });
-    const invalid = await cartPost(req("/api/kroger/cart", { method: "POST", body: { items: [{ upc: "x", quantity: 1 }] } }), ctx);
+    expect(JSON.parse(api.calls.at(-1)!.body!)).toEqual({
+      items: [{ upc: "0001111041700", quantity: 3, modality: "DELIVERY" }],
+    });
+    const invalid = await cartPost(
+      req("/api/kroger/cart", { method: "POST", body: { items: [{ upc: "x", quantity: 1 }] } }),
+      ctx,
+    );
     expect(invalid.status).toBe(400);
 
     const off = await connectDelete(req("/api/kroger/connect", { method: "DELETE" }), ctx);
-    expect(await off.json()).toEqual({ configured: true, connected: false, location: { id: "01400943", name: "Kroger Hyde Park" } });
-    expect(await store.getKrogerConnection(ALEX)).toEqual({ locationId: "01400943", locationName: "Kroger Hyde Park", zip: undefined });
+    expect(await off.json()).toEqual({
+      configured: true,
+      connected: false,
+      location: { id: "01400943", name: "Kroger Hyde Park" },
+    });
+    expect(await store.getKrogerConnection(ALEX)).toEqual({
+      locationId: "01400943",
+      locationName: "Kroger Hyde Park",
+      zip: undefined,
+    });
   });
 
   it("cart reports a failed refresh as not connected and clears the dead tokens", async () => {
     fakeKroger({ tokenStatus: 401 });
-    await store.saveKrogerConnection(ALEX, { accessToken: "stale", refreshToken: "dead", expiresAt: "2020-01-01T00:00:00.000Z", locationId: "1" });
+    await store.saveKrogerConnection(ALEX, {
+      accessToken: "stale",
+      refreshToken: "dead",
+      expiresAt: "2020-01-01T00:00:00.000Z",
+      locationId: "1",
+    });
     const res = await cartPost(req("/api/kroger/cart", { method: "POST" }), ctx);
     expect(res.status).toBe(401);
     expect(await res.json()).toMatchObject({ code: "kroger_not_connected" });

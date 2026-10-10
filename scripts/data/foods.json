@@ -15,7 +15,7 @@
       "potassiumMg": 256
     },
     "giEstimated": false,
-    "priceUsdPer100g": 1.1,
+    "priceUsdPer100g": 0.76,
     "servingG": 100,
     "servingLabel": "1 palm-size piece (100 g)",
     "tags": [
@@ -40,7 +40,7 @@
       "potassiumMg": 240
     },
     "giEstimated": false,
-    "priceUsdPer100g": 0.8,
+    "priceUsdPer100g": 1.17,
     "servingG": 100,
     "servingLabel": "1 thigh (100 g)",
     "tags": [
@@ -65,7 +65,7 @@
       "potassiumMg": 270
     },
     "giEstimated": false,
-    "priceUsdPer100g": 1.15,
+    "priceUsdPer100g": 1.61,
     "servingG": 85,
     "servingLabel": "3 oz cooked",
     "tags": [
@@ -90,7 +90,7 @@
       "potassiumMg": 330
     },
     "giEstimated": false,
-    "priceUsdPer100g": 1.45,
+    "priceUsdPer100g": 3.23,
     "servingG": 85,
     "servingLabel": "3 oz cooked",
     "tags": [
@@ -115,7 +115,7 @@
       "potassiumMg": 350
     },
     "giEstimated": false,
-    "priceUsdPer100g": 1.9,
+    "priceUsdPer100g": 4.41,
     "servingG": 85,
     "servingLabel": "3 oz grilled",
     "tags": [
@@ -140,7 +140,7 @@
       "potassiumMg": 380
     },
     "giEstimated": false,
-    "priceUsdPer100g": 1.1,
+    "priceUsdPer100g": 1.31,
     "servingG": 85,
     "servingLabel": "3 oz roasted",
     "tags": [
@@ -165,7 +165,7 @@
       "potassiumMg": 384
     },
     "giEstimated": false,
-    "priceUsdPer100g": 2.4,
+    "priceUsdPer100g": 2.2,
     "servingG": 100,
     "servingLabel": "1 fillet (100 g)",
     "tags": [
@@ -189,7 +189,7 @@
       "potassiumMg": 380
     },
     "giEstimated": false,
-    "priceUsdPer100g": 1.3,
+    "priceUsdPer100g": 2.76,
     "servingG": 100,
     "servingLabel": "1 fillet (100 g)",
     "tags": [
@@ -213,7 +213,7 @@
       "potassiumMg": 237
     },
     "giEstimated": false,
-    "priceUsdPer100g": 1.2,
+    "priceUsdPer100g": 0.71,
     "servingG": 85,
     "servingLabel": "1 can drained (85 g)",
     "tags": [
@@ -237,7 +237,7 @@
       "potassiumMg": 397
     },
     "giEstimated": false,
-    "priceUsdPer100g": 1.3,
+    "priceUsdPer100g": 1.59,
     "servingG": 92,
     "servingLabel": "1 can (92 g)",
     "tags": [
@@ -261,7 +261,7 @@
       "potassiumMg": 259
     },
     "giEstimated": false,
-    "priceUsdPer100g": 2.2,
+    "priceUsdPer100g": 1.43,
     "servingG": 85,
     "servingLabel": "3 oz cooked",
     "tags": [
@@ -285,7 +285,7 @@
       "potassiumMg": 138
     },
     "giEstimated": false,
-    "priceUsdPer100g": 0.55,
+    "priceUsdPer100g": 0.92,
     "servingG": 50,
     "servingLabel": "1 large egg",
     "tags": [
@@ -310,7 +310,7 @@
       "potassiumMg": 163
     },
     "giEstimated": false,
-    "priceUsdPer100g": 0.6,
+    "priceUsdPer100g": 0.77,
     "servingG": 33,
     "servingLabel": "1 egg white",
     "tags": [
@@ -335,7 +335,7 @@
       "potassiumMg": 237
     },
     "giEstimated": true,
-    "priceUsdPer100g": 0.75,
+    "priceUsdPer100g": 0.5,
     "servingG": 85,
     "servingLabel": "3 oz",
     "tags": [
@@ -362,7 +362,7 @@
       "potassiumMg": 436
     },
     "giEstimated": true,
-    "priceUsdPer100g": 0.7,
+    "priceUsdPer100g": 0.73,
     "servingG": 78,
     "servingLabel": "1/2 cup",
     "tags": [
@@ -390,7 +390,7 @@
       "potassiumMg": 355
     },
     "giEstimated": false,
-    "priceUsdPer100g": 0.3,
+    "priceUsdPer100g": 0.23,
     "servingG": 86,
     "servingLabel": "1/2 cup cooked",
     "tags": [
@@ -417,7 +417,7 @@
       "potassiumMg": 436
     },
     "giEstimated": false,
-    "priceUsdPer100g": 0.28,
+    "priceUsdPer100g": 0.23,
     "servingG": 86,
     "servingLabel": "1/2 cup cooked",
     "tags": [
@@ -444,7 +444,7 @@
       "potassiumMg": 369
     },
     "giEstimated": false,
-    "priceUsdPer100g": 0.3,
+    "priceUsdPer100g": 0.2,
     "servingG": 99,
     "servingLabel": "1/2 cup cooked",
     "tags": [
@@ -471,7 +471,7 @@
       "potassiumMg": 291
     },
     "giEstimated": false,
-    "priceUsdPer100g": 0.35,
+    "priceUsdPer100g": 0.34,
     "servingG": 82,
     "servingLabel": "1/2 cup cooked",
     "tags": [
@@ -498,7 +498,7 @@
       "potassiumMg": 228
     },
     "giEstimated": true,
-    "priceUsdPer100g": 0.9,
+    "priceUsdPer100g": 1.41,
     "servingG": 30,
     "servingLabel": "2 tbsp",
     "tags": [
@@ -526,7 +526,7 @@
       "potassiumMg": 141
     },
     "giEstimated": false,
-    "priceUsdPer100g": 0.75,
+    "priceUsdPer100g": 0.47,
     "servingG": 170,
     "servingLabel": "1 container (170 g)",
     "tags": [
@@ -552,7 +552,7 @@
       "potassiumMg": 125
     },
     "giEstimated": true,
-    "priceUsdPer100g": 0.65,
+    "priceUsdPer100g": 0.47,
     "servingG": 113,
     "servingLabel": "1/2 cup",
     "tags": [
@@ -578,7 +578,7 @@
       "potassiumMg": 140
     },
     "giEstimated": false,
-    "priceUsdPer100g": 0.1,
+    "priceUsdPer100g": 0.09,
     "servingG": 244,
     "servingLabel": "1 cup",
     "tags": [
@@ -604,7 +604,7 @@
       "potassiumMg": 76
     },
     "giEstimated": false,
-    "priceUsdPer100g": 1.2,
+    "priceUsdPer100g": 0.88,
     "servingG": 28,
     "servingLabel": "1 oz",
     "tags": [
@@ -629,7 +629,7 @@
       "potassiumMg": 129
     },
     "giEstimated": false,
-    "priceUsdPer100g": 1.1,
+    "priceUsdPer100g": 1.02,
     "servingG": 28,
     "servingLabel": "1 oz",
     "tags": [
@@ -654,7 +654,7 @@
       "potassiumMg": 95
     },
     "giEstimated": false,
-    "priceUsdPer100g": 1.1,
+    "priceUsdPer100g": 0.95,
     "servingG": 28,
     "servingLabel": "1 stick",
     "tags": [
@@ -679,7 +679,7 @@
       "potassiumMg": 649
     },
     "giEstimated": false,
-    "priceUsdPer100g": 0.7,
+    "priceUsdPer100g": 0.64,
     "servingG": 32,
     "servingLabel": "2 tbsp",
     "tags": [
@@ -707,7 +707,7 @@
       "potassiumMg": 733
     },
     "giEstimated": false,
-    "priceUsdPer100g": 1.6,
+    "priceUsdPer100g": 1.54,
     "servingG": 28,
     "servingLabel": "1 oz (23 almonds)",
     "tags": [
@@ -733,7 +733,7 @@
       "potassiumMg": 441
     },
     "giEstimated": false,
-    "priceUsdPer100g": 2,
+    "priceUsdPer100g": 2.35,
     "servingG": 28,
     "servingLabel": "1 oz (14 halves)",
     "tags": [
@@ -759,7 +759,7 @@
       "potassiumMg": 809
     },
     "giEstimated": false,
-    "priceUsdPer100g": 1.4,
+    "priceUsdPer100g": 2.64,
     "servingG": 28,
     "servingLabel": "1 oz",
     "tags": [
@@ -785,7 +785,7 @@
       "potassiumMg": 407
     },
     "giEstimated": true,
-    "priceUsdPer100g": 1.5,
+    "priceUsdPer100g": 1.41,
     "servingG": 12,
     "servingLabel": "1 tbsp",
     "tags": [
@@ -812,7 +812,7 @@
       "potassiumMg": 362
     },
     "giEstimated": false,
-    "priceUsdPer100g": 0.35,
+    "priceUsdPer100g": 0.75,
     "servingG": 40,
     "servingLabel": "1/2 cup dry",
     "tags": [
@@ -839,7 +839,7 @@
       "potassiumMg": 86
     },
     "giEstimated": false,
-    "priceUsdPer100g": 0.12,
+    "priceUsdPer100g": 0.17,
     "servingG": 98,
     "servingLabel": "1/2 cup cooked",
     "tags": [
@@ -866,7 +866,7 @@
       "potassiumMg": 35
     },
     "giEstimated": false,
-    "priceUsdPer100g": 0.08,
+    "priceUsdPer100g": 0.13,
     "servingG": 93,
     "servingLabel": "1/2 cup cooked",
     "tags": [
@@ -893,7 +893,7 @@
       "potassiumMg": 172
     },
     "giEstimated": false,
-    "priceUsdPer100g": 0.45,
+    "priceUsdPer100g": 0.29,
     "servingG": 92,
     "servingLabel": "1/2 cup cooked",
     "tags": [
@@ -920,7 +920,7 @@
       "potassiumMg": 254
     },
     "giEstimated": false,
-    "priceUsdPer100g": 0.55,
+    "priceUsdPer100g": 0.37,
     "servingG": 32,
     "servingLabel": "1 slice",
     "tags": [
@@ -948,7 +948,7 @@
       "potassiumMg": 96
     },
     "giEstimated": false,
-    "priceUsdPer100g": 0.2,
+    "priceUsdPer100g": 0.17,
     "servingG": 70,
     "servingLabel": "1/2 cup cooked",
     "tags": [
@@ -976,7 +976,7 @@
       "potassiumMg": 170
     },
     "giEstimated": false,
-    "priceUsdPer100g": 0.7,
+    "priceUsdPer100g": 0.78,
     "servingG": 64,
     "servingLabel": "1 pita",
     "tags": [
@@ -1004,7 +1004,7 @@
       "potassiumMg": 186
     },
     "giEstimated": false,
-    "priceUsdPer100g": 0.45,
+    "priceUsdPer100g": 0.24,
     "servingG": 26,
     "servingLabel": "1 tortilla (6 in)",
     "tags": [
@@ -1031,7 +1031,7 @@
       "potassiumMg": 200
     },
     "giEstimated": false,
-    "priceUsdPer100g": 0.6,
+    "priceUsdPer100g": 0.73,
     "servingG": 45,
     "servingLabel": "1 tortilla (8 in)",
     "tags": [
@@ -1086,7 +1086,7 @@
       "potassiumMg": 329
     },
     "giEstimated": false,
-    "priceUsdPer100g": 0.4,
+    "priceUsdPer100g": 1.1,
     "servingG": 24,
     "servingLabel": "3 cups popped",
     "tags": [
@@ -1113,7 +1113,7 @@
       "potassiumMg": 475
     },
     "giEstimated": false,
-    "priceUsdPer100g": 0.3,
+    "priceUsdPer100g": 0.33,
     "servingG": 130,
     "servingLabel": "1 medium",
     "tags": [
@@ -1139,7 +1139,7 @@
       "potassiumMg": 379
     },
     "giEstimated": false,
-    "priceUsdPer100g": 0.2,
+    "priceUsdPer100g": 0.22,
     "servingG": 150,
     "servingLabel": "1 medium",
     "tags": [
@@ -1165,7 +1165,7 @@
       "potassiumMg": 465
     },
     "giEstimated": true,
-    "priceUsdPer100g": 0.3,
+    "priceUsdPer100g": 0.42,
     "servingG": 100,
     "servingLabel": "1/2 plantain",
     "tags": [
@@ -1217,7 +1217,7 @@
       "potassiumMg": 293
     },
     "giEstimated": true,
-    "priceUsdPer100g": 0.45,
+    "priceUsdPer100g": 0.5,
     "servingG": 91,
     "servingLabel": "1 cup",
     "tags": [
@@ -1243,7 +1243,7 @@
       "potassiumMg": 558
     },
     "giEstimated": true,
-    "priceUsdPer100g": 0.8,
+    "priceUsdPer100g": 0.71,
     "servingG": 30,
     "servingLabel": "1 cup",
     "tags": [
@@ -1295,7 +1295,7 @@
       "potassiumMg": 237
     },
     "giEstimated": false,
-    "priceUsdPer100g": 0.45,
+    "priceUsdPer100g": 0.28,
     "servingG": 123,
     "servingLabel": "1 medium",
     "tags": [
@@ -1321,7 +1321,7 @@
       "potassiumMg": 146
     },
     "giEstimated": true,
-    "priceUsdPer100g": 0.25,
+    "priceUsdPer100g": 0.26,
     "servingG": 55,
     "servingLabel": "1/2 cup chopped",
     "tags": [
@@ -1347,7 +1347,7 @@
       "potassiumMg": 211
     },
     "giEstimated": true,
-    "priceUsdPer100g": 0.65,
+    "priceUsdPer100g": 1.11,
     "servingG": 119,
     "servingLabel": "1 medium",
     "tags": [
@@ -1373,7 +1373,7 @@
       "potassiumMg": 320
     },
     "giEstimated": false,
-    "priceUsdPer100g": 0.22,
+    "priceUsdPer100g": 0.28,
     "servingG": 61,
     "servingLabel": "1 medium",
     "tags": [
@@ -1399,7 +1399,7 @@
       "potassiumMg": 261
     },
     "giEstimated": true,
-    "priceUsdPer100g": 0.4,
+    "priceUsdPer100g": 0.39,
     "servingG": 124,
     "servingLabel": "1 medium",
     "tags": [
@@ -1425,7 +1425,7 @@
       "potassiumMg": 146
     },
     "giEstimated": true,
-    "priceUsdPer100g": 0.45,
+    "priceUsdPer100g": 1.03,
     "servingG": 125,
     "servingLabel": "1 cup",
     "tags": [
@@ -1451,7 +1451,7 @@
       "potassiumMg": 170
     },
     "giEstimated": true,
-    "priceUsdPer100g": 0.18,
+    "priceUsdPer100g": 0.22,
     "servingG": 89,
     "servingLabel": "1 cup shredded",
     "tags": [
@@ -1477,7 +1477,7 @@
       "potassiumMg": 147
     },
     "giEstimated": true,
-    "priceUsdPer100g": 0.35,
+    "priceUsdPer100g": 0.26,
     "servingG": 104,
     "servingLabel": "1/2 cucumber",
     "tags": [
@@ -1503,7 +1503,7 @@
       "potassiumMg": 318
     },
     "giEstimated": true,
-    "priceUsdPer100g": 0.9,
+    "priceUsdPer100g": 1.1,
     "servingG": 70,
     "servingLabel": "1/2 cup",
     "tags": [
@@ -1555,7 +1555,7 @@
       "potassiumMg": 230
     },
     "giEstimated": true,
-    "priceUsdPer100g": 0.6,
+    "priceUsdPer100g": 0.88,
     "servingG": 60,
     "servingLabel": "1/4 cup",
     "tags": [
@@ -1581,7 +1581,7 @@
       "potassiumMg": 485
     },
     "giEstimated": true,
-    "priceUsdPer100g": 0.9,
+    "priceUsdPer100g": 0.83,
     "servingG": 50,
     "servingLabel": "1/3 avocado",
     "tags": [
@@ -1607,7 +1607,7 @@
       "potassiumMg": 358
     },
     "giEstimated": false,
-    "priceUsdPer100g": 0.15,
+    "priceUsdPer100g": 0.13,
     "servingG": 118,
     "servingLabel": "1 medium",
     "tags": [
@@ -1633,7 +1633,7 @@
       "potassiumMg": 107
     },
     "giEstimated": false,
-    "priceUsdPer100g": 0.4,
+    "priceUsdPer100g": 0.99,
     "servingG": 182,
     "servingLabel": "1 medium",
     "tags": [
@@ -1659,7 +1659,7 @@
       "potassiumMg": 181
     },
     "giEstimated": false,
-    "priceUsdPer100g": 0.35,
+    "priceUsdPer100g": 0.55,
     "servingG": 131,
     "servingLabel": "1 medium",
     "tags": [
@@ -1685,7 +1685,7 @@
       "potassiumMg": 153
     },
     "giEstimated": false,
-    "priceUsdPer100g": 0.9,
+    "priceUsdPer100g": 0.81,
     "servingG": 144,
     "servingLabel": "1 cup",
     "tags": [
@@ -1711,7 +1711,7 @@
       "potassiumMg": 54
     },
     "giEstimated": false,
-    "priceUsdPer100g": 0.8,
+    "priceUsdPer100g": 1.55,
     "servingG": 77,
     "servingLabel": "1/2 cup",
     "tags": [
@@ -1737,7 +1737,7 @@
       "potassiumMg": 168
     },
     "giEstimated": false,
-    "priceUsdPer100g": 0.5,
+    "priceUsdPer100g": 0.37,
     "servingG": 82,
     "servingLabel": "1/2 cup",
     "tags": [
@@ -1763,7 +1763,7 @@
       "potassiumMg": 182
     },
     "giEstimated": false,
-    "priceUsdPer100g": 0.4,
+    "priceUsdPer100g": 0.39,
     "servingG": 140,
     "servingLabel": "1 cup cubes",
     "tags": [
@@ -1789,7 +1789,7 @@
       "potassiumMg": 312
     },
     "giEstimated": false,
-    "priceUsdPer100g": 0.7,
+    "priceUsdPer100g": 2.35,
     "servingG": 75,
     "servingLabel": "1 kiwi",
     "tags": [
@@ -1815,7 +1815,7 @@
       "potassiumMg": 169
     },
     "giEstimated": true,
-    "priceUsdPer100g": 0.35,
+    "priceUsdPer100g": 0.38,
     "servingG": 91,
     "servingLabel": "1/2 cup",
     "tags": [
@@ -1841,7 +1841,7 @@
       "potassiumMg": 218
     },
     "giEstimated": false,
-    "priceUsdPer100g": 0.3,
+    "priceUsdPer100g": 0.19,
     "servingG": 82,
     "servingLabel": "1/2 cup",
     "tags": [
@@ -1893,7 +1893,7 @@
       "potassiumMg": 1
     },
     "giEstimated": false,
-    "priceUsdPer100g": 0.9,
+    "priceUsdPer100g": 1.26,
     "servingG": 14,
     "servingLabel": "1 tbsp",
     "tags": [
@@ -1918,7 +1918,7 @@
       "potassiumMg": 200
     },
     "giEstimated": false,
-    "priceUsdPer100g": 0.6,
+    "priceUsdPer100g": 0.49,
     "servingG": 9,
     "servingLabel": "1/2 tbsp",
     "tags": [
@@ -1945,7 +1945,7 @@
       "potassiumMg": 52
     },
     "giEstimated": false,
-    "priceUsdPer100g": 0.8,
+    "priceUsdPer100g": 0.88,
     "servingG": 21,
     "servingLabel": "1 tbsp",
     "tags": [

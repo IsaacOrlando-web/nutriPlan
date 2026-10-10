@@ -9,43 +9,43 @@
     "question": null,
     "items": [
       {
-        "foodId": "chicken_thigh",
-        "name": "Chicken thigh, skinless, roasted",
+        "foodId": "chicken_breast",
+        "name": "Chicken breast, roasted",
         "grams": 200,
         "confidence": 0.86
       },
       {
-        "foodId": "pinto_beans",
-        "name": "Pinto beans, cooked",
-        "grams": 86,
+        "foodId": "brown_rice",
+        "name": "Brown rice, cooked",
+        "grams": 294,
         "confidence": 0.86
       },
       {
-        "foodId": "white_rice",
-        "name": "White rice, cooked",
-        "grams": 186,
+        "foodId": "black_beans",
+        "name": "Black beans, cooked",
+        "grams": 172,
         "confidence": 0.86
       },
       {
-        "foodId": "cabbage",
-        "name": "Cabbage, shredded",
-        "grams": 89,
+        "foodId": "fresh_salsa",
+        "name": "Fresh tomato salsa",
+        "grams": 60,
         "confidence": 0.86
       }
     ],
     "totals": {
-      "calories": 805,
-      "proteinG": 65.9,
-      "carbsG": 80.1,
-      "fatG": 23,
-      "fiberG": 10.7,
-      "sugarG": 3.3,
+      "calories": 931,
+      "proteinG": 85.8,
+      "carbsG": 118.6,
+      "fatG": 11.1,
+      "fiberG": 20.4,
+      "sugarG": 2.6,
       "addedSugarG": 0,
-      "satFatG": 6.3,
-      "sodiumMg": 209,
-      "potassiumMg": 1071,
-      "glycemicLoad": 43.8,
-      "costUsd": 2.15
+      "satFatG": 3.1,
+      "sodiumMg": 223,
+      "potassiumMg": 1513,
+      "glycemicLoad": 56,
+      "costUsd": 2.94
     },
     "flags": [
       {

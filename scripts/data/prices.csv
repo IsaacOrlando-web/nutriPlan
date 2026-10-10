@@ -1,76 +1,76 @@
 food_id,name,price_usd_per_100g,store,date_collected,source_note
-chicken_breast,"Chicken breast, roasted",1.10,ESTIMATE,2026-10-09,"US average estimate; replace with real store shelf price"
-chicken_thigh,"Chicken thigh, skinless, roasted",0.80,ESTIMATE,2026-10-09,"US average estimate; replace with real store shelf price"
-ground_turkey,"Ground turkey 93% lean, cooked",1.15,ESTIMATE,2026-10-09,"US average estimate; replace with real store shelf price"
-lean_ground_beef,"Ground beef 90% lean, cooked",1.45,ESTIMATE,2026-10-09,"US average estimate; replace with real store shelf price"
-flank_steak,"Flank steak, grilled",1.90,ESTIMATE,2026-10-09,"US average estimate; replace with real store shelf price"
-pork_loin,"Pork loin, roasted",1.10,ESTIMATE,2026-10-09,"US average estimate; replace with real store shelf price"
-salmon,"Salmon fillet, baked",2.40,ESTIMATE,2026-10-09,"US average estimate; replace with real store shelf price"
-tilapia,"Tilapia, baked",1.30,ESTIMATE,2026-10-09,"US average estimate; replace with real store shelf price"
-canned_tuna,"Tuna, canned in water, drained",1.20,ESTIMATE,2026-10-09,"US average estimate; replace with real store shelf price"
-sardines,"Sardines, canned in oil, drained",1.30,ESTIMATE,2026-10-09,"US average estimate; replace with real store shelf price"
-shrimp,"Shrimp, cooked",2.20,ESTIMATE,2026-10-09,"US average estimate; replace with real store shelf price"
-eggs,"Eggs, whole",0.55,ESTIMATE,2026-10-09,"US average estimate; replace with real store shelf price"
-egg_whites,"Egg whites",0.60,ESTIMATE,2026-10-09,"US average estimate; replace with real store shelf price"
-tofu,"Tofu, firm",0.75,ESTIMATE,2026-10-09,"US average estimate; replace with real store shelf price"
-edamame,"Edamame, shelled, cooked",0.70,ESTIMATE,2026-10-09,"US average estimate; replace with real store shelf price"
-black_beans,"Black beans, cooked",0.30,ESTIMATE,2026-10-09,"US average estimate; replace with real store shelf price"
-pinto_beans,"Pinto beans, cooked",0.28,ESTIMATE,2026-10-09,"US average estimate; replace with real store shelf price"
-lentils,"Lentils, cooked",0.30,ESTIMATE,2026-10-09,"US average estimate; replace with real store shelf price"
-chickpeas,"Chickpeas, cooked",0.35,ESTIMATE,2026-10-09,"US average estimate; replace with real store shelf price"
-hummus,"Hummus",0.90,ESTIMATE,2026-10-09,"US average estimate; replace with real store shelf price"
-greek_yogurt,"Greek yogurt, plain, nonfat",0.75,ESTIMATE,2026-10-09,"US average estimate; replace with real store shelf price"
-cottage_cheese,"Cottage cheese, 2%",0.65,ESTIMATE,2026-10-09,"US average estimate; replace with real store shelf price"
-milk,"Milk, 2%",0.10,ESTIMATE,2026-10-09,"US average estimate; replace with real store shelf price"
-cheddar,"Cheddar cheese",1.20,ESTIMATE,2026-10-09,"US average estimate; replace with real store shelf price"
-farmer_cheese,"Farmer cheese, fresh",1.10,ESTIMATE,2026-10-09,"US average estimate; replace with real store shelf price"
-string_cheese,"String cheese, part skim",1.10,ESTIMATE,2026-10-09,"US average estimate; replace with real store shelf price"
-peanut_butter,"Peanut butter, natural",0.70,ESTIMATE,2026-10-09,"US average estimate; replace with real store shelf price"
-almonds,"Almonds",1.60,ESTIMATE,2026-10-09,"US average estimate; replace with real store shelf price"
-walnuts,"Walnuts",2.00,ESTIMATE,2026-10-09,"US average estimate; replace with real store shelf price"
-pumpkin_seeds,"Pumpkin seeds",1.40,ESTIMATE,2026-10-09,"US average estimate; replace with real store shelf price"
-chia_seeds,"Chia seeds",1.50,ESTIMATE,2026-10-09,"US average estimate; replace with real store shelf price"
-oats,"Rolled oats, dry",0.35,ESTIMATE,2026-10-09,"US average estimate; replace with real store shelf price"
-brown_rice,"Brown rice, cooked",0.12,ESTIMATE,2026-10-09,"US average estimate; replace with real store shelf price"
-white_rice,"White rice, cooked",0.08,ESTIMATE,2026-10-09,"US average estimate; replace with real store shelf price"
-quinoa,"Quinoa, cooked",0.45,ESTIMATE,2026-10-09,"US average estimate; replace with real store shelf price"
-ww_bread,"Whole wheat bread",0.55,ESTIMATE,2026-10-09,"US average estimate; replace with real store shelf price"
-ww_pasta,"Whole wheat pasta, cooked",0.20,ESTIMATE,2026-10-09,"US average estimate; replace with real store shelf price"
-ww_pita,"Whole wheat pita",0.70,ESTIMATE,2026-10-09,"US average estimate; replace with real store shelf price"
-corn_tortilla,"Corn tortilla",0.45,ESTIMATE,2026-10-09,"US average estimate; replace with real store shelf price"
-flour_tortilla,"Whole wheat flour tortilla",0.60,ESTIMATE,2026-10-09,"US average estimate; replace with real store shelf price"
-arepa,"Corn arepa, cooked",0.40,ESTIMATE,2026-10-09,"US average estimate; replace with real store shelf price"
-popcorn,"Popcorn, air-popped",0.40,ESTIMATE,2026-10-09,"US average estimate; replace with real store shelf price"
-sweet_potato,"Sweet potato, baked",0.30,ESTIMATE,2026-10-09,"US average estimate; replace with real store shelf price"
-potato,"Potato, boiled",0.20,ESTIMATE,2026-10-09,"US average estimate; replace with real store shelf price"
-plantain,"Plantain, boiled",0.30,ESTIMATE,2026-10-09,"US average estimate; replace with real store shelf price"
-cassava,"Cassava, boiled",0.30,ESTIMATE,2026-10-09,"US average estimate; replace with real store shelf price"
-broccoli,"Broccoli, cooked",0.45,ESTIMATE,2026-10-09,"US average estimate; replace with real store shelf price"
-spinach,"Spinach, raw",0.80,ESTIMATE,2026-10-09,"US average estimate; replace with real store shelf price"
-mixed_greens,"Mixed salad greens",0.90,ESTIMATE,2026-10-09,"US average estimate; replace with real store shelf price"
-tomato,"Tomato",0.45,ESTIMATE,2026-10-09,"US average estimate; replace with real store shelf price"
-onion,"Onion",0.25,ESTIMATE,2026-10-09,"US average estimate; replace with real store shelf price"
-bell_pepper,"Bell pepper",0.65,ESTIMATE,2026-10-09,"US average estimate; replace with real store shelf price"
-carrots,"Carrots",0.22,ESTIMATE,2026-10-09,"US average estimate; replace with real store shelf price"
-zucchini,"Zucchini",0.40,ESTIMATE,2026-10-09,"US average estimate; replace with real store shelf price"
-green_beans,"Green beans, cooked",0.45,ESTIMATE,2026-10-09,"US average estimate; replace with real store shelf price"
-cabbage,"Cabbage, shredded",0.18,ESTIMATE,2026-10-09,"US average estimate; replace with real store shelf price"
-cucumber,"Cucumber",0.35,ESTIMATE,2026-10-09,"US average estimate; replace with real store shelf price"
-mushrooms,"Mushrooms, sauteed",0.90,ESTIMATE,2026-10-09,"US average estimate; replace with real store shelf price"
-cactus,"Cactus paddles, cooked",0.55,ESTIMATE,2026-10-09,"US average estimate; replace with real store shelf price"
-fresh_salsa,"Fresh tomato salsa",0.60,ESTIMATE,2026-10-09,"US average estimate; replace with real store shelf price"
-avocado,"Avocado",0.90,ESTIMATE,2026-10-09,"US average estimate; replace with real store shelf price"
-banana,"Banana",0.15,ESTIMATE,2026-10-09,"US average estimate; replace with real store shelf price"
-apple,"Apple",0.40,ESTIMATE,2026-10-09,"US average estimate; replace with real store shelf price"
-orange,"Orange",0.35,ESTIMATE,2026-10-09,"US average estimate; replace with real store shelf price"
-strawberries,"Strawberries",0.90,ESTIMATE,2026-10-09,"US average estimate; replace with real store shelf price"
-blueberries,"Blueberries, frozen",0.80,ESTIMATE,2026-10-09,"US average estimate; replace with real store shelf price"
-mango,"Mango",0.50,ESTIMATE,2026-10-09,"US average estimate; replace with real store shelf price"
-papaya,"Papaya",0.40,ESTIMATE,2026-10-09,"US average estimate; replace with real store shelf price"
-kiwi,"Kiwi",0.70,ESTIMATE,2026-10-09,"US average estimate; replace with real store shelf price"
-mixed_veg,"Mixed vegetables, frozen, cooked",0.35,ESTIMATE,2026-10-09,"US average estimate; replace with real store shelf price"
-corn,"Sweet corn kernels, cooked",0.30,ESTIMATE,2026-10-09,"US average estimate; replace with real store shelf price"
-canned_tomatoes,"Diced tomatoes, no salt added",0.30,ESTIMATE,2026-10-09,"US average estimate; replace with real store shelf price"
-olive_oil,"Olive oil",0.90,ESTIMATE,2026-10-09,"US average estimate; replace with real store shelf price"
-soy_sauce,"Soy sauce, low sodium",0.60,ESTIMATE,2026-10-09,"US average estimate; replace with real store shelf price"
-honey,"Honey",0.80,ESTIMATE,2026-10-09,"US average estimate; replace with real store shelf price"
+chicken_breast,"Chicken breast, roasted",0.76,Kroger - Kroger On the Rhine,2026-10-10,Kroger API 0028334900000 1 lb $2.59
+chicken_thigh,"Chicken thigh, skinless, roasted",1.17,Kroger - Kroger On the Rhine,2026-10-10,Kroger API 0025313650000 1 lb $3.99
+ground_turkey,"Ground turkey 93% lean, cooked",1.61,Kroger - Kroger On the Rhine,2026-10-10,Kroger API 0001111096874 1 lb $5.49
+lean_ground_beef,"Ground beef 90% lean, cooked",3.23,Kroger - Kroger On the Rhine,2026-10-10,Kroger API 0061266931671 16 oz $10.99
+flank_steak,"Flank steak, grilled",4.41,Kroger - Kroger On the Rhine,2026-10-10,Kroger API 0024161300000 1 lb $14.99
+pork_loin,"Pork loin, roasted",1.31,Kroger - Kroger On the Rhine,2026-10-10,Kroger API 0001111066226 36 oz $10.00
+salmon,"Salmon fillet, baked",2.20,Kroger - Kroger On the Rhine,2026-10-10,Kroger API 0073114951527 1.25 lb $9.99
+tilapia,"Tilapia, baked",2.76,Kroger - Kroger On the Rhine,2026-10-10,Kroger API 0001111062160 8 ounces $5.00
+canned_tuna,"Tuna, canned in water, drained",0.71,Kroger - Kroger On the Rhine,2026-10-10,Kroger API 0008000000673 5 oz $1.00
+sardines,"Sardines, canned in oil, drained",1.59,Kroger - Kroger On the Rhine,2026-10-10,Kroger API 0004800018718 3.75 oz $1.69
+shrimp,"Shrimp, cooked",1.43,Kroger - Kroger On the Rhine,2026-10-10,Kroger API 0001111096371 32 ounces $10.99
+eggs,"Eggs, whole",0.92,Kroger - Kroger On the Rhine,2026-10-10,Kroger API 0003360400537 1 dozen $5.49
+egg_whites,Egg whites,0.77,Kroger - Kroger On the Rhine,2026-10-10,Kroger API 0007590097122 32 oz $6.99
+tofu,"Tofu, firm",0.50,Kroger - Kroger On the Rhine,2026-10-10,Kroger API 0001111091341 14 oz $1.99
+edamame,"Edamame, shelled, cooked",0.73,Kroger - Kroger On the Rhine,2026-10-10,Kroger API 0001111015380 12 oz $2.49
+black_beans,"Black beans, cooked",0.23,Kroger - Kroger On the Rhine,2026-10-10,Kroger API 0001111072567 15.25 oz $1.00
+pinto_beans,"Pinto beans, cooked",0.23,Kroger - Kroger On the Rhine,2026-10-10,Kroger API 0001111072565 15.5 oz $1.00
+lentils,"Lentils, cooked",0.20,Kroger - Kroger On the Rhine,2026-10-10,Kroger API 0001111089654 16 oz $2.29
+chickpeas,"Chickpeas, cooked",0.34,Kroger - Kroger On the Rhine,2026-10-10,Kroger API 0003940000117 15.5 oz $1.49
+hummus,Hummus,1.41,Kroger - Kroger On the Rhine,2026-10-10,Kroger API 0004157358131 10 oz $3.99
+greek_yogurt,"Greek yogurt, plain, nonfat",0.47,Kroger - Kroger On the Rhine,2026-10-10,Kroger API 0001111010717 32 oz $4.29
+cottage_cheese,"Cottage cheese, 2%",0.47,Kroger - Kroger On the Rhine,2026-10-10,Kroger API 0001111044400 24 oz $3.19
+milk,"Milk, 2%",0.09,Kroger - Kroger On the Rhine,2026-10-10,Kroger API 0001111041660 1 gal $3.29
+cheddar,Cheddar cheese,0.88,Kroger - Kroger On the Rhine,2026-10-10,Kroger API 0001111050158 8 oz $2.00
+farmer_cheese,"Farmer cheese, fresh",1.02,Kroger - Kroger On the Rhine,2026-10-10,Kroger API 0001111012736 10 oz $2.89
+string_cheese,"String cheese, part skim",0.95,Kroger - Kroger On the Rhine,2026-10-10,Kroger API 0001111058151 24 ct / 1 oz $6.49
+peanut_butter,"Peanut butter, natural",0.64,Kroger - Kroger On the Rhine,2026-10-10,Kroger API 0005150024321 40 oz $7.29
+almonds,Almonds,1.54,Kroger - Kroger On the Rhine,2026-10-10,Kroger API 0001111002466 16 oz $6.99
+walnuts,Walnuts,2.35,Kroger - Kroger On the Rhine,2026-10-10,Kroger API 0001111002470 12 oz $7.99
+pumpkin_seeds,Pumpkin seeds,2.64,Kroger - Kroger On the Rhine,2026-10-10,Kroger API 0060265241708 8 oz $5.99
+chia_seeds,Chia seeds,1.41,Kroger - Kroger On the Rhine,2026-10-10,Kroger API 0001111008452 12 oz $4.79
+oats,"Rolled oats, dry",0.75,Kroger - Kroger On the Rhine,2026-10-10,Kroger API 0003997805155 32 oz $6.79
+brown_rice,"Brown rice, cooked",0.17,Kroger - Kroger On the Rhine,2026-10-10,Kroger API 0001111084736 14 oz $1.99
+white_rice,"White rice, cooked",0.13,Kroger - Kroger On the Rhine,2026-10-10,Kroger API 0001111084727 28 oz $3.19
+quinoa,"Quinoa, cooked",0.29,Kroger - Kroger On the Rhine,2026-10-10,Kroger API 0001111091238 16 oz $3.59
+ww_bread,Whole wheat bread,0.37,Kroger - Kroger On the Rhine,2026-10-10,Kroger API 0001111008480 24 oz $2.49
+ww_pasta,"Whole wheat pasta, cooked",0.17,Kroger - Kroger On the Rhine,2026-10-10,Kroger API 0004126033484 16 oz $1.69
+ww_pita,Whole wheat pita,0.78,Kroger - Kroger On the Rhine,2026-10-10,Kroger API 0007411700094 6 ct $2.99
+corn_tortilla,Corn tortilla,0.24,Kroger - Kroger On the Rhine,2026-10-10,Kroger API 0004856406000 66.7 oz $4.49
+flour_tortilla,Whole wheat flour tortilla,0.73,Kroger - Kroger On the Rhine,2026-10-10,Kroger API 0007373107107 16 oz $3.29
+arepa,"Corn arepa, cooked",0.40,ESTIMATE,2026-10-09,US average estimate; replace with real store shelf price
+popcorn,"Popcorn, air-popped",1.10,Kroger - Kroger On the Rhine,2026-10-10,Kroger API 0001111016502 7 oz $2.19
+sweet_potato,"Sweet potato, baked",0.33,Kroger - Kroger On the Rhine,2026-10-10,Kroger API 0000000004816 1 lb $1.49
+potato,"Potato, boiled",0.22,Kroger - Kroger On the Rhine,2026-10-10,Kroger API 0000000004072 1 lb $0.99
+plantain,"Plantain, boiled",0.42,Kroger - Kroger On the Rhine,2026-10-10,Kroger API 0000000004235 1 ea $0.75
+cassava,"Cassava, boiled",0.30,ESTIMATE,2026-10-09,US average estimate; replace with real store shelf price
+broccoli,"Broccoli, cooked",0.50,Kroger - Kroger On the Rhine,2026-10-10,Kroger API 0000000003082 1 lb $2.29
+spinach,"Spinach, raw",0.71,Kroger - Kroger On the Rhine,2026-10-10,Kroger API 0000000004090 1 ct $1.99
+mixed_greens,Mixed salad greens,0.90,ESTIMATE,2026-10-09,US average estimate; replace with real store shelf price
+tomato,Tomato,0.28,Kroger - Kroger On the Rhine,2026-10-10,Kroger API 0000000004087 1 lb $1.29
+onion,Onion,0.26,Kroger - Kroger On the Rhine,2026-10-10,Kroger API 0000000004093 1 lb $1.19
+bell_pepper,Bell pepper,1.11,Kroger - Kroger On the Rhine,2026-10-10,Kroger API 0000000003121 1 ct $1.67
+carrots,Carrots,0.28,Kroger - Kroger On the Rhine,2026-10-10,Kroger API 0000000004562 1 lb $1.29
+zucchini,Zucchini,0.39,Kroger - Kroger On the Rhine,2026-10-10,Kroger API 0000000004067 1 lb $1.79
+green_beans,"Green beans, cooked",1.03,Kroger - Kroger On the Rhine,2026-10-10,Kroger API 0001111022236 12 oz $3.49
+cabbage,"Cabbage, shredded",0.22,Kroger - Kroger On the Rhine,2026-10-10,Kroger API 0000000004069 1 lb $0.99
+cucumber,Cucumber,0.26,Kroger - Kroger On the Rhine,2026-10-10,Kroger API 0000000004062 1 ct $0.79
+mushrooms,"Mushrooms, sauteed",1.10,Kroger - Kroger On the Rhine,2026-10-10,Kroger API 0001111091487 8 oz $2.49
+cactus,"Cactus paddles, cooked",0.55,ESTIMATE,2026-10-09,US average estimate; replace with real store shelf price
+fresh_salsa,Fresh tomato salsa,0.88,Kroger - Kroger On the Rhine,2026-10-10,Kroger API 0064767100002 16 oz $3.99
+avocado,Avocado,0.83,Kroger - Kroger On the Rhine,2026-10-10,Kroger API 0001111018209 4 ct $4.99
+banana,Banana,0.13,Kroger - Kroger On the Rhine,2026-10-10,Kroger API 0000000004011 1 lb $0.59
+apple,Apple,0.99,Kroger - Kroger On the Rhine,2026-10-10,Kroger API 0001111061208 1 ct $1.79
+orange,Orange,0.55,Kroger - Kroger On the Rhine,2026-10-10,Kroger API 0086039900191 2 lb $4.99
+strawberries,Strawberries,0.81,Kroger - Kroger On the Rhine,2026-10-10,Kroger API 0001111003252 48 oz $10.99
+blueberries,"Blueberries, frozen",1.55,Kroger - Kroger On the Rhine,2026-10-10,Kroger API 0001111036742 10 oz $4.39
+mango,Mango,0.37,Kroger - Kroger On the Rhine,2026-10-10,Kroger API 0000000004959 1 ct $1.25
+papaya,Papaya,0.39,Kroger - Kroger On the Rhine,2026-10-10,Kroger API 0000000003112 1 lb $1.79
+kiwi,Kiwi,2.35,Kroger - Kroger On the Rhine,2026-10-10,Kroger API 0063912389492 9 oz $6.00
+mixed_veg,"Mixed vegetables, frozen, cooked",0.38,Kroger - Kroger On the Rhine,2026-10-10,Kroger API 0001111089735 12 oz $1.29
+corn,"Sweet corn kernels, cooked",0.19,Kroger - Kroger On the Rhine,2026-10-10,Kroger API 0001111010926 15.25 oz $0.83
+canned_tomatoes,"Diced tomatoes, no salt added",0.30,Kroger - Kroger On the Rhine,2026-10-10,Kroger API 0001111080930 28 oz $2.39
+olive_oil,Olive oil,1.26,Kroger - Kroger On the Rhine,2026-10-10,Kroger API 0001111004415 25.4 fl oz $9.49
+soy_sauce,"Soy sauce, low sodium",0.49,Kroger - Kroger On the Rhine,2026-10-10,Kroger API 0001111015476 15 fl oz $2.19
+honey,Honey,0.88,Kroger - Kroger On the Rhine,2026-10-10,Kroger API 0001111012316 24 oz $5.99

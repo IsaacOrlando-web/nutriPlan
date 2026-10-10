@@ -128,12 +128,12 @@
     "runId": "alex-run-0001",
     "agent": "budget",
     "kind": "objection",
-    "text": "Chicken breast, roasted alone eats $8.80 of the $50 across the pool. Lovely, so is rent. Once a week?",
+    "text": "Chicken thigh, skinless, roasted alone eats $10.53 of the $50 across the pool. Swap half of it for tuna?",
     "at": "2026-10-09T15:00:09.800Z",
     "data": {
-      "foodId": "chicken_breast",
-      "poolCostUsd": 8.8,
-      "swapFoodId": null
+      "foodId": "chicken_thigh",
+      "poolCostUsd": 10.53,
+      "swapFoodId": "canned_tuna"
     }
   },
   {
@@ -141,7 +141,7 @@
     "runId": "alex-run-0001",
     "agent": "chef",
     "kind": "concession",
-    "text": "Fine, I keep chicken breast once and lean on beans and eggs for the rest. Flavor stays.",
+    "text": "Fine, I keep chicken thigh once and lean on tuna for the rest. Flavor stays.",
     "at": "2026-10-09T15:00:11.200Z"
   },
   {
@@ -161,30 +161,30 @@
     "runId": "alex-run-0001",
     "agent": "orchestrator",
     "kind": "tool_call",
-    "text": "First solve: budget and protein are the scarce resources (budget binding at $50; protein 23 g under target on 7 days). Chef: 6 new meals.",
+    "text": "First solve: budget and protein are the scarce resources (budget binding at $50; protein 42 g under target on 5 days). Chef: 6 new meals.",
     "at": "2026-10-09T15:00:14.000Z",
     "data": {
       "tool": "optimizePlan",
       "solve": 1,
-      "poolSize": 33,
-      "solveMs": 2974,
+      "poolSize": 38,
+      "solveMs": 3056,
       "brief": {
         "count": 6,
         "feasible": true,
         "weeklyBudgetUsd": 50,
-        "weeklyCostUsd": 49.93,
+        "weeklyCostUsd": 50.04,
         "bindingConstraints": [
           "weekly_budget"
         ],
         "budgetBinding": true,
         "proteinTargetG": 179,
-        "proteinShortDays": 7,
-        "proteinGapG": 23,
-        "sodiumSharePct": 59,
+        "proteinShortDays": 5,
+        "proteinGapG": 42,
+        "sodiumSharePct": 66,
         "costPerType": {
-          "breakfast": 1.65,
-          "lunch": 2.72,
-          "dinner": 2.76
+          "breakfast": 1.87,
+          "lunch": 2.59,
+          "dinner": 2.69
         },
         "typeCounts": {
           "dinner": 3,
@@ -210,7 +210,7 @@
           "high protein (at least 65 g)",
           "under $2.15"
         ],
-        "text": "First solve: budget and protein are the scarce resources (budget binding at $50; protein 23 g under target on 7 days). Chef: 6 new meals."
+        "text": "First solve: budget and protein are the scarce resources (budget binding at $50; protein 42 g under target on 5 days). Chef: 6 new meals."
       }
     }
   },
@@ -219,7 +219,7 @@
     "runId": "alex-run-0001",
     "agent": "chef",
     "kind": "proposal",
-    "text": "Brief received: 6 high-protein meals under $2.15. Here they come: one-pot chicken and rice, extra chicken thigh and sardine tomato pasta.",
+    "text": "Brief received: 6 high-protein meals under $2.15. First up: chipotle shredded chicken tostadas, extra chicken breast.",
     "at": "2026-10-09T15:00:15.400Z",
     "data": {
       "brief": {
@@ -233,12 +233,12 @@
         }
       },
       "columns": [
+        "Chipotle shredded chicken tostadas, extra chicken breast",
+        "Lentil bolognese",
         "One-pot chicken and rice, extra chicken thigh",
-        "Sardine tomato pasta",
-        "Chicken thigh with rice and green beans, extra chicken thigh",
-        "Chicken with pinto beans and rice, extra chicken thigh",
-        "Ginger soy chicken rice bowl, extra chicken thigh",
-        "Lentil spinach curry"
+        "Mexican chicken vegetable soup, extra chicken breast",
+        "Chicken avocado sandwich, extra chicken breast",
+        "Chicken and cactus tacos, extra chicken breast"
       ],
       "source": "templates",
       "count": 6
@@ -249,19 +249,19 @@
     "runId": "alex-run-0001",
     "agent": "orchestrator",
     "kind": "proposal",
-    "text": "Second solve used 4 of Chef's 6 new meals; protein deviation went from 23 g to 6 g. Solved in 6.1 s.",
+    "text": "Second solve used 2 of Chef's 6 new meals; weekly cost went from $50.04 to $49.96, inside the $50. Solved in 4.5 s.",
     "at": "2026-10-09T15:00:16.800Z",
     "data": {
       "solve": 2,
-      "usedColumns": 4,
+      "usedColumns": 2,
       "offeredColumns": 6,
       "kept": true,
-      "proteinDeviationBeforeG": 23,
-      "proteinDeviationAfterG": 6,
-      "weeklyCostBeforeUsd": 49.93,
-      "weeklyCostAfterUsd": 49.9,
-      "solveMs": 6072,
-      "solveSec": 6.1,
+      "proteinDeviationBeforeG": 31,
+      "proteinDeviationAfterG": 20,
+      "weeklyCostBeforeUsd": 50.04,
+      "weeklyCostAfterUsd": 49.96,
+      "solveMs": 4540,
+      "solveSec": 4.5,
       "shadowPricesMs": 0
     }
   },
@@ -293,14 +293,13 @@
     "runId": "alex-run-0001",
     "agent": "budget",
     "kind": "proposal",
-    "text": "Budget is the binding constraint: $49.90 of your $50 is working. Every extra dollar buys variety.",
+    "text": "Budget is the binding constraint: $49.96 of your $50 is working. Every extra dollar buys variety.",
     "at": "2026-10-09T15:00:21.000Z",
     "data": {
       "bindingConstraints": [
-        "weekly_budget",
-        "min_fiber"
+        "weekly_budget"
       ],
-      "weeklyCostUsd": 49.9
+      "weeklyCostUsd": 49.96
     }
   },
   {
@@ -308,11 +307,11 @@
     "runId": "alex-run-0001",
     "agent": "budget",
     "kind": "proposal",
-    "text": "Grocery list ready: 24 items, $49.90 total.",
+    "text": "Grocery list ready: 25 items, $49.96 total.",
     "at": "2026-10-09T15:00:22.400Z",
     "data": {
-      "items": 24,
-      "weeklyCostUsd": 49.9
+      "items": 25,
+      "weeklyCostUsd": 49.96
     }
   },
   {
@@ -328,7 +327,7 @@
     "runId": "alex-run-0001",
     "agent": "orchestrator",
     "kind": "decision",
-    "text": "Plan v1 approved: 7 days, $49.90, zero rule violations.",
+    "text": "Plan v1 approved: 7 days, $49.96, zero rule violations.",
     "at": "2026-10-09T15:00:25.200Z",
     "data": {
       "planId": "alex-plan-0001",
@@ -336,10 +335,10 @@
       "bestEffort": false,
       "concededAny": false,
       "timingMs": {
-        "firstSolveMs": 2976,
-        "chefColumnsMs": 1,
-        "elapsedBeforeSecondSolveMs": 2980,
-        "secondSolveMs": 6074,
+        "firstSolveMs": 3069,
+        "chefColumnsMs": 4,
+        "elapsedBeforeSecondSolveMs": 3093,
+        "secondSolveMs": 4551,
         "shadowPricesMs": 0,
         "shadowPricesDeferred": 1
       }

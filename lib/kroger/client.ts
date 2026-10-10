@@ -215,7 +215,9 @@ export async function searchLocations(
   opts: { limit?: number; chain?: string } = {},
 ): Promise<KrogerLocation[]> {
   const token = await getAppToken();
-  const q = new URLSearchParams({ "filter.zipCode.near": zip, "filter.limit": String(opts.limit ?? 5) });
+  const limit = opts.limit ?? 5;
+  // Ask for extra rows: Kroger lists internal fulfillment nodes ("Spoke Forecast", "Unused Spoke") next to stores.
+  const q = new URLSearchParams({ "filter.zipCode.near": zip, "filter.limit": String(limit * 2) });
   if (opts.chain) q.set("filter.chain", opts.chain);
   const res = await krogerFetch(`${apiBase()}/locations?${q.toString()}`, {
     headers: { Authorization: `Bearer ${token}`, Accept: "application/json" },
@@ -223,7 +225,8 @@ export async function searchLocations(
   if (!res.ok) throw await upstreamError(res, "location search");
   const body = await readJson<{ data?: RawLocation[] }>(res, "location search");
   return (body.data ?? [])
-    .filter((l) => l.locationId)
+    .filter((l) => l.locationId && !isInternalNode(l.name))
+    .slice(0, limit)
     .map((l) => {
       const a = l.address ?? {};
       const address = [a.addressLine1, [a.city, a.state].filter(Boolean).join(", "), a.zipCode]
@@ -231,6 +234,11 @@ export async function searchLocations(
         .join(", ");
       return { id: String(l.locationId), name: l.name ?? l.chain ?? "Kroger", address };
     });
+}
+
+/** Kroger's locations feed includes warehouse and forecasting nodes nobody can shop at. */
+export function isInternalNode(name: string | undefined): boolean {
+  return /\b(spoke|forecast|unused|shed|trans|fulfillment|warehouse|hub|delivery center)\b/i.test(name ?? "");
 }
 
 // ---------------------------------------------------------------- products

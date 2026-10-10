@@ -137,12 +137,12 @@
       "runId": "alex-run-0001",
       "agent": "budget",
       "kind": "objection",
-      "text": "Chicken breast, roasted alone eats $8.80 of the $50 across the pool. Lovely, so is rent. Once a week?",
+      "text": "Chicken thigh, skinless, roasted alone eats $10.53 of the $50 across the pool. Swap half of it for tuna?",
       "at": "2026-10-09T15:00:09.800Z",
       "data": {
-        "foodId": "chicken_breast",
-        "poolCostUsd": 8.8,
-        "swapFoodId": null
+        "foodId": "chicken_thigh",
+        "poolCostUsd": 10.53,
+        "swapFoodId": "canned_tuna"
       }
     },
     {
@@ -150,7 +150,7 @@
       "runId": "alex-run-0001",
       "agent": "chef",
       "kind": "concession",
-      "text": "Fine, I keep chicken breast once and lean on beans and eggs for the rest. Flavor stays.",
+      "text": "Fine, I keep chicken thigh once and lean on tuna for the rest. Flavor stays.",
       "at": "2026-10-09T15:00:11.200Z"
     },
     {
@@ -170,30 +170,30 @@
       "runId": "alex-run-0001",
       "agent": "orchestrator",
       "kind": "tool_call",
-      "text": "First solve: budget and protein are the scarce resources (budget binding at $50; protein 23 g under target on 7 days). Chef: 6 new meals.",
+      "text": "First solve: budget and protein are the scarce resources (budget binding at $50; protein 42 g under target on 5 days). Chef: 6 new meals.",
       "at": "2026-10-09T15:00:14.000Z",
       "data": {
         "tool": "optimizePlan",
         "solve": 1,
-        "poolSize": 33,
-        "solveMs": 2974,
+        "poolSize": 38,
+        "solveMs": 3056,
         "brief": {
           "count": 6,
           "feasible": true,
           "weeklyBudgetUsd": 50,
-          "weeklyCostUsd": 49.93,
+          "weeklyCostUsd": 50.04,
           "bindingConstraints": [
             "weekly_budget"
           ],
           "budgetBinding": true,
           "proteinTargetG": 179,
-          "proteinShortDays": 7,
-          "proteinGapG": 23,
-          "sodiumSharePct": 59,
+          "proteinShortDays": 5,
+          "proteinGapG": 42,
+          "sodiumSharePct": 66,
           "costPerType": {
-            "breakfast": 1.65,
-            "lunch": 2.72,
-            "dinner": 2.76
+            "breakfast": 1.87,
+            "lunch": 2.59,
+            "dinner": 2.69
           },
           "typeCounts": {
             "dinner": 3,
@@ -219,7 +219,7 @@
             "high protein (at least 65 g)",
             "under $2.15"
           ],
-          "text": "First solve: budget and protein are the scarce resources (budget binding at $50; protein 23 g under target on 7 days). Chef: 6 new meals."
+          "text": "First solve: budget and protein are the scarce resources (budget binding at $50; protein 42 g under target on 5 days). Chef: 6 new meals."
         }
       }
     },
@@ -228,7 +228,7 @@
       "runId": "alex-run-0001",
       "agent": "chef",
       "kind": "proposal",
-      "text": "Brief received: 6 high-protein meals under $2.15. Here they come: one-pot chicken and rice, extra chicken thigh and sardine tomato pasta.",
+      "text": "Brief received: 6 high-protein meals under $2.15. First up: chipotle shredded chicken tostadas, extra chicken breast.",
       "at": "2026-10-09T15:00:15.400Z",
       "data": {
         "brief": {
@@ -242,12 +242,12 @@
           }
         },
         "columns": [
+          "Chipotle shredded chicken tostadas, extra chicken breast",
+          "Lentil bolognese",
           "One-pot chicken and rice, extra chicken thigh",
-          "Sardine tomato pasta",
-          "Chicken thigh with rice and green beans, extra chicken thigh",
-          "Chicken with pinto beans and rice, extra chicken thigh",
-          "Ginger soy chicken rice bowl, extra chicken thigh",
-          "Lentil spinach curry"
+          "Mexican chicken vegetable soup, extra chicken breast",
+          "Chicken avocado sandwich, extra chicken breast",
+          "Chicken and cactus tacos, extra chicken breast"
         ],
         "source": "templates",
         "count": 6
@@ -258,19 +258,19 @@
       "runId": "alex-run-0001",
       "agent": "orchestrator",
       "kind": "proposal",
-      "text": "Second solve used 4 of Chef's 6 new meals; protein deviation went from 23 g to 6 g. Solved in 6.1 s.",
+      "text": "Second solve used 2 of Chef's 6 new meals; weekly cost went from $50.04 to $49.96, inside the $50. Solved in 4.5 s.",
       "at": "2026-10-09T15:00:16.800Z",
       "data": {
         "solve": 2,
-        "usedColumns": 4,
+        "usedColumns": 2,
         "offeredColumns": 6,
         "kept": true,
-        "proteinDeviationBeforeG": 23,
-        "proteinDeviationAfterG": 6,
-        "weeklyCostBeforeUsd": 49.93,
-        "weeklyCostAfterUsd": 49.9,
-        "solveMs": 6072,
-        "solveSec": 6.1,
+        "proteinDeviationBeforeG": 31,
+        "proteinDeviationAfterG": 20,
+        "weeklyCostBeforeUsd": 50.04,
+        "weeklyCostAfterUsd": 49.96,
+        "solveMs": 4540,
+        "solveSec": 4.5,
         "shadowPricesMs": 0
       }
     },
@@ -302,14 +302,13 @@
       "runId": "alex-run-0001",
       "agent": "budget",
       "kind": "proposal",
-      "text": "Budget is the binding constraint: $49.90 of your $50 is working. Every extra dollar buys variety.",
+      "text": "Budget is the binding constraint: $49.96 of your $50 is working. Every extra dollar buys variety.",
       "at": "2026-10-09T15:00:21.000Z",
       "data": {
         "bindingConstraints": [
-          "weekly_budget",
-          "min_fiber"
+          "weekly_budget"
         ],
-        "weeklyCostUsd": 49.9
+        "weeklyCostUsd": 49.96
       }
     },
     {
@@ -317,11 +316,11 @@
       "runId": "alex-run-0001",
       "agent": "budget",
       "kind": "proposal",
-      "text": "Grocery list ready: 24 items, $49.90 total.",
+      "text": "Grocery list ready: 25 items, $49.96 total.",
       "at": "2026-10-09T15:00:22.400Z",
       "data": {
-        "items": 24,
-        "weeklyCostUsd": 49.9
+        "items": 25,
+        "weeklyCostUsd": 49.96
       }
     },
     {
@@ -337,7 +336,7 @@
       "runId": "alex-run-0001",
       "agent": "orchestrator",
       "kind": "decision",
-      "text": "Plan v1 approved: 7 days, $49.90, zero rule violations.",
+      "text": "Plan v1 approved: 7 days, $49.96, zero rule violations.",
       "at": "2026-10-09T15:00:25.200Z",
       "data": {
         "planId": "alex-plan-0001",
@@ -345,10 +344,10 @@
         "bestEffort": false,
         "concededAny": false,
         "timingMs": {
-          "firstSolveMs": 2976,
-          "chefColumnsMs": 1,
-          "elapsedBeforeSecondSolveMs": 2980,
-          "secondSolveMs": 6074,
+          "firstSolveMs": 3069,
+          "chefColumnsMs": 4,
+          "elapsedBeforeSecondSolveMs": 3093,
+          "secondSolveMs": 4551,
           "shadowPricesMs": 0,
           "shadowPricesDeferred": 1
         }
@@ -362,513 +361,79 @@
     "reason": "Onboarding plan",
     "runId": "alex-run-0001",
     "startDate": "2026-10-10",
-    "weeklyCostUsd": 49.9,
+    "weeklyCostUsd": 49.96,
     "days": [
       {
         "date": "2026-10-10",
         "meals": [
           {
-            "mealId": "2026-10-10_breakfast_ranchero_eggs",
+            "mealId": "2026-10-10_breakfast_arepa_egg_avocado",
             "type": "breakfast",
-            "name": "Ranchero eggs with black beans",
-            "cuisine": "Mexican",
+            "name": "Corn arepa with egg and avocado",
+            "cuisine": "Venezuelan",
             "recipeSteps": [
-              "Warm tortillas and beans",
-              "Fry eggs in a light film of oil",
-              "Top tortillas with beans, eggs, salsa and crumbled cheese"
+              "Toast arepas on a dry griddle until crisp",
+              "Scramble eggs",
+              "Split arepas and fill with eggs, avocado and farmer cheese"
             ],
             "prepMinutes": 15,
             "items": [
               {
-                "foodId": "eggs",
-                "name": "Eggs, whole",
-                "servings": 2,
-                "grams": 100
-              },
-              {
-                "foodId": "corn_tortilla",
-                "name": "Corn tortilla",
-                "servings": 2,
-                "grams": 52
-              },
-              {
-                "foodId": "black_beans",
-                "name": "Black beans, cooked",
-                "servings": 2,
-                "grams": 172
-              },
-              {
-                "foodId": "fresh_salsa",
-                "name": "Fresh tomato salsa",
+                "foodId": "arepa",
+                "name": "Corn arepa, cooked",
                 "servings": 1,
-                "grams": 60
-              }
-            ],
-            "totals": {
-              "calories": 495,
-              "proteinG": 31.4,
-              "carbsG": 67.2,
-              "fatG": 12,
-              "fiberG": 19,
-              "sugarG": 2.9,
-              "addedSugarG": 0,
-              "satFatG": 3.5,
-              "sodiumMg": 229,
-              "potassiumMg": 983,
-              "glycemicLoad": 17.2,
-              "costUsd": 1.66
-            },
-            "explanation": [
-              {
-                "agent": "chef",
-                "text": "Ranchero eggs with black beans: Mexican flavors you said you like, 15 minutes of prep."
-              },
-              {
-                "agent": "doctor",
-                "text": "31.4 g protein and 19 g fiber keep you full while losing fat safely."
-              },
-              {
-                "agent": "budget",
-                "text": "$1.66 for this meal, 31% of today's sodium."
-              }
-            ]
-          },
-          {
-            "mealId": "2026-10-10_lunch_chicken_beans_rice",
-            "type": "lunch",
-            "name": "Chicken with pinto beans and rice",
-            "cuisine": "Latin",
-            "recipeSteps": [
-              "Season chicken with garlic and cumin, then bake",
-              "Warm beans and rice",
-              "Serve with a cabbage lime slaw"
-            ],
-            "prepMinutes": 25,
-            "items": [
-              {
-                "foodId": "chicken_thigh",
-                "name": "Chicken thigh, skinless, roasted",
-                "servings": 2,
-                "grams": 200
-              },
-              {
-                "foodId": "pinto_beans",
-                "name": "Pinto beans, cooked",
-                "servings": 1,
-                "grams": 86
-              },
-              {
-                "foodId": "white_rice",
-                "name": "White rice, cooked",
-                "servings": 2,
-                "grams": 186
-              },
-              {
-                "foodId": "cabbage",
-                "name": "Cabbage, shredded",
-                "servings": 1,
-                "grams": 89
-              }
-            ],
-            "totals": {
-              "calories": 805,
-              "proteinG": 65.9,
-              "carbsG": 80.1,
-              "fatG": 23,
-              "fiberG": 10.7,
-              "sugarG": 3.3,
-              "addedSugarG": 0,
-              "satFatG": 6.3,
-              "sodiumMg": 209,
-              "potassiumMg": 1071,
-              "glycemicLoad": 43.8,
-              "costUsd": 2.15
-            },
-            "explanation": [
-              {
-                "agent": "chef",
-                "text": "Chicken with pinto beans and rice: Latin flavors you said you like, 25 minutes of prep."
-              },
-              {
-                "agent": "doctor",
-                "text": "65.9 g protein and 10.7 g fiber keep you full while losing fat safely."
-              },
-              {
-                "agent": "budget",
-                "text": "$2.15 for this meal, 29% of today's sodium."
-              }
-            ]
-          },
-          {
-            "mealId": "2026-10-10_dinner_chicken_rice_greenbeans__xp",
-            "type": "dinner",
-            "name": "Chicken thigh with rice and green beans, extra chicken thigh",
-            "cuisine": "American",
-            "recipeSteps": [
-              "Roast chicken thighs",
-              "Steam green beans",
-              "Serve with rice"
-            ],
-            "prepMinutes": 30,
-            "items": [
-              {
-                "foodId": "chicken_thigh",
-                "name": "Chicken thigh, skinless, roasted",
-                "servings": 3,
-                "grams": 300
-              },
-              {
-                "foodId": "brown_rice",
-                "name": "Brown rice, cooked",
-                "servings": 1,
-                "grams": 98
-              },
-              {
-                "foodId": "green_beans",
-                "name": "Green beans, cooked",
-                "servings": 1,
-                "grams": 125
-              }
-            ],
-            "totals": {
-              "calories": 791,
-              "proteinG": 83,
-              "carbsG": 35,
-              "fatG": 34.1,
-              "fiberG": 5.6,
-              "sugarG": 4.7,
-              "addedSugarG": 0,
-              "satFatG": 9.4,
-              "sodiumMg": 290,
-              "potassiumMg": 987,
-              "glycemicLoad": 16.6,
-              "costUsd": 3.08
-            },
-            "explanation": [
-              {
-                "agent": "chef",
-                "text": "Chicken thigh with rice and green beans, extra chicken thigh: American flavors you said you like, 30 minutes of prep."
-              },
-              {
-                "agent": "doctor",
-                "text": "83 g protein and 5.6 g fiber keep you full while losing fat safely."
-              },
-              {
-                "agent": "budget",
-                "text": "$3.08 for this meal, 40% of today's sodium."
-              }
-            ]
-          }
-        ],
-        "dayTotals": {
-          "calories": 2091,
-          "proteinG": 180.3,
-          "carbsG": 182.3,
-          "fatG": 69.1,
-          "fiberG": 35.3,
-          "sugarG": 10.9,
-          "addedSugarG": 0,
-          "satFatG": 19.2,
-          "sodiumMg": 728,
-          "potassiumMg": 3041,
-          "glycemicLoad": 77.6,
-          "costUsd": 6.89
-        }
-      },
-      {
-        "date": "2026-10-11",
-        "meals": [
-          {
-            "mealId": "2026-10-11_breakfast_bean_breakfast_burrito",
-            "type": "breakfast",
-            "name": "Egg and black bean breakfast burrito",
-            "cuisine": "Mexican",
-            "recipeSteps": [
-              "Scramble eggs",
-              "Warm beans and tortilla",
-              "Fill tortilla with eggs, beans, salsa and cheese, then roll"
-            ],
-            "prepMinutes": 12,
-            "items": [
-              {
-                "foodId": "flour_tortilla",
-                "name": "Whole wheat flour tortilla",
-                "servings": 1,
-                "grams": 45
+                "grams": 75
               },
               {
                 "foodId": "eggs",
                 "name": "Eggs, whole",
-                "servings": 2,
-                "grams": 100
-              },
-              {
-                "foodId": "black_beans",
-                "name": "Black beans, cooked",
                 "servings": 1,
-                "grams": 86
+                "grams": 50
               },
               {
-                "foodId": "fresh_salsa",
-                "name": "Fresh tomato salsa",
+                "foodId": "avocado",
+                "name": "Avocado",
                 "servings": 1,
-                "grams": 60
+                "grams": 50
               },
               {
-                "foodId": "cheddar",
-                "name": "Cheddar cheese",
+                "foodId": "farmer_cheese",
+                "name": "Farmer cheese, fresh",
                 "servings": 1,
                 "grams": 28
               }
             ],
             "totals": {
-              "calories": 515,
-              "proteinG": 31.3,
-              "carbsG": 46.1,
-              "fatG": 22.7,
-              "fiberG": 11.4,
-              "sugarG": 3.2,
-              "addedSugarG": 0.5,
-              "satFatG": 9.4,
-              "sodiumMg": 639,
-              "potassiumMg": 693,
-              "glycemicLoad": 9.8,
-              "costUsd": 1.77
-            },
-            "explanation": [
-              {
-                "agent": "chef",
-                "text": "Egg and black bean breakfast burrito: Mexican flavors you said you like, 12 minutes of prep."
-              },
-              {
-                "agent": "doctor",
-                "text": "31.3 g protein and 11.4 g fiber keep you full while losing fat safely."
-              },
-              {
-                "agent": "budget",
-                "text": "$1.77 for this meal, 59% of today's sodium."
-              }
-            ]
-          },
-          {
-            "mealId": "2026-10-11_lunch_chicken_beans_rice__xp",
-            "type": "lunch",
-            "name": "Chicken with pinto beans and rice, extra chicken thigh",
-            "cuisine": "Latin",
-            "recipeSteps": [
-              "Season chicken with garlic and cumin, then bake",
-              "Warm beans and rice",
-              "Serve with a cabbage lime slaw"
-            ],
-            "prepMinutes": 25,
-            "items": [
-              {
-                "foodId": "chicken_thigh",
-                "name": "Chicken thigh, skinless, roasted",
-                "servings": 3,
-                "grams": 300
-              },
-              {
-                "foodId": "pinto_beans",
-                "name": "Pinto beans, cooked",
-                "servings": 2,
-                "grams": 172
-              },
-              {
-                "foodId": "white_rice",
-                "name": "White rice, cooked",
-                "servings": 2,
-                "grams": 186
-              },
-              {
-                "foodId": "cabbage",
-                "name": "Cabbage, shredded",
-                "servings": 1,
-                "grams": 89
-              }
-            ],
-            "totals": {
-              "calories": 1137,
-              "proteinG": 99.7,
-              "carbsG": 102.7,
-              "fatG": 34.6,
-              "fiberG": 18.4,
-              "sugarG": 3.6,
+              "calories": 385,
+              "proteinG": 15.8,
+              "carbsG": 36.9,
+              "fatG": 20.3,
+              "fiberG": 5.2,
+              "sugarG": 1.8,
               "addedSugarG": 0,
-              "satFatG": 9.4,
-              "sodiumMg": 305,
-              "potassiumMg": 1686,
-              "glycemicLoad": 49.6,
-              "costUsd": 3.19
+              "satFatG": 6.5,
+              "sodiumMg": 495,
+              "potassiumMg": 423,
+              "glycemicLoad": 17.9,
+              "costUsd": 1.46
             },
             "explanation": [
               {
                 "agent": "chef",
-                "text": "Chicken with pinto beans and rice, extra chicken thigh: Latin flavors you said you like, 25 minutes of prep."
+                "text": "Corn arepa with egg and avocado: Venezuelan flavors you said you like, 15 minutes of prep."
               },
               {
                 "agent": "doctor",
-                "text": "99.7 g protein and 18.4 g fiber keep you full while losing fat safely."
+                "text": "15.8 g protein and 5.2 g fiber keep you full while losing fat safely."
               },
               {
                 "agent": "budget",
-                "text": "$3.19 for this meal, 28% of today's sodium."
+                "text": "$1.46 for this meal, 43% of today's sodium."
               }
             ]
           },
           {
-            "mealId": "2026-10-11_dinner_chipotle_chicken_tostadas",
-            "type": "dinner",
-            "name": "Chipotle shredded chicken tostadas",
-            "cuisine": "Mexican",
-            "recipeSteps": [
-              "Simmer shredded chicken with tomato, onion and chipotle",
-              "Crisp tortillas in the oven",
-              "Top with tinga, cabbage and farmer cheese"
-            ],
-            "prepMinutes": 30,
-            "items": [
-              {
-                "foodId": "chicken_breast",
-                "name": "Chicken breast, roasted",
-                "servings": 1,
-                "grams": 100
-              },
-              {
-                "foodId": "corn_tortilla",
-                "name": "Corn tortilla",
-                "servings": 3,
-                "grams": 78
-              },
-              {
-                "foodId": "canned_tomatoes",
-                "name": "Diced tomatoes, no salt added",
-                "servings": 1,
-                "grams": 121
-              },
-              {
-                "foodId": "onion",
-                "name": "Onion",
-                "servings": 1,
-                "grams": 55
-              },
-              {
-                "foodId": "cabbage",
-                "name": "Cabbage, shredded",
-                "servings": 1,
-                "grams": 89
-              }
-            ],
-            "totals": {
-              "calories": 418,
-              "proteinG": 39.1,
-              "carbsG": 53.9,
-              "fatG": 6.4,
-              "fiberG": 10.4,
-              "sugarG": 11.2,
-              "addedSugarG": 0,
-              "satFatG": 1.3,
-              "sodiumMg": 139,
-              "potassiumMg": 864,
-              "glycemicLoad": 16.9,
-              "costUsd": 2.11
-            },
-            "explanation": [
-              {
-                "agent": "chef",
-                "text": "Chipotle shredded chicken tostadas: Mexican flavors you said you like, 30 minutes of prep."
-              },
-              {
-                "agent": "doctor",
-                "text": "39.1 g protein and 10.4 g fiber keep you full while losing fat safely."
-              },
-              {
-                "agent": "budget",
-                "text": "$2.11 for this meal, 13% of today's sodium."
-              }
-            ]
-          }
-        ],
-        "dayTotals": {
-          "calories": 2070,
-          "proteinG": 170.1,
-          "carbsG": 202.7,
-          "fatG": 63.7,
-          "fiberG": 40.2,
-          "sugarG": 18,
-          "addedSugarG": 0.5,
-          "satFatG": 20.1,
-          "sodiumMg": 1083,
-          "potassiumMg": 3243,
-          "glycemicLoad": 76.3,
-          "costUsd": 7.07
-        }
-      },
-      {
-        "date": "2026-10-12",
-        "meals": [
-          {
-            "mealId": "2026-10-12_breakfast_veggie_eggs_toast",
-            "type": "breakfast",
-            "name": "Veggie scrambled eggs with toast",
-            "cuisine": "American",
-            "recipeSteps": [
-              "Whisk eggs with a pinch of pepper",
-              "Wilt spinach in a nonstick pan, add eggs and scramble softly",
-              "Serve with toast and sliced tomato"
-            ],
-            "prepMinutes": 10,
-            "items": [
-              {
-                "foodId": "eggs",
-                "name": "Eggs, whole",
-                "servings": 3,
-                "grams": 150
-              },
-              {
-                "foodId": "spinach",
-                "name": "Spinach, raw",
-                "servings": 1,
-                "grams": 30
-              },
-              {
-                "foodId": "ww_bread",
-                "name": "Whole wheat bread",
-                "servings": 1,
-                "grams": 32
-              }
-            ],
-            "totals": {
-              "calories": 302,
-              "proteinG": 23.7,
-              "carbsG": 15.8,
-              "fatG": 15.5,
-              "fiberG": 2.6,
-              "sugarG": 2.1,
-              "addedSugarG": 0.8,
-              "satFatG": 4.9,
-              "sodiumMg": 381,
-              "potassiumMg": 456,
-              "glycemicLoad": 8.7,
-              "costUsd": 1.24
-            },
-            "explanation": [
-              {
-                "agent": "chef",
-                "text": "Veggie scrambled eggs with toast: American flavors you said you like, 10 minutes of prep."
-              },
-              {
-                "agent": "doctor",
-                "text": "23.7 g protein and 2.6 g fiber keep you full while losing fat safely."
-              },
-              {
-                "agent": "budget",
-                "text": "$1.24 for this meal, 47% of today's sodium."
-              }
-            ]
-          },
-          {
-            "mealId": "2026-10-12_lunch_chicken_burrito_bowl",
+            "mealId": "2026-10-10_lunch_chicken_burrito_bowl",
             "type": "lunch",
             "name": "Chicken burrito bowl",
             "cuisine": "Mexican",
@@ -916,7 +481,7 @@
               "sodiumMg": 223,
               "potassiumMg": 1513,
               "glycemicLoad": 56,
-              "costUsd": 3.43
+              "costUsd": 2.94
             },
             "explanation": [
               {
@@ -929,97 +494,109 @@
               },
               {
                 "agent": "budget",
-                "text": "$3.43 for this meal, 28% of today's sodium."
+                "text": "$2.94 for this meal, 20% of today's sodium."
               }
             ]
           },
           {
-            "mealId": "2026-10-12_dinner_chicken_rice_greenbeans",
+            "mealId": "2026-10-10_dinner_chipotle_chicken_tostadas",
             "type": "dinner",
-            "name": "Chicken thigh with rice and green beans",
-            "cuisine": "American",
+            "name": "Chipotle shredded chicken tostadas",
+            "cuisine": "Mexican",
             "recipeSteps": [
-              "Roast chicken thighs",
-              "Steam green beans",
-              "Serve with rice"
+              "Simmer shredded chicken with tomato, onion and chipotle",
+              "Crisp tortillas in the oven",
+              "Top with tinga, cabbage and farmer cheese"
             ],
             "prepMinutes": 30,
             "items": [
               {
-                "foodId": "chicken_thigh",
-                "name": "Chicken thigh, skinless, roasted",
+                "foodId": "chicken_breast",
+                "name": "Chicken breast, roasted",
                 "servings": 2,
                 "grams": 200
               },
               {
-                "foodId": "brown_rice",
-                "name": "Brown rice, cooked",
-                "servings": 2,
-                "grams": 196
+                "foodId": "corn_tortilla",
+                "name": "Corn tortilla",
+                "servings": 3,
+                "grams": 78
               },
               {
-                "foodId": "green_beans",
-                "name": "Green beans, cooked",
+                "foodId": "canned_tomatoes",
+                "name": "Diced tomatoes, no salt added",
                 "servings": 1,
-                "grams": 125
+                "grams": 121
               },
               {
-                "foodId": "olive_oil",
-                "name": "Olive oil",
+                "foodId": "onion",
+                "name": "Onion",
                 "servings": 1,
-                "grams": 14
+                "grams": 55
+              },
+              {
+                "foodId": "cabbage",
+                "name": "Cabbage, shredded",
+                "servings": 1,
+                "grams": 89
+              },
+              {
+                "foodId": "farmer_cheese",
+                "name": "Farmer cheese, fresh",
+                "servings": 1,
+                "grams": 28
               }
             ],
             "totals": {
-              "calories": 827,
-              "proteinG": 59.7,
-              "carbsG": 60.1,
-              "fatG": 38.1,
-              "fiberG": 7.1,
-              "sugarG": 4.9,
+              "calories": 667,
+              "proteinG": 75.2,
+              "carbsG": 54.7,
+              "fatG": 16.7,
+              "fiberG": 10.4,
+              "sugarG": 12,
               "addedSugarG": 0,
-              "satFatG": 8.6,
-              "sodiumMg": 199,
-              "potassiumMg": 831,
-              "glycemicLoad": 32.6,
-              "costUsd": 2.52
+              "satFatG": 6,
+              "sodiumMg": 424,
+              "potassiumMg": 1156,
+              "glycemicLoad": 16.9,
+              "costUsd": 2.69
             },
             "explanation": [
               {
                 "agent": "chef",
-                "text": "Chicken thigh with rice and green beans: American flavors you said you like, 30 minutes of prep."
+                "text": "Chipotle shredded chicken tostadas: Mexican flavors you said you like, 30 minutes of prep."
               },
               {
                 "agent": "doctor",
-                "text": "59.7 g protein and 7.1 g fiber keep you full while losing fat safely."
+                "text": "75.2 g protein and 10.4 g fiber keep you full while losing fat safely."
               },
               {
                 "agent": "budget",
-                "text": "$2.52 for this meal, 25% of today's sodium."
+                "text": "$2.69 for this meal, 37% of today's sodium."
               }
             ]
           }
         ],
         "dayTotals": {
-          "calories": 2060,
-          "proteinG": 169.2,
-          "carbsG": 194.5,
-          "fatG": 64.7,
-          "fiberG": 30.1,
-          "sugarG": 9.6,
-          "addedSugarG": 0.8,
-          "satFatG": 16.6,
-          "sodiumMg": 803,
-          "potassiumMg": 2800,
-          "glycemicLoad": 97.3,
-          "costUsd": 7.19
+          "calories": 1983,
+          "proteinG": 176.8,
+          "carbsG": 210.2,
+          "fatG": 48.1,
+          "fiberG": 36,
+          "sugarG": 16.4,
+          "addedSugarG": 0,
+          "satFatG": 15.6,
+          "sodiumMg": 1142,
+          "potassiumMg": 3092,
+          "glycemicLoad": 90.8,
+          "costUsd": 7.09
         }
       },
       {
-        "date": "2026-10-13",
+        "date": "2026-10-11",
         "meals": [
           {
-            "mealId": "2026-10-13_breakfast_ranchero_eggs",
+            "mealId": "2026-10-11_breakfast_ranchero_eggs",
             "type": "breakfast",
             "name": "Ranchero eggs with black beans",
             "cuisine": "Mexican",
@@ -1053,21 +630,27 @@
                 "name": "Fresh tomato salsa",
                 "servings": 1,
                 "grams": 60
+              },
+              {
+                "foodId": "farmer_cheese",
+                "name": "Farmer cheese, fresh",
+                "servings": 1,
+                "grams": 28
               }
             ],
             "totals": {
-              "calories": 495,
-              "proteinG": 31.4,
-              "carbsG": 67.2,
-              "fatG": 12,
+              "calories": 579,
+              "proteinG": 36.5,
+              "carbsG": 68.1,
+              "fatG": 18.7,
               "fiberG": 19,
-              "sugarG": 2.9,
+              "sugarG": 3.7,
               "addedSugarG": 0,
-              "satFatG": 3.5,
-              "sodiumMg": 229,
-              "potassiumMg": 983,
+              "satFatG": 7.1,
+              "sodiumMg": 439,
+              "potassiumMg": 1019,
               "glycemicLoad": 17.2,
-              "costUsd": 1.66
+              "costUsd": 2.25
             },
             "explanation": [
               {
@@ -1076,31 +659,37 @@
               },
               {
                 "agent": "doctor",
-                "text": "31.4 g protein and 19 g fiber keep you full while losing fat safely."
+                "text": "36.5 g protein and 19 g fiber keep you full while losing fat safely."
               },
               {
                 "agent": "budget",
-                "text": "$1.66 for this meal, 22% of today's sodium."
+                "text": "$2.25 for this meal, 38% of today's sodium."
               }
             ]
           },
           {
-            "mealId": "2026-10-13_lunch_teriyaki_chicken_bowl__xp",
+            "mealId": "2026-10-11_lunch_chicken_beans_rice__canned_tuna",
             "type": "lunch",
-            "name": "Ginger soy chicken rice bowl, extra chicken thigh",
-            "cuisine": "Asian",
+            "name": "Chicken with pinto beans and rice (tuna version)",
+            "cuisine": "Latin",
             "recipeSteps": [
-              "Sear chicken thigh pieces",
-              "Steam broccoli",
-              "Toss chicken with soy sauce and ginger, serve over rice"
+              "Season chicken with garlic and cumin, then bake",
+              "Warm beans and rice",
+              "Serve with a cabbage lime slaw"
             ],
-            "prepMinutes": 20,
+            "prepMinutes": 25,
             "items": [
               {
-                "foodId": "chicken_thigh",
-                "name": "Chicken thigh, skinless, roasted",
-                "servings": 3,
-                "grams": 300
+                "foodId": "canned_tuna",
+                "name": "Tuna, canned in water, drained",
+                "servings": 1,
+                "grams": 85
+              },
+              {
+                "foodId": "pinto_beans",
+                "name": "Pinto beans, cooked",
+                "servings": 2,
+                "grams": 172
               },
               {
                 "foodId": "white_rice",
@@ -1109,137 +698,607 @@
                 "grams": 186
               },
               {
-                "foodId": "broccoli",
-                "name": "Broccoli, cooked",
+                "foodId": "cabbage",
+                "name": "Cabbage, shredded",
                 "servings": 1,
-                "grams": 91
-              },
-              {
-                "foodId": "soy_sauce",
-                "name": "Soy sauce, low sodium",
-                "servings": 1,
-                "grams": 9
+                "grams": 89
               }
             ],
             "totals": {
-              "calories": 905,
-              "proteinG": 85.9,
-              "carbsG": 59.5,
-              "fatG": 33.6,
-              "fiberG": 3.8,
-              "sugarG": 1.5,
+              "calories": 609,
+              "proteinG": 43.8,
+              "carbsG": 102.7,
+              "fatG": 2.5,
+              "fiberG": 18.4,
+              "sugarG": 3.6,
               "addedSugarG": 0,
-              "satFatG": 9.3,
-              "sodiumMg": 624,
-              "potassiumMg": 1070,
-              "glycemicLoad": 38.1,
-              "costUsd": 3.01
+              "satFatG": 0.5,
+              "sodiumMg": 230,
+              "potassiumMg": 1168,
+              "glycemicLoad": 49.6,
+              "costUsd": 1.44
             },
             "explanation": [
               {
                 "agent": "chef",
-                "text": "Ginger soy chicken rice bowl, extra chicken thigh: Asian flavors you said you like, 20 minutes of prep."
+                "text": "Chicken with pinto beans and rice (tuna version): Latin flavors you said you like, 25 minutes of prep."
               },
               {
                 "agent": "doctor",
-                "text": "85.9 g protein and 3.8 g fiber keep you full while losing fat safely."
+                "text": "43.8 g protein and 18.4 g fiber keep you full while losing fat safely."
               },
               {
                 "agent": "budget",
-                "text": "$3.01 for this meal, 59% of today's sodium."
+                "text": "$1.44 for this meal, 20% of today's sodium."
               }
             ]
           },
           {
-            "mealId": "2026-10-13_dinner_chicken_rice_greenbeans__xp",
+            "mealId": "2026-10-11_dinner_chipotle_chicken_tostadas__xp",
             "type": "dinner",
-            "name": "Chicken thigh with rice and green beans, extra chicken thigh",
-            "cuisine": "American",
+            "name": "Chipotle shredded chicken tostadas, extra chicken breast",
+            "cuisine": "Mexican",
             "recipeSteps": [
-              "Roast chicken thighs",
-              "Steam green beans",
-              "Serve with rice"
+              "Simmer shredded chicken with tomato, onion and chipotle",
+              "Crisp tortillas in the oven",
+              "Top with tinga, cabbage and farmer cheese"
             ],
             "prepMinutes": 30,
             "items": [
               {
-                "foodId": "chicken_thigh",
-                "name": "Chicken thigh, skinless, roasted",
+                "foodId": "chicken_breast",
+                "name": "Chicken breast, roasted",
+                "servings": 3,
+                "grams": 300
+              },
+              {
+                "foodId": "corn_tortilla",
+                "name": "Corn tortilla",
+                "servings": 3,
+                "grams": 78
+              },
+              {
+                "foodId": "canned_tomatoes",
+                "name": "Diced tomatoes, no salt added",
+                "servings": 1,
+                "grams": 121
+              },
+              {
+                "foodId": "onion",
+                "name": "Onion",
+                "servings": 1,
+                "grams": 55
+              },
+              {
+                "foodId": "cabbage",
+                "name": "Cabbage, shredded",
+                "servings": 1,
+                "grams": 89
+              },
+              {
+                "foodId": "farmer_cheese",
+                "name": "Farmer cheese, fresh",
+                "servings": 1,
+                "grams": 28
+              }
+            ],
+            "totals": {
+              "calories": 832,
+              "proteinG": 106.2,
+              "carbsG": 54.7,
+              "fatG": 20.3,
+              "fiberG": 10.4,
+              "sugarG": 12,
+              "addedSugarG": 0,
+              "satFatG": 7,
+              "sodiumMg": 498,
+              "potassiumMg": 1412,
+              "glycemicLoad": 16.9,
+              "costUsd": 3.45
+            },
+            "explanation": [
+              {
+                "agent": "chef",
+                "text": "Chipotle shredded chicken tostadas, extra chicken breast: Mexican flavors you said you like, 30 minutes of prep."
+              },
+              {
+                "agent": "doctor",
+                "text": "106.2 g protein and 10.4 g fiber keep you full while losing fat safely."
+              },
+              {
+                "agent": "budget",
+                "text": "$3.45 for this meal, 43% of today's sodium."
+              }
+            ]
+          }
+        ],
+        "dayTotals": {
+          "calories": 2020,
+          "proteinG": 186.5,
+          "carbsG": 225.5,
+          "fatG": 41.5,
+          "fiberG": 47.8,
+          "sugarG": 19.3,
+          "addedSugarG": 0,
+          "satFatG": 14.6,
+          "sodiumMg": 1167,
+          "potassiumMg": 3599,
+          "glycemicLoad": 83.7,
+          "costUsd": 7.14
+        }
+      },
+      {
+        "date": "2026-10-12",
+        "meals": [
+          {
+            "mealId": "2026-10-12_breakfast_avocado_egg_toast",
+            "type": "breakfast",
+            "name": "Avocado toast with eggs",
+            "cuisine": "American",
+            "recipeSteps": [
+              "Toast bread",
+              "Mash avocado on toast",
+              "Top with eggs cooked your way and tomato slices"
+            ],
+            "prepMinutes": 8,
+            "items": [
+              {
+                "foodId": "ww_bread",
+                "name": "Whole wheat bread",
+                "servings": 2,
+                "grams": 64
+              },
+              {
+                "foodId": "avocado",
+                "name": "Avocado",
+                "servings": 1,
+                "grams": 50
+              },
+              {
+                "foodId": "eggs",
+                "name": "Eggs, whole",
+                "servings": 1,
+                "grams": 50
+              }
+            ],
+            "totals": {
+              "calories": 313,
+              "proteinG": 15.2,
+              "carbsG": 31.9,
+              "fatG": 14.3,
+              "fiberG": 7.2,
+              "sugarG": 3.4,
+              "addedSugarG": 1.6,
+              "satFatG": 3,
+              "sodiumMg": 363,
+              "potassiumMg": 474,
+              "glycemicLoad": 17.5,
+              "costUsd": 1.11
+            },
+            "explanation": [
+              {
+                "agent": "chef",
+                "text": "Avocado toast with eggs: American flavors you said you like, 8 minutes of prep."
+              },
+              {
+                "agent": "doctor",
+                "text": "15.2 g protein and 7.2 g fiber keep you full while losing fat safely."
+              },
+              {
+                "agent": "budget",
+                "text": "$1.11 for this meal, 36% of today's sodium."
+              }
+            ]
+          },
+          {
+            "mealId": "2026-10-12_lunch_chicken_burrito_bowl",
+            "type": "lunch",
+            "name": "Chicken burrito bowl",
+            "cuisine": "Mexican",
+            "recipeSteps": [
+              "Season and grill chicken, then slice",
+              "Warm rice and beans",
+              "Build bowl with corn, salsa and avocado"
+            ],
+            "prepMinutes": 20,
+            "items": [
+              {
+                "foodId": "chicken_breast",
+                "name": "Chicken breast, roasted",
                 "servings": 2,
                 "grams": 200
               },
               {
                 "foodId": "brown_rice",
                 "name": "Brown rice, cooked",
-                "servings": 2,
-                "grams": 196
+                "servings": 3,
+                "grams": 294
               },
               {
-                "foodId": "green_beans",
-                "name": "Green beans, cooked",
+                "foodId": "black_beans",
+                "name": "Black beans, cooked",
+                "servings": 2,
+                "grams": 172
+              },
+              {
+                "foodId": "fresh_salsa",
+                "name": "Fresh tomato salsa",
                 "servings": 1,
-                "grams": 125
+                "grams": 60
+              },
+              {
+                "foodId": "avocado",
+                "name": "Avocado",
+                "servings": 1,
+                "grams": 50
               }
             ],
             "totals": {
-              "calories": 703,
-              "proteinG": 59.7,
-              "carbsG": 60.1,
-              "fatG": 24.1,
-              "fiberG": 7.1,
-              "sugarG": 4.9,
+              "calories": 1011,
+              "proteinG": 86.8,
+              "carbsG": 122.9,
+              "fatG": 18.5,
+              "fiberG": 23.7,
+              "sugarG": 3,
               "addedSugarG": 0,
-              "satFatG": 6.7,
-              "sodiumMg": 199,
-              "potassiumMg": 831,
-              "glycemicLoad": 32.6,
-              "costUsd": 2.4
+              "satFatG": 4.1,
+              "sodiumMg": 227,
+              "potassiumMg": 1756,
+              "glycemicLoad": 56.1,
+              "costUsd": 3.36
             },
             "explanation": [
               {
                 "agent": "chef",
-                "text": "Chicken thigh with rice and green beans, extra chicken thigh: American flavors you said you like, 30 minutes of prep."
+                "text": "Chicken burrito bowl: Mexican flavors you said you like, 20 minutes of prep."
               },
               {
                 "agent": "doctor",
-                "text": "59.7 g protein and 7.1 g fiber keep you full while losing fat safely."
+                "text": "86.8 g protein and 23.7 g fiber keep you full while losing fat safely."
               },
               {
                 "agent": "budget",
-                "text": "$2.40 for this meal, 19% of today's sodium."
+                "text": "$3.36 for this meal, 22% of today's sodium."
+              }
+            ]
+          },
+          {
+            "mealId": "2026-10-12_dinner_chipotle_chicken_tostadas",
+            "type": "dinner",
+            "name": "Chipotle shredded chicken tostadas",
+            "cuisine": "Mexican",
+            "recipeSteps": [
+              "Simmer shredded chicken with tomato, onion and chipotle",
+              "Crisp tortillas in the oven",
+              "Top with tinga, cabbage and farmer cheese"
+            ],
+            "prepMinutes": 30,
+            "items": [
+              {
+                "foodId": "chicken_breast",
+                "name": "Chicken breast, roasted",
+                "servings": 2,
+                "grams": 200
+              },
+              {
+                "foodId": "corn_tortilla",
+                "name": "Corn tortilla",
+                "servings": 3,
+                "grams": 78
+              },
+              {
+                "foodId": "canned_tomatoes",
+                "name": "Diced tomatoes, no salt added",
+                "servings": 1,
+                "grams": 121
+              },
+              {
+                "foodId": "onion",
+                "name": "Onion",
+                "servings": 1,
+                "grams": 55
+              },
+              {
+                "foodId": "cabbage",
+                "name": "Cabbage, shredded",
+                "servings": 1,
+                "grams": 89
+              },
+              {
+                "foodId": "farmer_cheese",
+                "name": "Farmer cheese, fresh",
+                "servings": 1,
+                "grams": 28
+              }
+            ],
+            "totals": {
+              "calories": 667,
+              "proteinG": 75.2,
+              "carbsG": 54.7,
+              "fatG": 16.7,
+              "fiberG": 10.4,
+              "sugarG": 12,
+              "addedSugarG": 0,
+              "satFatG": 6,
+              "sodiumMg": 424,
+              "potassiumMg": 1156,
+              "glycemicLoad": 16.9,
+              "costUsd": 2.69
+            },
+            "explanation": [
+              {
+                "agent": "chef",
+                "text": "Chipotle shredded chicken tostadas: Mexican flavors you said you like, 30 minutes of prep."
+              },
+              {
+                "agent": "doctor",
+                "text": "75.2 g protein and 10.4 g fiber keep you full while losing fat safely."
+              },
+              {
+                "agent": "budget",
+                "text": "$2.69 for this meal, 42% of today's sodium."
               }
             ]
           }
         ],
         "dayTotals": {
-          "calories": 2103,
-          "proteinG": 177,
-          "carbsG": 186.8,
-          "fatG": 69.7,
-          "fiberG": 29.9,
-          "sugarG": 9.3,
+          "calories": 1991,
+          "proteinG": 177.2,
+          "carbsG": 209.5,
+          "fatG": 49.5,
+          "fiberG": 41.3,
+          "sugarG": 18.4,
+          "addedSugarG": 1.6,
+          "satFatG": 13.1,
+          "sodiumMg": 1014,
+          "potassiumMg": 3386,
+          "glycemicLoad": 90.5,
+          "costUsd": 7.16
+        }
+      },
+      {
+        "date": "2026-10-13",
+        "meals": [
+          {
+            "mealId": "2026-10-13_breakfast_arepa_egg_avocado",
+            "type": "breakfast",
+            "name": "Corn arepa with egg and avocado",
+            "cuisine": "Venezuelan",
+            "recipeSteps": [
+              "Toast arepas on a dry griddle until crisp",
+              "Scramble eggs",
+              "Split arepas and fill with eggs, avocado and farmer cheese"
+            ],
+            "prepMinutes": 15,
+            "items": [
+              {
+                "foodId": "arepa",
+                "name": "Corn arepa, cooked",
+                "servings": 2,
+                "grams": 150
+              },
+              {
+                "foodId": "eggs",
+                "name": "Eggs, whole",
+                "servings": 1,
+                "grams": 50
+              },
+              {
+                "foodId": "avocado",
+                "name": "Avocado",
+                "servings": 1,
+                "grams": 50
+              },
+              {
+                "foodId": "farmer_cheese",
+                "name": "Farmer cheese, fresh",
+                "servings": 1,
+                "grams": 28
+              }
+            ],
+            "totals": {
+              "calories": 535,
+              "proteinG": 19.2,
+              "carbsG": 68.4,
+              "fatG": 21.8,
+              "fiberG": 7.1,
+              "sugarG": 2.1,
+              "addedSugarG": 0,
+              "satFatG": 6.7,
+              "sodiumMg": 705,
+              "potassiumMg": 498,
+              "glycemicLoad": 35.7,
+              "costUsd": 1.76
+            },
+            "explanation": [
+              {
+                "agent": "chef",
+                "text": "Corn arepa with egg and avocado: Venezuelan flavors you said you like, 15 minutes of prep."
+              },
+              {
+                "agent": "doctor",
+                "text": "19.2 g protein and 7.1 g fiber keep you full while losing fat safely."
+              },
+              {
+                "agent": "budget",
+                "text": "$1.76 for this meal, 54% of today's sodium."
+              }
+            ]
+          },
+          {
+            "mealId": "2026-10-13_lunch_chicken_beans_rice",
+            "type": "lunch",
+            "name": "Chicken with pinto beans and rice",
+            "cuisine": "Latin",
+            "recipeSteps": [
+              "Season chicken with garlic and cumin, then bake",
+              "Warm beans and rice",
+              "Serve with a cabbage lime slaw"
+            ],
+            "prepMinutes": 25,
+            "items": [
+              {
+                "foodId": "chicken_thigh",
+                "name": "Chicken thigh, skinless, roasted",
+                "servings": 1,
+                "grams": 100
+              },
+              {
+                "foodId": "pinto_beans",
+                "name": "Pinto beans, cooked",
+                "servings": 2,
+                "grams": 172
+              },
+              {
+                "foodId": "white_rice",
+                "name": "White rice, cooked",
+                "servings": 2,
+                "grams": 186
+              },
+              {
+                "foodId": "cabbage",
+                "name": "Cabbage, shredded",
+                "servings": 1,
+                "grams": 89
+              }
+            ],
+            "totals": {
+              "calories": 719,
+              "proteinG": 47.7,
+              "carbsG": 102.7,
+              "fatG": 12.8,
+              "fiberG": 18.4,
+              "sugarG": 3.6,
+              "addedSugarG": 0,
+              "satFatG": 3.4,
+              "sodiumMg": 115,
+              "potassiumMg": 1206,
+              "glycemicLoad": 49.6,
+              "costUsd": 2
+            },
+            "explanation": [
+              {
+                "agent": "chef",
+                "text": "Chicken with pinto beans and rice: Latin flavors you said you like, 25 minutes of prep."
+              },
+              {
+                "agent": "doctor",
+                "text": "47.7 g protein and 18.4 g fiber keep you full while losing fat safely."
+              },
+              {
+                "agent": "budget",
+                "text": "$2.00 for this meal, 9% of today's sodium."
+              }
+            ]
+          },
+          {
+            "mealId": "2026-10-13_dinner_chipotle_chicken_tostadas__xp",
+            "type": "dinner",
+            "name": "Chipotle shredded chicken tostadas, extra chicken breast",
+            "cuisine": "Mexican",
+            "recipeSteps": [
+              "Simmer shredded chicken with tomato, onion and chipotle",
+              "Crisp tortillas in the oven",
+              "Top with tinga, cabbage and farmer cheese"
+            ],
+            "prepMinutes": 30,
+            "items": [
+              {
+                "foodId": "chicken_breast",
+                "name": "Chicken breast, roasted",
+                "servings": 3,
+                "grams": 300
+              },
+              {
+                "foodId": "corn_tortilla",
+                "name": "Corn tortilla",
+                "servings": 2,
+                "grams": 52
+              },
+              {
+                "foodId": "canned_tomatoes",
+                "name": "Diced tomatoes, no salt added",
+                "servings": 1,
+                "grams": 121
+              },
+              {
+                "foodId": "onion",
+                "name": "Onion",
+                "servings": 1,
+                "grams": 55
+              },
+              {
+                "foodId": "cabbage",
+                "name": "Cabbage, shredded",
+                "servings": 1,
+                "grams": 89
+              },
+              {
+                "foodId": "farmer_cheese",
+                "name": "Farmer cheese, fresh",
+                "servings": 1,
+                "grams": 28
+              }
+            ],
+            "totals": {
+              "calories": 775,
+              "proteinG": 104.7,
+              "carbsG": 43.1,
+              "fatG": 19.5,
+              "fiberG": 8.7,
+              "sugarG": 11.8,
+              "addedSugarG": 0,
+              "satFatG": 6.8,
+              "sodiumMg": 486,
+              "potassiumMg": 1364,
+              "glycemicLoad": 12.4,
+              "costUsd": 3.39
+            },
+            "explanation": [
+              {
+                "agent": "chef",
+                "text": "Chipotle shredded chicken tostadas, extra chicken breast: Mexican flavors you said you like, 30 minutes of prep."
+              },
+              {
+                "agent": "doctor",
+                "text": "104.7 g protein and 8.7 g fiber keep you full while losing fat safely."
+              },
+              {
+                "agent": "budget",
+                "text": "$3.39 for this meal, 37% of today's sodium."
+              }
+            ]
+          }
+        ],
+        "dayTotals": {
+          "calories": 2029,
+          "proteinG": 171.6,
+          "carbsG": 214.2,
+          "fatG": 54.1,
+          "fiberG": 34.2,
+          "sugarG": 17.5,
           "addedSugarG": 0,
-          "satFatG": 19.5,
-          "sodiumMg": 1052,
-          "potassiumMg": 2884,
-          "glycemicLoad": 87.9,
-          "costUsd": 7.07
+          "satFatG": 16.9,
+          "sodiumMg": 1306,
+          "potassiumMg": 3068,
+          "glycemicLoad": 97.7,
+          "costUsd": 7.15
         }
       },
       {
         "date": "2026-10-14",
         "meals": [
           {
-            "mealId": "2026-10-14_breakfast_veggie_eggs_toast",
+            "mealId": "2026-10-14_breakfast_ranchero_eggs",
             "type": "breakfast",
-            "name": "Veggie scrambled eggs with toast",
-            "cuisine": "American",
+            "name": "Ranchero eggs with black beans",
+            "cuisine": "Mexican",
             "recipeSteps": [
-              "Whisk eggs with a pinch of pepper",
-              "Wilt spinach in a nonstick pan, add eggs and scramble softly",
-              "Serve with toast and sliced tomato"
+              "Warm tortillas and beans",
+              "Fry eggs in a light film of oil",
+              "Top tortillas with beans, eggs, salsa and crumbled cheese"
             ],
-            "prepMinutes": 10,
+            "prepMinutes": 15,
             "items": [
               {
                 "foodId": "eggs",
@@ -1248,44 +1307,56 @@
                 "grams": 100
               },
               {
-                "foodId": "spinach",
-                "name": "Spinach, raw",
-                "servings": 1,
-                "grams": 30
+                "foodId": "corn_tortilla",
+                "name": "Corn tortilla",
+                "servings": 2,
+                "grams": 52
               },
               {
-                "foodId": "ww_bread",
-                "name": "Whole wheat bread",
+                "foodId": "black_beans",
+                "name": "Black beans, cooked",
+                "servings": 2,
+                "grams": 172
+              },
+              {
+                "foodId": "fresh_salsa",
+                "name": "Fresh tomato salsa",
                 "servings": 1,
-                "grams": 32
+                "grams": 60
+              },
+              {
+                "foodId": "farmer_cheese",
+                "name": "Farmer cheese, fresh",
+                "servings": 1,
+                "grams": 28
               }
             ],
             "totals": {
-              "calories": 231,
-              "proteinG": 17.4,
-              "carbsG": 15.4,
-              "fatG": 10.7,
-              "fiberG": 2.6,
-              "sugarG": 1.9,
-              "addedSugarG": 0.8,
-              "satFatG": 3.4,
-              "sodiumMg": 310,
-              "potassiumMg": 387,
-              "glycemicLoad": 8.7,
-              "costUsd": 0.97
+              "calories": 579,
+              "proteinG": 36.5,
+              "carbsG": 68.1,
+              "fatG": 18.7,
+              "fiberG": 19,
+              "sugarG": 3.7,
+              "addedSugarG": 0,
+              "satFatG": 7.1,
+              "sodiumMg": 439,
+              "potassiumMg": 1019,
+              "glycemicLoad": 17.2,
+              "costUsd": 2.25
             },
             "explanation": [
               {
                 "agent": "chef",
-                "text": "Veggie scrambled eggs with toast: American flavors you said you like, 10 minutes of prep."
+                "text": "Ranchero eggs with black beans: Mexican flavors you said you like, 15 minutes of prep."
               },
               {
                 "agent": "doctor",
-                "text": "17.4 g protein and 2.6 g fiber keep you full while losing fat safely."
+                "text": "36.5 g protein and 19 g fiber keep you full while losing fat safely."
               },
               {
                 "agent": "budget",
-                "text": "$0.97 for this meal, 37% of today's sodium."
+                "text": "$2.25 for this meal, 43% of today's sodium."
               }
             ]
           },
@@ -1338,7 +1409,7 @@
               "sodiumMg": 210,
               "potassiumMg": 1446,
               "glycemicLoad": 49.6,
-              "costUsd": 2.39
+              "costUsd": 3.17
             },
             "explanation": [
               {
@@ -1351,250 +1422,33 @@
               },
               {
                 "agent": "budget",
-                "text": "$2.39 for this meal, 25% of today's sodium."
+                "text": "$3.17 for this meal, 21% of today's sodium."
               }
             ]
           },
           {
-            "mealId": "2026-10-14_dinner_one_pot_chicken_rice__xp",
+            "mealId": "2026-10-14_dinner_tofu_broccoli_stir_fry",
             "type": "dinner",
-            "name": "One-pot chicken and rice, extra chicken thigh",
-            "cuisine": "Latin",
+            "name": "Tofu broccoli stir fry",
+            "cuisine": "Asian",
             "recipeSteps": [
-              "Brown chicken",
-              "Saute pepper and onion, add rice and broth",
-              "Nestle chicken and vegetables, simmer covered 20 minutes"
+              "Press and cube tofu, sear until golden",
+              "Stir fry broccoli",
+              "Toss with soy sauce and serve over rice"
             ],
-            "prepMinutes": 40,
+            "prepMinutes": 20,
             "items": [
               {
-                "foodId": "chicken_thigh",
-                "name": "Chicken thigh, skinless, roasted",
-                "servings": 3,
-                "grams": 300
-              },
-              {
-                "foodId": "white_rice",
-                "name": "White rice, cooked",
+                "foodId": "tofu",
+                "name": "Tofu, firm",
                 "servings": 2,
-                "grams": 186
+                "grams": 170
               },
               {
-                "foodId": "mixed_veg",
-                "name": "Mixed vegetables, frozen, cooked",
+                "foodId": "broccoli",
+                "name": "Broccoli, cooked",
                 "servings": 1,
                 "grams": 91
-              },
-              {
-                "foodId": "bell_pepper",
-                "name": "Bell pepper",
-                "servings": 1,
-                "grams": 119
-              },
-              {
-                "foodId": "onion",
-                "name": "Onion",
-                "servings": 1,
-                "grams": 55
-              }
-            ],
-            "totals": {
-              "calories": 982,
-              "proteinG": 87.5,
-              "carbsG": 76.5,
-              "fatG": 33.9,
-              "fiberG": 8.2,
-              "sugarG": 10.3,
-              "addedSugarG": 0,
-              "satFatG": 9.2,
-              "sodiumMg": 326,
-              "potassiumMg": 1270,
-              "glycemicLoad": 41.8,
-              "costUsd": 3.78
-            },
-            "explanation": [
-              {
-                "agent": "chef",
-                "text": "One-pot chicken and rice, extra chicken thigh: Latin flavors you said you like, 40 minutes of prep."
-              },
-              {
-                "agent": "doctor",
-                "text": "87.5 g protein and 8.2 g fiber keep you full while losing fat safely."
-              },
-              {
-                "agent": "budget",
-                "text": "$3.78 for this meal, 39% of today's sodium."
-              }
-            ]
-          }
-        ],
-        "dayTotals": {
-          "calories": 2141,
-          "proteinG": 178.6,
-          "carbsG": 194.6,
-          "fatG": 68.3,
-          "fiberG": 29.2,
-          "sugarG": 15.8,
-          "addedSugarG": 0.8,
-          "satFatG": 19,
-          "sodiumMg": 846,
-          "potassiumMg": 3103,
-          "glycemicLoad": 100.1,
-          "costUsd": 7.14
-        }
-      },
-      {
-        "date": "2026-10-15",
-        "meals": [
-          {
-            "mealId": "2026-10-15_breakfast_cactus_egg_scramble",
-            "type": "breakfast",
-            "name": "Cactus and egg scramble",
-            "cuisine": "Mexican",
-            "recipeSteps": [
-              "Saute cactus until tender",
-              "Add eggs and scramble together",
-              "Serve with warm tortillas and salsa"
-            ],
-            "prepMinutes": 12,
-            "items": [
-              {
-                "foodId": "eggs",
-                "name": "Eggs, whole",
-                "servings": 2,
-                "grams": 100
-              },
-              {
-                "foodId": "cactus",
-                "name": "Cactus paddles, cooked",
-                "servings": 1,
-                "grams": 75
-              },
-              {
-                "foodId": "corn_tortilla",
-                "name": "Corn tortilla",
-                "servings": 2,
-                "grams": 52
-              },
-              {
-                "foodId": "fresh_salsa",
-                "name": "Fresh tomato salsa",
-                "servings": 1,
-                "grams": 60
-              }
-            ],
-            "totals": {
-              "calories": 280,
-              "proteinG": 17.2,
-              "carbsG": 28.9,
-              "fatG": 11.2,
-              "fiberG": 5.5,
-              "sugarG": 3.3,
-              "addedSugarG": 0,
-              "satFatG": 3.3,
-              "sodiumMg": 240,
-              "potassiumMg": 519,
-              "glycemicLoad": 9.5,
-              "costUsd": 1.56
-            },
-            "explanation": [
-              {
-                "agent": "chef",
-                "text": "Cactus and egg scramble: Mexican flavors you said you like, 12 minutes of prep."
-              },
-              {
-                "agent": "doctor",
-                "text": "17.2 g protein and 5.5 g fiber keep you full while losing fat safely."
-              },
-              {
-                "agent": "budget",
-                "text": "$1.56 for this meal, 32% of today's sodium."
-              }
-            ]
-          },
-          {
-            "mealId": "2026-10-15_lunch_chicken_beans_rice__xp",
-            "type": "lunch",
-            "name": "Chicken with pinto beans and rice, extra chicken thigh",
-            "cuisine": "Latin",
-            "recipeSteps": [
-              "Season chicken with garlic and cumin, then bake",
-              "Warm beans and rice",
-              "Serve with a cabbage lime slaw"
-            ],
-            "prepMinutes": 25,
-            "items": [
-              {
-                "foodId": "chicken_thigh",
-                "name": "Chicken thigh, skinless, roasted",
-                "servings": 3,
-                "grams": 300
-              },
-              {
-                "foodId": "pinto_beans",
-                "name": "Pinto beans, cooked",
-                "servings": 2,
-                "grams": 172
-              },
-              {
-                "foodId": "white_rice",
-                "name": "White rice, cooked",
-                "servings": 2,
-                "grams": 186
-              },
-              {
-                "foodId": "cabbage",
-                "name": "Cabbage, shredded",
-                "servings": 1,
-                "grams": 89
-              }
-            ],
-            "totals": {
-              "calories": 1137,
-              "proteinG": 99.7,
-              "carbsG": 102.7,
-              "fatG": 34.6,
-              "fiberG": 18.4,
-              "sugarG": 3.6,
-              "addedSugarG": 0,
-              "satFatG": 9.4,
-              "sodiumMg": 305,
-              "potassiumMg": 1686,
-              "glycemicLoad": 49.6,
-              "costUsd": 3.19
-            },
-            "explanation": [
-              {
-                "agent": "chef",
-                "text": "Chicken with pinto beans and rice, extra chicken thigh: Latin flavors you said you like, 25 minutes of prep."
-              },
-              {
-                "agent": "doctor",
-                "text": "99.7 g protein and 18.4 g fiber keep you full while losing fat safely."
-              },
-              {
-                "agent": "budget",
-                "text": "$3.19 for this meal, 41% of today's sodium."
-              }
-            ]
-          },
-          {
-            "mealId": "2026-10-15_dinner_chicken_rice_greenbeans",
-            "type": "dinner",
-            "name": "Chicken thigh with rice and green beans",
-            "cuisine": "American",
-            "recipeSteps": [
-              "Roast chicken thighs",
-              "Steam green beans",
-              "Serve with rice"
-            ],
-            "prepMinutes": 30,
-            "items": [
-              {
-                "foodId": "chicken_thigh",
-                "name": "Chicken thigh, skinless, roasted",
-                "servings": 2,
-                "grams": 200
               },
               {
                 "foodId": "brown_rice",
@@ -1603,62 +1457,62 @@
                 "grams": 196
               },
               {
-                "foodId": "green_beans",
-                "name": "Green beans, cooked",
+                "foodId": "soy_sauce",
+                "name": "Soy sauce, low sodium",
                 "servings": 1,
-                "grams": 125
+                "grams": 9
               }
             ],
             "totals": {
-              "calories": 703,
-              "proteinG": 59.7,
-              "carbsG": 60.1,
-              "fatG": 24.1,
-              "fiberG": 7.1,
-              "sugarG": 4.9,
+              "calories": 523,
+              "proteinG": 37.6,
+              "carbsG": 61.9,
+              "fatG": 17.1,
+              "fiberG": 10.1,
+              "sugarG": 2.7,
               "addedSugarG": 0,
-              "satFatG": 6.7,
-              "sodiumMg": 199,
-              "potassiumMg": 831,
-              "glycemicLoad": 32.6,
-              "costUsd": 2.4
+              "satFatG": 2.9,
+              "sodiumMg": 369,
+              "potassiumMg": 856,
+              "glycemicLoad": 32.5,
+              "costUsd": 1.68
             },
             "explanation": [
               {
                 "agent": "chef",
-                "text": "Chicken thigh with rice and green beans: American flavors you said you like, 30 minutes of prep."
+                "text": "Tofu broccoli stir fry: Asian flavors you said you like, 20 minutes of prep."
               },
               {
                 "agent": "doctor",
-                "text": "59.7 g protein and 7.1 g fiber keep you full while losing fat safely."
+                "text": "37.6 g protein and 10.1 g fiber keep you full while losing fat safely."
               },
               {
                 "agent": "budget",
-                "text": "$2.40 for this meal, 27% of today's sodium."
+                "text": "$1.68 for this meal, 36% of today's sodium."
               }
             ]
           }
         ],
         "dayTotals": {
-          "calories": 2120,
-          "proteinG": 176.6,
-          "carbsG": 191.7,
-          "fatG": 69.9,
-          "fiberG": 31,
-          "sugarG": 11.8,
+          "calories": 2030,
+          "proteinG": 147.8,
+          "carbsG": 232.7,
+          "fatG": 59.5,
+          "fiberG": 47.5,
+          "sugarG": 10,
           "addedSugarG": 0,
-          "satFatG": 19.4,
-          "sodiumMg": 744,
-          "potassiumMg": 3036,
-          "glycemicLoad": 91.7,
-          "costUsd": 7.15
+          "satFatG": 16.4,
+          "sodiumMg": 1018,
+          "potassiumMg": 3321,
+          "glycemicLoad": 99.3,
+          "costUsd": 7.1
         }
       },
       {
-        "date": "2026-10-16",
+        "date": "2026-10-15",
         "meals": [
           {
-            "mealId": "2026-10-16_breakfast_bean_breakfast_burrito",
+            "mealId": "2026-10-15_breakfast_bean_breakfast_burrito",
             "type": "breakfast",
             "name": "Egg and black bean breakfast burrito",
             "cuisine": "Mexican",
@@ -1712,7 +1566,7 @@
               "sodiumMg": 639,
               "potassiumMg": 693,
               "glycemicLoad": 9.8,
-              "costUsd": 1.77
+              "costUsd": 2.22
             },
             "explanation": [
               {
@@ -1725,14 +1579,14 @@
               },
               {
                 "agent": "budget",
-                "text": "$1.77 for this meal, 46% of today's sodium."
+                "text": "$2.22 for this meal, 52% of today's sodium."
               }
             ]
           },
           {
-            "mealId": "2026-10-16_lunch_teriyaki_chicken_bowl__xp",
+            "mealId": "2026-10-15_lunch_teriyaki_chicken_bowl",
             "type": "lunch",
-            "name": "Ginger soy chicken rice bowl, extra chicken thigh",
+            "name": "Ginger soy chicken rice bowl",
             "cuisine": "Asian",
             "recipeSteps": [
               "Sear chicken thigh pieces",
@@ -1744,14 +1598,14 @@
               {
                 "foodId": "chicken_thigh",
                 "name": "Chicken thigh, skinless, roasted",
-                "servings": 3,
-                "grams": 300
+                "servings": 2,
+                "grams": 200
               },
               {
                 "foodId": "white_rice",
                 "name": "White rice, cooked",
-                "servings": 2,
-                "grams": 186
+                "servings": 3,
+                "grams": 279
               },
               {
                 "foodId": "broccoli",
@@ -1767,204 +1621,431 @@
               }
             ],
             "totals": {
-              "calories": 905,
-              "proteinG": 85.9,
-              "carbsG": 59.5,
-              "fatG": 33.6,
-              "fiberG": 3.8,
-              "sugarG": 1.5,
+              "calories": 817,
+              "proteinG": 62.4,
+              "carbsG": 85.7,
+              "fatG": 23,
+              "fiberG": 4.2,
+              "sugarG": 1.6,
               "addedSugarG": 0,
-              "satFatG": 9.3,
-              "sodiumMg": 624,
-              "potassiumMg": 1070,
-              "glycemicLoad": 38.1,
-              "costUsd": 3.01
+              "satFatG": 6.4,
+              "sodiumMg": 530,
+              "potassiumMg": 862,
+              "glycemicLoad": 57,
+              "costUsd": 3.2
             },
             "explanation": [
               {
                 "agent": "chef",
-                "text": "Ginger soy chicken rice bowl, extra chicken thigh: Asian flavors you said you like, 20 minutes of prep."
+                "text": "Ginger soy chicken rice bowl: Asian flavors you said you like, 20 minutes of prep."
               },
               {
                 "agent": "doctor",
-                "text": "85.9 g protein and 3.8 g fiber keep you full while losing fat safely."
+                "text": "62.4 g protein and 4.2 g fiber keep you full while losing fat safely."
               },
               {
                 "agent": "budget",
-                "text": "$3.01 for this meal, 45% of today's sodium."
+                "text": "$3.20 for this meal, 43% of today's sodium."
               }
             ]
           },
           {
-            "mealId": "2026-10-16_dinner_steak_rice_beans",
+            "mealId": "2026-10-15_dinner_lentil_bolognese",
             "type": "dinner",
-            "name": "Grilled steak with rice and beans",
-            "cuisine": "Mexican",
+            "name": "Lentil bolognese",
+            "cuisine": "Italian",
             "recipeSteps": [
-              "Marinate steak in lime and garlic, then grill",
-              "Warm rice and beans",
-              "Slice steak and serve with salsa"
+              "Saute onion and carrot",
+              "Add lentils and tomatoes, simmer 20 minutes",
+              "Serve over pasta"
             ],
-            "prepMinutes": 25,
+            "prepMinutes": 30,
             "items": [
               {
-                "foodId": "flank_steak",
-                "name": "Flank steak, grilled",
+                "foodId": "lentils",
+                "name": "Lentils, cooked",
+                "servings": 3,
+                "grams": 297
+              },
+              {
+                "foodId": "ww_pasta",
+                "name": "Whole wheat pasta, cooked",
+                "servings": 2,
+                "grams": 140
+              },
+              {
+                "foodId": "canned_tomatoes",
+                "name": "Diced tomatoes, no salt added",
                 "servings": 1,
-                "grams": 85
+                "grams": 121
               },
               {
-                "foodId": "white_rice",
-                "name": "White rice, cooked",
-                "servings": 2,
-                "grams": 186
+                "foodId": "carrots",
+                "name": "Carrots",
+                "servings": 1,
+                "grams": 61
               },
               {
-                "foodId": "pinto_beans",
-                "name": "Pinto beans, cooked",
-                "servings": 2,
-                "grams": 172
+                "foodId": "onion",
+                "name": "Onion",
+                "servings": 1,
+                "grams": 55
+              }
+            ],
+            "totals": {
+              "calories": 639,
+              "proteinG": 38.1,
+              "carbsG": 121.5,
+              "fatG": 4.1,
+              "fiberG": 33.9,
+              "sugarG": 17,
+              "addedSugarG": 0,
+              "satFatG": 0.7,
+              "sodiumMg": 68,
+              "potassiumMg": 1737,
+              "glycemicLoad": 33.7,
+              "costUsd": 1.51
+            },
+            "explanation": [
+              {
+                "agent": "chef",
+                "text": "Lentil bolognese: Italian flavors you said you like, 30 minutes of prep."
+              },
+              {
+                "agent": "doctor",
+                "text": "38.1 g protein and 33.9 g fiber keep you full while losing fat safely."
+              },
+              {
+                "agent": "budget",
+                "text": "$1.51 for this meal, 5% of today's sodium."
+              }
+            ]
+          }
+        ],
+        "dayTotals": {
+          "calories": 1971,
+          "proteinG": 131.8,
+          "carbsG": 253.3,
+          "fatG": 49.8,
+          "fiberG": 49.5,
+          "sugarG": 21.8,
+          "addedSugarG": 0.5,
+          "satFatG": 16.5,
+          "sodiumMg": 1237,
+          "potassiumMg": 3292,
+          "glycemicLoad": 100.5,
+          "costUsd": 6.93
+        }
+      },
+      {
+        "date": "2026-10-16",
+        "meals": [
+          {
+            "mealId": "2026-10-16_breakfast_bean_breakfast_burrito",
+            "type": "breakfast",
+            "name": "Egg and black bean breakfast burrito",
+            "cuisine": "Mexican",
+            "recipeSteps": [
+              "Scramble eggs",
+              "Warm beans and tortilla",
+              "Fill tortilla with eggs, beans, salsa and cheese, then roll"
+            ],
+            "prepMinutes": 12,
+            "items": [
+              {
+                "foodId": "flour_tortilla",
+                "name": "Whole wheat flour tortilla",
+                "servings": 1,
+                "grams": 45
+              },
+              {
+                "foodId": "eggs",
+                "name": "Eggs, whole",
+                "servings": 3,
+                "grams": 150
+              },
+              {
+                "foodId": "black_beans",
+                "name": "Black beans, cooked",
+                "servings": 1,
+                "grams": 86
               },
               {
                 "foodId": "fresh_salsa",
                 "name": "Fresh tomato salsa",
                 "servings": 1,
                 "grams": 60
+              },
+              {
+                "foodId": "cheddar",
+                "name": "Cheddar cheese",
+                "servings": 1,
+                "grams": 28
               }
             ],
             "totals": {
-              "calories": 663,
-              "proteinG": 44.8,
-              "carbsG": 100.1,
-              "fatG": 8.7,
-              "fiberG": 16.9,
-              "sugarG": 2.2,
-              "addedSugarG": 0,
-              "satFatG": 3.2,
-              "sodiumMg": 115,
-              "potassiumMg": 1251,
-              "glycemicLoad": 49.6,
-              "costUsd": 2.61
+              "calories": 587,
+              "proteinG": 37.6,
+              "carbsG": 46.4,
+              "fatG": 27.4,
+              "fiberG": 11.4,
+              "sugarG": 3.4,
+              "addedSugarG": 0.5,
+              "satFatG": 11,
+              "sodiumMg": 710,
+              "potassiumMg": 762,
+              "glycemicLoad": 9.8,
+              "costUsd": 2.68
             },
             "explanation": [
               {
                 "agent": "chef",
-                "text": "Grilled steak with rice and beans: Mexican flavors you said you like, 25 minutes of prep."
+                "text": "Egg and black bean breakfast burrito: Mexican flavors you said you like, 12 minutes of prep."
               },
               {
                 "agent": "doctor",
-                "text": "44.8 g protein and 16.9 g fiber keep you full while losing fat safely."
+                "text": "37.6 g protein and 11.4 g fiber keep you full while losing fat safely."
               },
               {
                 "agent": "budget",
-                "text": "$2.61 for this meal, 8% of today's sodium."
+                "text": "$2.68 for this meal, 54% of today's sodium."
+              }
+            ]
+          },
+          {
+            "mealId": "2026-10-16_lunch_teriyaki_chicken_bowl",
+            "type": "lunch",
+            "name": "Ginger soy chicken rice bowl",
+            "cuisine": "Asian",
+            "recipeSteps": [
+              "Sear chicken thigh pieces",
+              "Steam broccoli",
+              "Toss chicken with soy sauce and ginger, serve over rice"
+            ],
+            "prepMinutes": 20,
+            "items": [
+              {
+                "foodId": "chicken_thigh",
+                "name": "Chicken thigh, skinless, roasted",
+                "servings": 2,
+                "grams": 200
+              },
+              {
+                "foodId": "white_rice",
+                "name": "White rice, cooked",
+                "servings": 3,
+                "grams": 279
+              },
+              {
+                "foodId": "broccoli",
+                "name": "Broccoli, cooked",
+                "servings": 1,
+                "grams": 91
+              },
+              {
+                "foodId": "soy_sauce",
+                "name": "Soy sauce, low sodium",
+                "servings": 1,
+                "grams": 9
+              }
+            ],
+            "totals": {
+              "calories": 817,
+              "proteinG": 62.4,
+              "carbsG": 85.7,
+              "fatG": 23,
+              "fiberG": 4.2,
+              "sugarG": 1.6,
+              "addedSugarG": 0,
+              "satFatG": 6.4,
+              "sodiumMg": 530,
+              "potassiumMg": 862,
+              "glycemicLoad": 57,
+              "costUsd": 3.2
+            },
+            "explanation": [
+              {
+                "agent": "chef",
+                "text": "Ginger soy chicken rice bowl: Asian flavors you said you like, 20 minutes of prep."
+              },
+              {
+                "agent": "doctor",
+                "text": "62.4 g protein and 4.2 g fiber keep you full while losing fat safely."
+              },
+              {
+                "agent": "budget",
+                "text": "$3.20 for this meal, 41% of today's sodium."
+              }
+            ]
+          },
+          {
+            "mealId": "2026-10-16_dinner_lentil_bolognese",
+            "type": "dinner",
+            "name": "Lentil bolognese",
+            "cuisine": "Italian",
+            "recipeSteps": [
+              "Saute onion and carrot",
+              "Add lentils and tomatoes, simmer 20 minutes",
+              "Serve over pasta"
+            ],
+            "prepMinutes": 30,
+            "items": [
+              {
+                "foodId": "lentils",
+                "name": "Lentils, cooked",
+                "servings": 3,
+                "grams": 297
+              },
+              {
+                "foodId": "ww_pasta",
+                "name": "Whole wheat pasta, cooked",
+                "servings": 2,
+                "grams": 140
+              },
+              {
+                "foodId": "canned_tomatoes",
+                "name": "Diced tomatoes, no salt added",
+                "servings": 1,
+                "grams": 121
+              },
+              {
+                "foodId": "carrots",
+                "name": "Carrots",
+                "servings": 1,
+                "grams": 61
+              },
+              {
+                "foodId": "onion",
+                "name": "Onion",
+                "servings": 1,
+                "grams": 55
+              }
+            ],
+            "totals": {
+              "calories": 639,
+              "proteinG": 38.1,
+              "carbsG": 121.5,
+              "fatG": 4.1,
+              "fiberG": 33.9,
+              "sugarG": 17,
+              "addedSugarG": 0,
+              "satFatG": 0.7,
+              "sodiumMg": 68,
+              "potassiumMg": 1737,
+              "glycemicLoad": 33.7,
+              "costUsd": 1.51
+            },
+            "explanation": [
+              {
+                "agent": "chef",
+                "text": "Lentil bolognese: Italian flavors you said you like, 30 minutes of prep."
+              },
+              {
+                "agent": "doctor",
+                "text": "38.1 g protein and 33.9 g fiber keep you full while losing fat safely."
+              },
+              {
+                "agent": "budget",
+                "text": "$1.51 for this meal, 5% of today's sodium."
               }
             ]
           }
         ],
         "dayTotals": {
-          "calories": 2083,
-          "proteinG": 162,
-          "carbsG": 205.7,
-          "fatG": 65,
-          "fiberG": 32.1,
-          "sugarG": 6.9,
+          "calories": 2043,
+          "proteinG": 138.1,
+          "carbsG": 253.6,
+          "fatG": 54.5,
+          "fiberG": 49.5,
+          "sugarG": 22,
           "addedSugarG": 0.5,
-          "satFatG": 21.9,
-          "sodiumMg": 1378,
-          "potassiumMg": 3014,
-          "glycemicLoad": 97.5,
+          "satFatG": 18.1,
+          "sodiumMg": 1308,
+          "potassiumMg": 3361,
+          "glycemicLoad": 100.5,
           "costUsd": 7.39
         }
       }
     ],
     "groceryList": [
       {
-        "foodId": "bell_pepper",
-        "name": "Bell pepper",
-        "quantityG": 119,
-        "quantityLabel": "119 g (about 1 x 1 medium)",
-        "costUsd": 0.77,
+        "foodId": "avocado",
+        "name": "Avocado",
+        "quantityG": 200,
+        "quantityLabel": "200 g (about 4 x 1/3 avocado)",
+        "costUsd": 1.66,
         "storeSection": "produce"
       },
       {
         "foodId": "broccoli",
         "name": "Broccoli, cooked",
-        "quantityG": 182,
-        "quantityLabel": "182 g (about 2 x 1 cup)",
-        "costUsd": 0.82,
+        "quantityG": 273,
+        "quantityLabel": "273 g (about 3 x 1 cup)",
+        "costUsd": 1.37,
         "storeSection": "produce"
       },
       {
         "foodId": "cabbage",
         "name": "Cabbage, shredded",
-        "quantityG": 445,
-        "quantityLabel": "445 g (about 5 x 1 cup shredded)",
-        "costUsd": 0.8,
+        "quantityG": 623,
+        "quantityLabel": "623 g (about 7 x 1 cup shredded)",
+        "costUsd": 1.37,
         "storeSection": "produce"
       },
       {
-        "foodId": "cactus",
-        "name": "Cactus paddles, cooked",
-        "quantityG": 75,
-        "quantityLabel": "75 g (about 1 x 1/2 cup)",
-        "costUsd": 0.41,
+        "foodId": "carrots",
+        "name": "Carrots",
+        "quantityG": 122,
+        "quantityLabel": "122 g (about 2 x 1 medium)",
+        "costUsd": 0.34,
         "storeSection": "produce"
       },
       {
         "foodId": "fresh_salsa",
         "name": "Fresh tomato salsa",
-        "quantityG": 420,
-        "quantityLabel": "420 g (about 7 x 1/4 cup)",
-        "costUsd": 2.52,
-        "storeSection": "produce"
-      },
-      {
-        "foodId": "green_beans",
-        "name": "Green beans, cooked",
-        "quantityG": 500,
-        "quantityLabel": "500 g (about 4 x 1 cup)",
-        "costUsd": 2.25,
+        "quantityG": 360,
+        "quantityLabel": "360 g (about 6 x 1/4 cup)",
+        "costUsd": 3.17,
         "storeSection": "produce"
       },
       {
         "foodId": "onion",
         "name": "Onion",
-        "quantityG": 110,
-        "quantityLabel": "110 g (about 2 x 1/2 cup chopped)",
-        "costUsd": 0.28,
-        "storeSection": "produce"
-      },
-      {
-        "foodId": "spinach",
-        "name": "Spinach, raw",
-        "quantityG": 60,
-        "quantityLabel": "60 g (about 2 x 1 cup)",
-        "costUsd": 0.48,
+        "quantityG": 330,
+        "quantityLabel": "330 g (about 6 x 1/2 cup chopped)",
+        "costUsd": 0.86,
         "storeSection": "produce"
       },
       {
         "foodId": "chicken_breast",
         "name": "Chicken breast, roasted",
-        "quantityG": 300,
-        "quantityLabel": "300 g (about 3 x 1 palm-size piece (100 g))",
-        "costUsd": 3.3,
+        "quantityG": 1400,
+        "quantityLabel": "1400 g (about 14 x 1 palm-size piece (100 g))",
+        "costUsd": 10.64,
         "storeSection": "protein"
       },
       {
         "foodId": "chicken_thigh",
         "name": "Chicken thigh, skinless, roasted",
-        "quantityG": 2800,
-        "quantityLabel": "2800 g (about 28 x 1 thigh (100 g))",
-        "costUsd": 22.4,
+        "quantityG": 700,
+        "quantityLabel": "700 g (about 7 x 1 thigh (100 g))",
+        "costUsd": 8.19,
         "storeSection": "protein"
       },
       {
-        "foodId": "flank_steak",
-        "name": "Flank steak, grilled",
+        "foodId": "tofu",
+        "name": "Tofu, firm",
+        "quantityG": 170,
+        "quantityLabel": "170 g (about 2 x 3 oz)",
+        "costUsd": 0.85,
+        "storeSection": "protein"
+      },
+      {
+        "foodId": "canned_tuna",
+        "name": "Tuna, canned in water, drained",
         "quantityG": 85,
-        "quantityLabel": "85 g (about 1 x 3 oz grilled)",
-        "costUsd": 1.62,
+        "quantityLabel": "85 g (about 1 x 1 can drained (85 g))",
+        "costUsd": 0.6,
         "storeSection": "protein"
       },
       {
@@ -1972,39 +2053,55 @@
         "name": "Cheddar cheese",
         "quantityG": 56,
         "quantityLabel": "56 g (about 2 x 1 oz)",
-        "costUsd": 0.67,
+        "costUsd": 0.49,
         "storeSection": "dairy"
       },
       {
         "foodId": "eggs",
         "name": "Eggs, whole",
-        "quantityG": 750,
-        "quantityLabel": "750 g (about 15 x 1 large egg)",
-        "costUsd": 4.13,
+        "quantityG": 600,
+        "quantityLabel": "600 g (about 12 x 1 large egg)",
+        "costUsd": 5.52,
+        "storeSection": "dairy"
+      },
+      {
+        "foodId": "farmer_cheese",
+        "name": "Farmer cheese, fresh",
+        "quantityG": 224,
+        "quantityLabel": "224 g (about 8 x 1 oz)",
+        "costUsd": 2.28,
         "storeSection": "dairy"
       },
       {
         "foodId": "brown_rice",
         "name": "Brown rice, cooked",
-        "quantityG": 980,
-        "quantityLabel": "980 g (about 10 x 1/2 cup cooked)",
-        "costUsd": 1.18,
+        "quantityG": 784,
+        "quantityLabel": "784 g (about 8 x 1/2 cup cooked)",
+        "costUsd": 1.33,
+        "storeSection": "grains"
+      },
+      {
+        "foodId": "arepa",
+        "name": "Corn arepa, cooked",
+        "quantityG": 225,
+        "quantityLabel": "225 g (about 3 x 1 arepa)",
+        "costUsd": 0.9,
         "storeSection": "grains"
       },
       {
         "foodId": "corn_tortilla",
         "name": "Corn tortilla",
-        "quantityG": 234,
-        "quantityLabel": "234 g (about 9 x 1 tortilla (6 in))",
-        "costUsd": 1.05,
+        "quantityG": 390,
+        "quantityLabel": "390 g (about 15 x 1 tortilla (6 in))",
+        "costUsd": 0.94,
         "storeSection": "grains"
       },
       {
         "foodId": "white_rice",
         "name": "White rice, cooked",
-        "quantityG": 1488,
-        "quantityLabel": "1488 g (about 16 x 1/2 cup cooked)",
-        "costUsd": 1.19,
+        "quantityG": 1116,
+        "quantityLabel": "1116 g (about 12 x 1/2 cup cooked)",
+        "costUsd": 1.45,
         "storeSection": "grains"
       },
       {
@@ -2012,7 +2109,7 @@
         "name": "Whole wheat bread",
         "quantityG": 64,
         "quantityLabel": "64 g (about 2 x 1 slice)",
-        "costUsd": 0.35,
+        "costUsd": 0.24,
         "storeSection": "grains"
       },
       {
@@ -2020,56 +2117,56 @@
         "name": "Whole wheat flour tortilla",
         "quantityG": 90,
         "quantityLabel": "90 g (about 2 x 1 tortilla (8 in))",
-        "costUsd": 0.54,
+        "costUsd": 0.66,
+        "storeSection": "grains"
+      },
+      {
+        "foodId": "ww_pasta",
+        "name": "Whole wheat pasta, cooked",
+        "quantityG": 280,
+        "quantityLabel": "280 g (about 4 x 1/2 cup cooked)",
+        "costUsd": 0.48,
         "storeSection": "grains"
       },
       {
         "foodId": "black_beans",
         "name": "Black beans, cooked",
-        "quantityG": 688,
-        "quantityLabel": "688 g (about 8 x 1/2 cup cooked)",
-        "costUsd": 2.06,
+        "quantityG": 860,
+        "quantityLabel": "860 g (about 10 x 1/2 cup cooked)",
+        "costUsd": 1.98,
         "storeSection": "pantry"
       },
       {
         "foodId": "canned_tomatoes",
         "name": "Diced tomatoes, no salt added",
-        "quantityG": 121,
-        "quantityLabel": "121 g (about 1 x 1/2 cup)",
-        "costUsd": 0.36,
+        "quantityG": 726,
+        "quantityLabel": "726 g (about 6 x 1/2 cup)",
+        "costUsd": 2.18,
         "storeSection": "pantry"
       },
       {
-        "foodId": "olive_oil",
-        "name": "Olive oil",
-        "quantityG": 14,
-        "quantityLabel": "14 g (about 1 x 1 tbsp)",
-        "costUsd": 0.13,
+        "foodId": "lentils",
+        "name": "Lentils, cooked",
+        "quantityG": 594,
+        "quantityLabel": "594 g (about 6 x 1/2 cup cooked)",
+        "costUsd": 1.19,
         "storeSection": "pantry"
       },
       {
         "foodId": "pinto_beans",
         "name": "Pinto beans, cooked",
-        "quantityG": 774,
-        "quantityLabel": "774 g (about 9 x 1/2 cup cooked)",
-        "costUsd": 2.17,
+        "quantityG": 516,
+        "quantityLabel": "516 g (about 6 x 1/2 cup cooked)",
+        "costUsd": 1.19,
         "storeSection": "pantry"
       },
       {
         "foodId": "soy_sauce",
         "name": "Soy sauce, low sodium",
-        "quantityG": 18,
-        "quantityLabel": "18 g (about 2 x 1/2 tbsp)",
-        "costUsd": 0.11,
+        "quantityG": 27,
+        "quantityLabel": "27 g (about 3 x 1/2 tbsp)",
+        "costUsd": 0.13,
         "storeSection": "pantry"
-      },
-      {
-        "foodId": "mixed_veg",
-        "name": "Mixed vegetables, frozen, cooked",
-        "quantityG": 91,
-        "quantityLabel": "91 g (about 1 x 1/2 cup)",
-        "costUsd": 0.32,
-        "storeSection": "frozen"
       }
     ],
     "shadowPrices": [],
