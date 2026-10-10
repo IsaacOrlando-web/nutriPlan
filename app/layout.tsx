@@ -1,5 +1,8 @@
+// Root layout. ClerkProvider only mounts when a publishable key exists,
+// so the zero-key demo (AUTH_MODE=local) keeps working.
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
+import { ClerkProvider } from "@clerk/nextjs";
 import { Providers } from "@/components/Providers";
 import "./globals.css";
 
@@ -17,11 +20,19 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
+const clerkEnabled = Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY);
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={inter.variable}>
       <body className="min-h-screen bg-surface font-sans text-ink">
-        <Providers>{children}</Providers>
+        {clerkEnabled ? (
+          <ClerkProvider afterSignOutUrl="/welcome">
+            <Providers>{children}</Providers>
+          </ClerkProvider>
+        ) : (
+          <Providers>{children}</Providers>
+        )}
       </body>
     </html>
   );

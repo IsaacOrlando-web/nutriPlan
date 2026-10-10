@@ -1,5 +1,6 @@
 "use client";
 
+import { SignOutButton } from "@clerk/nextjs";
 import {
   Camera,
   Home,
@@ -12,11 +13,14 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import type { ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import { Disclaimer } from "@/components/common/Disclaimer";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useProfile } from "@/lib/hooks/useProfile";
+import { useLoginFlow } from "@/lib/hooks/useLoginFlow";
 import { cn } from "@/lib/utils";
+
+const clerkEnabled = Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY);
 
 interface NavItem {
   key: "dashboard" | "plan" | "log" | "trends" | "coach";
@@ -147,17 +151,63 @@ export function AppShell({ children }: { children: ReactNode }) {
 }
 
 function ProfileLink({ name, loading, compact }: { name?: string; loading: boolean; compact?: boolean }) {
+  const [open, setOpen] = useState(false);
+  const { logout } = useLoginFlow();
+
   return (
-    <Link
-      href="/profile"
-      className={cn(
-        "flex items-center gap-2 rounded-lg text-sm font-medium text-ink hover:bg-surface-sunken",
-        compact ? "px-2 py-1" : "px-3 py-2",
+    <div className={cn("relative", compact ? "" : "w-full")}>
+      <button
+        type="button"
+        aria-expanded={open}
+        aria-haspopup="menu"
+        onClick={() => setOpen((current) => !current)}
+        className={cn(
+          "flex items-center gap-2 rounded-lg text-sm font-medium text-ink hover:bg-surface-sunken",
+          compact ? "px-2 py-1" : "w-full px-3 py-2",
+        )}
+        aria-label="Profile"
+      >
+        <UserCircle className="h-6 w-6 text-ink-muted" aria-hidden="true" />
+        {loading ? <Skeleton className="h-4 w-16" /> : <span className="truncate">{name ?? "Profile"}</span>}
+      </button>
+      {open && (
+        <div
+          role="menu"
+          className={cn(
+            "absolute right-0 z-40 min-w-40 rounded-lg border bg-surface-raised p-1 shadow-sm",
+            compact ? "top-full mt-2" : "bottom-full mb-2",
+          )}
+        >
+          <Link
+            href="/profile"
+            role="menuitem"
+            onClick={() => setOpen(false)}
+            className="block rounded-md px-3 py-2 text-sm text-ink hover:bg-surface-sunken"
+          >
+            My profile
+          </Link>
+          {clerkEnabled ? (
+            <SignOutButton redirectUrl="/welcome">
+              <button
+                type="button"
+                role="menuitem"
+                className="block w-full rounded-md px-3 py-2 text-left text-sm text-danger hover:bg-danger-soft"
+              >
+                Sign out
+              </button>
+            </SignOutButton>
+          ) : (
+            <button
+              type="button"
+              role="menuitem"
+              onClick={() => void logout()}
+              className="block w-full rounded-md px-3 py-2 text-left text-sm text-danger hover:bg-danger-soft"
+            >
+              Sign out
+            </button>
+          )}
+        </div>
       )}
-      aria-label="Profile"
-    >
-      <UserCircle className="h-6 w-6 text-ink-muted" aria-hidden="true" />
-      {loading ? <Skeleton className="h-4 w-16" /> : <span className="truncate">{name ?? "Profile"}</span>}
-    </Link>
+    </div>
   );
 }

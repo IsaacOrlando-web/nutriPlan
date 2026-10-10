@@ -3,6 +3,7 @@
 // AUTH_MODE=local    (default) a signed-less demo cookie `np_uid` selects the user. /api/auth/login accepts
 //                    "alex" or "maria" (or any email) and sets the cookie. Perfect for mocks and the demo.
 // AUTH_MODE=supabase Supabase Auth via @supabase/ssr cookies. Same return shape, so routes never care.
+// AUTH_MODE=clerk    Clerk via @clerk/nextjs. The Clerk user id is hashed to a stable uuid so the store schema is unchanged.
 import { cookies } from "next/headers";
 import type { NextRequest } from "next/server";
 import { DEMO_EMAILS, DEMO_USER_IDS, type DemoUserKey } from "@/lib/db/seed/demo-users";
@@ -16,6 +17,17 @@ export interface Session {
 
 export function authMode(): "local" | "supabase" {
   return process.env.AUTH_MODE === "supabase" ? "supabase" : "local";
+}
+
+/**
+ * Kept apart from authMode() because SessionInfo.mode in contracts.ts only allows "local" | "supabase".
+ * Configured Clerk keys win over AUTH_MODE=local, so a leftover np_uid demo cookie never counts as a login
+ * once Clerk is on. Keep in sync with clerkEnabled in middleware.ts.
+ */
+export function isClerkMode(): boolean {
+  if (process.env.AUTH_MODE === "clerk") return true;
+  const clerkKeys = Boolean(process.env.CLERK_SECRET_KEY && process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY);
+  return clerkKeys && process.env.AUTH_MODE !== "supabase";
 }
 
 /** Maps "alex" / "maria" / their demo emails to the seeded user ids; anything else becomes a stable uuid. */
@@ -40,6 +52,16 @@ function uuidFromString(s: string): string {
 }
 
 export async function getSession(req?: NextRequest): Promise<Session | null> {
+  if (isClerkMode()) {
+    const { auth, currentUser } = await import("@clerk/nextjs/server");
+    const { userId } = await auth();
+    if (!userId) return null;
+    const user = await currentUser();
+    return {
+      userId: uuidFromString(`clerk:${userId}`),
+      email: user?.primaryEmailAddress?.emailAddress ?? null,
+    };
+  }
   if (authMode() === "supabase") {
     const { createServerSupabase } = await import("@/lib/supabase/server");
     const supabase = await createServerSupabase();
