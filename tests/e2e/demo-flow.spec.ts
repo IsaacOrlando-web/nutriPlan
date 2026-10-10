@@ -4,7 +4,7 @@
 // Test ids are frozen in /app/CLAUDE.md; counts use >= where the data may vary.
 import { expect, test, type Locator, type Page } from "@playwright/test";
 
-const NAV_TIMEOUT = 30_000;
+const NAV_TIMEOUT = 90_000; // dev server cold compiles can take 30+ s per route on Windows
 const AGENT_ROOM_TIMEOUT = 90_000;
 /** The dashboard is the app root. */
 const DASHBOARD = "/";
