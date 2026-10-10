@@ -1,12 +1,11 @@
 // POST /api/upload multipart "file" (JPEG/PNG/WebP, 10 MB max) -> UploadResponse. Owner: Backend.
-// local store: saved under .data/uploads and served by GET /api/upload/[id].
-// supabase store: uploaded to the public "photos" Storage bucket; the public URL is returned.
+// Files are saved under .data/uploads and served by GET /api/upload/[id].
 import fs from "node:fs/promises";
 import path from "node:path";
 import type { NextRequest } from "next/server";
 import type { UploadResponse } from "@/types/contracts";
 import { requireSession } from "@/lib/auth/session";
-import { getStore, newId } from "@/lib/db";
+import { newId } from "@/lib/db";
 import { HttpError, handler, json } from "@/lib/api/http";
 
 export const runtime = "nodejs";
@@ -18,7 +17,7 @@ const EXT_BY_TYPE: Record<string, string> = { "image/jpeg": "jpg", "image/png": 
 const uploadDir = () => path.resolve(process.cwd(), ".data", "uploads");
 
 export const POST = handler(async (req: NextRequest) => {
-  const { userId } = await requireSession(req);
+  await requireSession(req);
   let form: FormData;
   try {
     form = await req.formData();
@@ -34,20 +33,6 @@ export const POST = handler(async (req: NextRequest) => {
 
   const id = `${newId()}.${ext}`;
   const bytes = Buffer.from(await file.arrayBuffer());
-
-  if (getStore().kind === "supabase") {
-    const url = process.env.SUPABASE_URL ?? process.env.NEXT_PUBLIC_SUPABASE_URL;
-    const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
-    if (!url || !key) throw new HttpError(500, "Storage is not configured");
-    const { createClient } = await import("@supabase/supabase-js");
-    const supabase = createClient(url, key, { auth: { persistSession: false } });
-    const objectPath = `${userId}/${id}`;
-    const { error } = await supabase.storage.from("photos").upload(objectPath, bytes, { contentType: file.type, upsert: false });
-    if (error) throw new HttpError(502, "Upload failed");
-    const { data } = supabase.storage.from("photos").getPublicUrl(objectPath);
-    const body: UploadResponse = { url: data.publicUrl };
-    return json(body, { status: 201 });
-  }
 
   const dir = uploadDir();
   await fs.mkdir(dir, { recursive: true });

@@ -3,7 +3,7 @@ import fs from "node:fs";
 import path from "node:path";
 
 export type PromptName =
-  "orchestrator" | "doctor" | "chef" | "chef_columns" | "budget" | "monitor" | "coach" | "vision";
+  "orchestrator" | "doctor" | "chef" | "chef_columns" | "budget" | "monitor" | "coach" | "recipes" | "planner" | "vision";
 
 const cache = new Map<PromptName, string>();
 
@@ -20,6 +20,10 @@ const FALLBACK: Record<PromptName, string> = {
   monitor:
     "You are Monitor, observant and encouraging. Quote only the trend facts you are given. Under 140 characters.",
   coach: "You are Coach, warm and concrete. Only quote numbers that appear in the context you are given.",
+  planner:
+    "You write practical home recipes for a weekly meal plan. Follow the JSON schema exactly. Respect every exclusion. Never state calories, nutrients or prices.",
+  recipes:
+    "You are the Chef. Return exactly 2 meals (lunch and dinner) for this person by ingredient names only, avoiding excluded foods. Never state numbers.",
   vision:
     "You identify foods in a photo and estimate grams. Return short ingredient names and gram estimates.",
 };

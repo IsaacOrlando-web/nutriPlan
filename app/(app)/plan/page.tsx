@@ -1,51 +1,203 @@
 "use client";
 
-import { Check, Lightbulb, ShoppingCart, Sparkles } from "lucide-react";
+import {
+  CalendarDays,
+  ChevronLeft,
+  ChevronRight,
+  Lightbulb,
+  Loader2,
+  RefreshCw,
+  ShoppingCart,
+  Sparkles,
+} from "lucide-react";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { type ReactNode, useEffect, useState } from "react";
+import { toast } from "sonner";
+import { EmptyState } from "@/components/common/EmptyState";
 import { ErrorState } from "@/components/common/ErrorState";
+import { LoadingState } from "@/components/common/LoadingState";
 import { PageHeader } from "@/components/common/PageHeader";
 import { BudgetSlider } from "@/components/meals/BudgetSlider";
-import { MealCard } from "@/components/meals/MealCard";
-import { planReasonSentence } from "@/components/meals/planReason";
-import { WhySheet } from "@/components/meals/WhySheet";
-import { Badge } from "@/components/ui/badge";
+import { MonthSchedule, WEEKDAY_NAMES, monthOfWeek } from "@/components/meals/MonthSchedule";
+import { RecipeCard } from "@/components/meals/RecipeCard";
+import { RecipeSheet } from "@/components/meals/RecipeSheet";
 import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Card, CardContent } from "@/components/ui/card";
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { useBudgetCurve } from "@/lib/hooks/useBudgetCurve";
 import { usePlan } from "@/lib/hooks/usePlan";
+import {
+  mondayOf,
+  useGenerateWeek,
+  useRegenerateAgentPlan,
+  usePlannerSettings,
+  useReplaceRecipe,
+  useSaveShoppingDay,
+  useWeekPlan,
+} from "@/lib/hooks/usePlanner";
 import { useProfile } from "@/lib/hooks/useProfile";
-import { cn, fmtDate, fmtNumber, fmtUsd, todayIso } from "@/lib/utils";
-import type { DailyTargets, Meal, MealPlan, MealTotals } from "@/types/contracts";
+import { addDays, formatWeekRange, weekStartOf, weekdayIndex } from "@/lib/planner/dates";
+import { cn, fmtDate, fmtUsd, todayIso } from "@/lib/utils";
+import type { MealPlan, PlannerDay, PlannerMealType, Recipe, WeeklyMealPlan } from "@/types/contracts";
 
-const LABEL = "text-xs font-semibold uppercase tracking-wide text-ink-subtle";
+const MEAL_TYPES: PlannerMealType[] = ["breakfast", "lunch", "dinner"];
+const errorMessage = (err: unknown, fallback: string) => (err instanceof Error ? err.message : fallback);
 
 export default function PlanPage() {
-  const plan = usePlan();
+  const today = todayIso();
+  const currentWeek = mondayOf(today);
+  const [weekStart, setWeekStart] = useState(currentWeek);
+  const [focusDate, setFocusDate] = useState(today);
+  const [month, setMonth] = useState(() => today.slice(0, 7));
+  const [monthOpen, setMonthOpen] = useState(false);
+  const week = useWeekPlan(weekStart);
+  const plannerSettings = usePlannerSettings();
+  const saveShoppingDay = useSaveShoppingDay();
+  const shoppingWeekday = plannerSettings.data?.preferences.shoppingWeekday ?? null;
+  const changeShoppingDay = (weekday: number | null) =>
+    saveShoppingDay.mutate(weekday, {
+      onSuccess: () =>
+        toast.success(
+          weekday === null ? "Shopping day cleared." : `Shopping day set to ${WEEKDAY_NAMES[weekday]}.`,
+        ),
+      onError: (err) => toast.error(errorMessage(err, "Could not save the shopping day.")),
+    });
+  const agentPlan = usePlan();
   const profile = useProfile();
+  const generate = useGenerateWeek();
+  const agentRegen = useRegenerateAgentPlan();
+  const plan = week.data?.plan ?? null;
+  const isCurrentWeek = weekStart === currentWeek;
+
+  /** Opens the week that contains `date` with that day selected (from the calendar or the week arrows). */
+  const openDate = (date: string) => {
+    setWeekStart(weekStartOf(date));
+    setFocusDate(date);
+    setMonth(date.slice(0, 7));
+    setMonthOpen(false);
+  };
+  const openWeek = (monday: string) => {
+    setWeekStart(monday);
+    setFocusDate(monday === currentWeek ? today : monday);
+    setMonth(monthOfWeek(monday));
+  };
+
+  const calendar = (className?: string) => (
+    <MonthSchedule
+      month={month}
+      onMonthChange={setMonth}
+      weekStart={weekStart}
+      focusDate={focusDate}
+      today={today}
+      onPickDate={openDate}
+      shoppingWeekday={shoppingWeekday}
+      onShoppingWeekdayChange={changeShoppingDay}
+      className={className}
+    />
+  );
+  const weekSwitcher = (
+    <WeekSwitcher
+      weekStart={weekStart}
+      isCurrentWeek={isCurrentWeek}
+      onChange={openWeek}
+      onToday={() => openDate(today)}
+      onOpenMonth={() => setMonthOpen(true)}
+    />
+  );
+
+  // One click refreshes both: the recipes (planner) and the agents' optimizer plan behind the grocery list,
+  // weekly cost, budget tradeoff and "What would change". They run in parallel and settle independently.
+  const regenerate = () => {
+    generate.mutate(
+      { weekStartDate: weekStart },
+      {
+        onSuccess: () => toast.success(`Fresh recipes for ${formatWeekRange(weekStart)}.`),
+        onError: (err) => toast.error(errorMessage(err, "Could not generate the week.")),
+      },
+    );
+    // The agents' optimizer plan (grocery list, budget) is about this week only; other weeks just get recipes.
+    if (isCurrentWeek && !agentRegen.isPending)
+      agentRegen.mutate(undefined, {
+        onSuccess: () => toast.success("Grocery list and budget updated."),
+        onError: (err) => toast.error(errorMessage(err, "Could not update the grocery list and budget.")),
+      });
+  };
 
   return (
-    <div data-testid="plan-screen" className="space-y-8">
-      {plan.isLoading && <PlanSkeleton />}
-      {plan.error && <ErrorState error={plan.error} onRetry={() => void plan.refetch()} />}
-      {!plan.isLoading && !plan.error && (!plan.data || plan.data.days.length === 0) && (
-        <>
-          <PageHeader title="Your week" />
-          <div className="flex items-center justify-between gap-3 rounded-xl bg-surface-sunken px-4 py-3">
-            <p className="text-sm text-ink-muted">No plan yet.</p>
-            <Button asChild size="sm">
-              <Link href="/onboarding">Build my plan</Link>
-            </Button>
-          </div>
-        </>
-      )}
-      {plan.data && plan.data.days.length > 0 && (
-        <PlanView
-          plan={plan.data}
+    <div data-testid="plan-screen" className="space-y-6">
+      <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_18rem] lg:items-start lg:gap-6">
+        <div className="min-w-0 space-y-6">
+          {week.isLoading && <PlanSkeleton />}
+          {week.error && <ErrorState error={week.error} onRetry={() => void week.refetch()} />}
+          {!week.isLoading && !week.error && !plan && (
+            <>
+              <PageHeader
+                title={isCurrentWeek ? "Your week" : "Plan a week"}
+                subtitle="Seven days of breakfasts, lunches and dinners, built around your rules."
+              />
+              {weekSwitcher}
+              {generate.isPending ? (
+                <GeneratingWeek />
+              ) : (
+                <EmptyState
+                  title={isCurrentWeek ? "No plan yet" : "No plan for this week yet"}
+                  body="Chef writes 21 recipes that respect your allergies, restrictions and budget."
+                  action={
+                    <div className="flex flex-col items-center gap-2">
+                      <Button data-testid="plan-build" onClick={regenerate}>
+                        <Sparkles aria-hidden="true" />
+                        Generate my week
+                      </Button>
+                      {isCurrentWeek && (
+                        <Link
+                          href="/onboarding"
+                          className="text-sm text-ink-muted underline-offset-4 hover:underline"
+                        >
+                          Answer a few questions first
+                        </Link>
+                      )}
+                    </div>
+                  }
+                />
+              )}
+            </>
+          )}
+          {plan && (
+            <WeekView
+              key={plan.weekStartDate}
+              plan={plan}
+              isCurrentWeek={isCurrentWeek}
+              focusDate={focusDate}
+              onFocusDate={setFocusDate}
+              shoppingWeekday={shoppingWeekday}
+              weekSwitcher={weekSwitcher}
+              regenerating={generate.isPending}
+              onRegenerate={regenerate}
+              agentRunId={agentPlan.data?.runId}
+            />
+          )}
+        </div>
+        {calendar("hidden lg:sticky lg:top-6 lg:block")}
+      </div>
+
+      <Sheet open={monthOpen} onOpenChange={setMonthOpen}>
+        <SheetContent side="bottom" className="gap-4 lg:hidden">
+          <SheetHeader>
+            <SheetTitle>Month schedule</SheetTitle>
+            <SheetDescription>Every week you generate is saved. Tap a day to open it.</SheetDescription>
+          </SheetHeader>
+          {calendar("shadow-none ring-0")}
+        </SheetContent>
+      </Sheet>
+
+      {!isCurrentWeek ? null : agentPlan.data && agentPlan.data.days.length > 0 ? (
+        <BudgetSection
+          plan={agentPlan.data}
           budget={profile.data?.profile.weeklyBudgetUsd}
-          targets={profile.data?.targets}
-          targetsLoading={profile.isLoading}
+          updating={agentRegen.isPending}
         />
+      ) : (
+        agentRegen.isPending && <BudgetUpdating />
       )}
     </div>
   );
@@ -53,81 +205,185 @@ export default function PlanPage() {
 
 function PlanSkeleton() {
   return (
-    <div className="space-y-8" role="status" aria-label="Loading your week">
+    <div className="space-y-6" role="status" aria-label="Loading your week">
       <div className="space-y-2">
-        <Skeleton className="h-8 w-40" />
-        <Skeleton className="h-4 w-56 max-w-full" />
+        <div className="h-8 w-40 animate-pulse rounded-md bg-surface-sunken" />
+        <div className="h-4 w-80 max-w-full animate-pulse rounded-md bg-surface-sunken" />
       </div>
-      <div className="flex gap-1">
+      <div className="flex gap-2">
         {Array.from({ length: 7 }).map((_, i) => (
-          <Skeleton key={i} className="h-14 w-12 rounded-xl" />
+          <div key={i} className="h-16 w-14 animate-pulse rounded-xl bg-surface-sunken" />
         ))}
       </div>
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-        {Array.from({ length: 3 }).map((_, i) => (
-          <Skeleton key={i} className="h-40 rounded-2xl" />
-        ))}
-      </div>
+      <LoadingState variant="cards" rows={3} />
     </div>
   );
 }
 
-interface PlanViewProps {
-  plan: MealPlan;
-  budget?: number;
-  targets?: DailyTargets;
-  targetsLoading: boolean;
+function GeneratingWeek() {
+  return (
+    <div className="space-y-4">
+      <p className="flex items-center gap-2 text-sm text-ink-muted" role="status">
+        <Loader2 className="h-4 w-4 animate-spin text-brand" aria-hidden="true" />
+        Chef is writing 21 recipes. This can take a minute.
+      </p>
+      <LoadingState variant="cards" rows={3} />
+    </div>
+  );
 }
 
-function PlanView({ plan, budget, targets, targetsLoading }: PlanViewProps) {
-  const [openMeal, setOpenMeal] = useState<Meal | null>(null);
+function WeekSwitcher({
+  weekStart,
+  isCurrentWeek,
+  onChange,
+  onToday,
+  onOpenMonth,
+}: {
+  weekStart: string;
+  isCurrentWeek: boolean;
+  onChange: (monday: string) => void;
+  onToday: () => void;
+  onOpenMonth: () => void;
+}) {
+  return (
+    <div className="flex items-center gap-1" data-testid="plan-week-switcher">
+      <Button
+        variant="ghost"
+        size="icon"
+        className="h-8 w-8"
+        data-testid="plan-week-prev"
+        aria-label="Previous week"
+        onClick={() => onChange(addDays(weekStart, -7))}
+      >
+        <ChevronLeft aria-hidden="true" />
+      </Button>
+      <p className="min-w-0 text-sm font-medium tabular-nums" aria-live="polite">
+        {formatWeekRange(weekStart)}
+      </p>
+      <Button
+        variant="ghost"
+        size="icon"
+        className="h-8 w-8"
+        data-testid="plan-week-next"
+        aria-label="Next week"
+        onClick={() => onChange(addDays(weekStart, 7))}
+      >
+        <ChevronRight aria-hidden="true" />
+      </Button>
+      {!isCurrentWeek && (
+        <Button variant="link" size="sm" className="px-1" onClick={onToday}>
+          This week
+        </Button>
+      )}
+      <Button
+        variant="outline"
+        size="sm"
+        className="ml-auto lg:hidden"
+        data-testid="plan-month-open"
+        onClick={onOpenMonth}
+      >
+        <CalendarDays aria-hidden="true" />
+        Month
+      </Button>
+    </div>
+  );
+}
+
+function WeekView({
+  plan,
+  isCurrentWeek,
+  focusDate,
+  onFocusDate,
+  shoppingWeekday,
+  weekSwitcher,
+  regenerating,
+  onRegenerate,
+  agentRunId,
+}: {
+  plan: WeeklyMealPlan;
+  isCurrentWeek: boolean;
+  focusDate: string;
+  onFocusDate: (date: string) => void;
+  shoppingWeekday: number | null;
+  weekSwitcher: ReactNode;
+  regenerating: boolean;
+  onRegenerate: () => void;
+  agentRunId?: string;
+}) {
   const today = todayIso();
-  const [selected, setSelected] = useState(() =>
+  const [selected, setSelectedIndex] = useState(() =>
     Math.max(
       0,
-      plan.days.findIndex((d) => d.date === today),
+      plan.days.findIndex((d) => d.date === focusDate),
     ),
   );
+  const setSelected = (i: number) => {
+    setSelectedIndex(i);
+    if (plan.days[i]) onFocusDate(plan.days[i].date);
+  };
+  // A tap on the month calendar inside this same week moves the day tab too.
   useEffect(() => {
-    if (selected >= plan.days.length) setSelected(0);
+    const i = plan.days.findIndex((d) => d.date === focusDate);
+    if (i >= 0) setSelectedIndex(i);
+  }, [focusDate, plan.days]);
+  const [openRecipe, setOpenRecipe] = useState<Recipe | null>(null);
+  const [swapping, setSwapping] = useState<PlannerMealType | null>(null);
+  const swap = useReplaceRecipe();
+  useEffect(() => {
+    if (selected >= plan.days.length) setSelectedIndex(0);
   }, [plan.days.length, selected]);
   const day = plan.days[selected] ?? plan.days[0];
-  const effectiveBudget = budget ?? plan.weeklyCostUsd;
-  const overBudget = plan.weeklyCostUsd > effectiveBudget;
-  // Mounting the hook here warms the tradeoff curve as soon as the plan is on screen (feature 7).
-  const curve = useBudgetCurve();
-  const insights = curve.data?.curve.insights ?? [];
-  const curveInsight = insights.find((s) => s.includes(fmtUsd(effectiveBudget, true))) ?? insights[0];
-  // Budget's notes: what the optimizer says would change (plan shadow prices), then the curve insights.
-  const notes = Array.from(new Set([...plan.shadowPrices.map((sp) => sp.humanText), ...insights]));
-  const first = plan.days[0].date;
-  const last = plan.days[plan.days.length - 1].date;
-  const range = `${fmtDate(first, { month: "short", day: "numeric" })} – ${fmtDate(last, { month: "short", day: "numeric" })}`;
-  const mealCols = day.meals.length >= 4 ? "lg:grid-cols-4" : "lg:grid-cols-3";
+
+  const onSwap = (d: PlannerDay, mealType: PlannerMealType) => {
+    const current = d[mealType];
+    setSwapping(mealType);
+    swap.mutate(
+      {
+        weekStartDate: plan.weekStartDate,
+        date: d.date,
+        mealType,
+        currentRecipe: {
+          title: current.title,
+          mainIngredients: current.ingredients.slice(0, 3).map((i) => i.name),
+        },
+      },
+      {
+        onSuccess: ({ recipe }) => toast.success(`Swapped in ${recipe.title}.`),
+        onError: (err) => toast.error(errorMessage(err, "Could not swap that dish.")),
+        onSettled: () => setSwapping(null),
+      },
+    );
+  };
 
   return (
     <>
       <PageHeader
-        title="Your week"
-        subtitle={
-          <span className="flex flex-col gap-1">
-            <span className="flex flex-wrap items-center gap-2">
-              <span>
-                {range} · Version {plan.version}
-              </span>
-              {plan.bestEffort && <Badge variant="warning">Best effort</Badge>}
-            </span>
-            {plan.version > 1 && <span>{planReasonSentence(plan)}</span>}
-          </span>
-        }
+        title={isCurrentWeek ? "Your week" : "Saved week"}
+        subtitle={`Week of ${fmtDate(plan.weekStartDate, { month: "long", day: "numeric" })}. Tap a dish for the recipe, or swap it for another.`}
         actions={
           <>
-            <Button asChild variant="outline" size="sm">
-              <Link href={`/agents/${plan.runId}`}>
-                <Sparkles aria-hidden="true" />
-                Watch the negotiation
-              </Link>
+            <Button
+              variant="outline"
+              size="sm"
+              data-testid="plan-regenerate"
+              onClick={onRegenerate}
+              disabled={regenerating || swapping !== null}
+            >
+              {regenerating ? (
+                <Loader2 className="animate-spin" aria-hidden="true" />
+              ) : (
+                <RefreshCw aria-hidden="true" />
+              )}
+              {regenerating ? "Regenerating…" : "Regenerate week"}
             </Button>
+            {agentRunId && isCurrentWeek && (
+              <Button asChild variant="outline" size="sm">
+                <Link href={`/agents/${agentRunId}`}>
+                  <Sparkles aria-hidden="true" />
+                  Watch the negotiation
+                </Link>
+              </Button>
+            )}
             <Button asChild size="sm">
               <Link href="/grocery">
                 <ShoppingCart aria-hidden="true" />
@@ -138,236 +394,174 @@ function PlanView({ plan, budget, targets, targetsLoading }: PlanViewProps) {
         }
       />
 
-      {/* Day picker, day totals and meals */}
-      <section className="space-y-5" aria-labelledby="pick-a-day">
+      {weekSwitcher}
+
+      <section className="space-y-4" aria-labelledby="pick-a-day" aria-busy={regenerating}>
         <h2 id="pick-a-day" className="sr-only">
           Pick a day
         </h2>
         <div
           role="tablist"
           aria-label="Plan days"
-          className="no-scrollbar -mx-4 flex gap-1 overflow-x-auto px-4 sm:mx-0 sm:px-0"
+          className="no-scrollbar -mx-4 flex gap-2 overflow-x-auto px-4 sm:mx-0 sm:px-0"
         >
           {plan.days.map((d, i) => {
             const active = i === selected;
             const isToday = d.date === today;
+            const isShopping = weekdayIndex(d.date) === shoppingWeekday;
             return (
               <button
                 key={d.date}
                 role="tab"
                 type="button"
                 data-testid="plan-day"
+                data-shopping={isShopping ? "true" : "false"}
                 aria-selected={active}
-                aria-label={`${fmtDate(d.date, { weekday: "long", month: "long", day: "numeric" })}${isToday ? ", today" : ""}`}
+                aria-label={`${fmtDate(d.date, { weekday: "long", month: "long", day: "numeric" })}${isToday ? ", today" : ""}${isShopping ? ", shopping day" : ""}`}
                 onClick={() => setSelected(i)}
                 className={cn(
-                  "flex h-14 min-w-[3.25rem] shrink-0 flex-col items-center justify-center rounded-xl px-2 transition-colors",
+                  "flex min-w-[4rem] shrink-0 flex-col items-center rounded-xl px-3 py-2 text-sm transition-colors",
                   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
-                  active ? "bg-ink text-surface-raised shadow-sm" : "text-ink-muted hover:bg-surface-sunken",
+                  active
+                    ? "bg-brand text-brand-foreground shadow-sm"
+                    : isShopping
+                      ? "bg-warning-soft text-ink ring-1 ring-warning hover:ring-2"
+                      : "bg-surface-raised text-ink-muted ring-1 ring-border hover:ring-ink-subtle",
+                  active && isShopping && "ring-2 ring-warning ring-offset-2",
                 )}
               >
-                <span
-                  className={cn(
-                    "text-[10px] font-semibold uppercase tracking-wide",
-                    !active && "text-ink-subtle",
-                  )}
-                >
+                <span className="text-[11px] uppercase tracking-wide">
                   {fmtDate(d.date, { weekday: "short" })}
                 </span>
-                <span className="text-base font-semibold leading-tight tabular-nums">
+                <span className="text-lg font-semibold leading-tight">
                   {fmtDate(d.date, { day: "numeric" })}
                 </span>
                 <span
                   className={cn(
-                    "mt-0.5 h-1 w-1 rounded-full",
-                    active ? "bg-surface-raised" : "bg-brand",
-                    !isToday && "invisible",
+                    "flex items-center gap-0.5 text-[10px] font-medium",
+                    active ? "text-brand-foreground/90" : isToday ? "text-brand" : "text-ink",
+                    !isToday && !isShopping && "invisible",
                   )}
-                  aria-hidden="true"
-                />
+                >
+                  {isShopping && <ShoppingCart className="h-2.5 w-2.5" aria-hidden="true" />}
+                  {isToday ? "Today" : "Shop"}
+                </span>
               </button>
             );
           })}
         </div>
 
-        <div className="grid gap-5 lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] lg:items-end lg:gap-10">
-          <div>
-            <h3 className="text-xl font-semibold tracking-tight">{fmtDate(day.date, { weekday: "long" })}</h3>
-            <p className="mt-1 text-sm tabular-nums text-ink-muted">
-              <span className="font-semibold text-ink">
-                {fmtNumber(Math.round(day.dayTotals.calories))} kcal
-              </span>
-              {" · "}
-              {Math.round(day.dayTotals.carbsG)} g carbs · {Math.round(day.dayTotals.fatG)} g fat
-              {" · "}
-              <span className="font-semibold text-ink">{fmtUsd(day.dayTotals.costUsd)}</span>
-            </p>
+        {regenerating ? (
+          <GeneratingWeek />
+        ) : (
+          <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+            {MEAL_TYPES.map((type) => (
+              <RecipeCard
+                key={day[type].id}
+                recipe={day[type]}
+                onOpen={setOpenRecipe}
+                onSwap={() => onSwap(day, type)}
+                swapping={swapping === type}
+                disabled={swapping !== null}
+              />
+            ))}
           </div>
-          <DayTargets totals={day.dayTotals} targets={targets} loading={targetsLoading} />
-        </div>
-
-        <div className={cn("grid gap-3 sm:grid-cols-2", mealCols)}>
-          {day.meals.map((meal) => (
-            <MealCard key={meal.mealId} meal={meal} onOpen={setOpenMeal} />
-          ))}
-        </div>
+        )}
       </section>
 
-      {/* Budget */}
-      <section className="space-y-4" aria-labelledby="budget-tradeoff">
-        <h2 id="budget-tradeoff" className={LABEL}>
-          Budget
-        </h2>
-        <div className="grid gap-8 lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] lg:gap-12">
-          <div className="space-y-8">
-            <div>
-              <p className="text-sm text-ink-muted">This week costs</p>
-              <p className="mt-1 flex flex-wrap items-baseline gap-x-2">
-                <span
-                  data-testid="weekly-cost"
-                  className={cn(
-                    "text-5xl font-bold tracking-tight tabular-nums",
-                    overBudget ? "text-warning" : "text-ink",
-                  )}
-                >
-                  {fmtUsd(plan.weeklyCostUsd)}
-                </span>
-                <span className="text-base text-ink-muted">of {fmtUsd(effectiveBudget, true)}</span>
-              </p>
-              <p className="mt-2 flex items-center gap-1.5 text-sm text-ink-muted">
-                {overBudget ? (
-                  "Over budget. A small overage beat breaking a health rule."
-                ) : (
-                  <>
-                    <Check className="h-4 w-4 text-success" aria-hidden="true" />
-                    {fmtUsd(effectiveBudget - plan.weeklyCostUsd)} under · every rule kept
-                  </>
-                )}
-              </p>
-            </div>
-
-            {notes.length > 0 && (
-              <div>
-                <p className={cn(LABEL, "flex items-center gap-1.5")}>
-                  <Lightbulb className="h-3.5 w-3.5 text-agent-budget" aria-hidden="true" />
-                  What would change
-                </p>
-                <ul
-                  className="mt-2 divide-y divide-border/70 text-sm text-ink-muted"
-                  data-testid="budget-insights"
-                >
-                  {notes.map((line) => (
-                    <li key={line} className="py-2">
-                      {line}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-          </div>
-
-          <div className="rounded-2xl bg-surface-raised p-4 shadow-sm ring-1 ring-border sm:p-5">
-            <BudgetSlider value={effectiveBudget} showInsights={false} />
-          </div>
-        </div>
-      </section>
-
-      <WhySheet
-        meal={openMeal}
-        shadowPrices={plan.shadowPrices}
-        curveInsight={curveInsight}
-        onClose={() => setOpenMeal(null)}
-      />
+      <RecipeSheet recipe={openRecipe} onClose={() => setOpenRecipe(null)} />
     </>
   );
 }
 
-interface TargetRow {
-  key: string;
-  label: string;
-  value: number;
-  target: number;
-  unit: string;
-  /** "min" targets are met at or above the number, "max" caps are met at or below it. */
-  kind: "min" | "max";
+/** Budget tradeoff from the agents' optimizer plan (feature 7). */
+function BudgetUpdating() {
+  return (
+    <p
+      data-testid="budget-updating"
+      role="status"
+      className="flex items-center gap-2 rounded-lg bg-surface-sunken px-3 py-2 text-sm text-ink-muted"
+    >
+      <Loader2 className="h-4 w-4 shrink-0 animate-spin text-agent-budget" aria-hidden="true" />
+      The agents are rebuilding your grocery list and budget. This takes a moment.
+    </p>
+  );
 }
 
-/**
- * The day against the profile targets: protein, fiber and the sodium cap. Every number comes from the
- * API; the only arithmetic is the ratio that sets a bar's width.
- */
-function DayTargets({
-  totals,
-  targets,
-  loading,
-}: {
-  totals: MealTotals;
-  targets?: DailyTargets;
-  loading: boolean;
-}) {
-  if (!targets) {
-    if (!loading) return null;
-    return (
-      <div className="grid grid-cols-3 gap-4" role="status" aria-label="Loading targets">
-        {Array.from({ length: 3 }).map((_, i) => (
-          <div key={i} className="space-y-1.5">
-            <Skeleton className="h-3 w-full" />
-            <Skeleton className="h-1.5 w-full rounded-full" />
-          </div>
-        ))}
-      </div>
-    );
-  }
-  const rows: TargetRow[] = [
-    {
-      key: "protein",
-      label: "Protein",
-      value: totals.proteinG,
-      target: targets.proteinG,
-      unit: "g",
-      kind: "min",
-    },
-    { key: "fiber", label: "Fiber", value: totals.fiberG, target: targets.fiberG, unit: "g", kind: "min" },
-    {
-      key: "sodium",
-      label: "Sodium cap",
-      value: totals.sodiumMg,
-      target: targets.sodiumMg,
-      unit: "mg",
-      kind: "max",
-    },
-  ];
+function BudgetSection({ plan, budget, updating }: { plan: MealPlan; budget?: number; updating: boolean }) {
+  const effectiveBudget = budget ?? plan.weeklyCostUsd;
+  const overBudget = plan.weeklyCostUsd > effectiveBudget;
+  // Mounting the hook here warms the tradeoff curve as soon as the plan is on screen (feature 7).
+  const curve = useBudgetCurve();
+  const insights = curve.data?.curve.insights ?? [];
+  // Budget's notes: what the optimizer says would change (plan shadow prices), then the curve insights.
+  const notes = Array.from(new Set([...plan.shadowPrices.map((sp) => sp.humanText), ...insights]));
+
   return (
-    <ul className="grid grid-cols-3 gap-4" data-testid="plan-targets" aria-label="Day against targets">
-      {rows.map((r) => {
-        const ratio = r.target > 0 ? r.value / r.target : 0;
-        const met = r.kind === "min" ? ratio >= 1 : ratio <= 1;
-        const fill = met ? "bg-success" : r.kind === "max" ? "bg-danger" : "bg-ink-subtle";
-        return (
-          <li
-            key={r.key}
-            data-testid="plan-target"
-            className="min-w-0 space-y-1.5"
-            aria-label={`${r.label} ${fmtNumber(Math.round(r.value))} of ${fmtNumber(r.target)} ${r.unit}, ${met ? "met" : "not met"}`}
-          >
-            <div className="flex items-baseline justify-between gap-1 text-[11px]">
-              <span className="flex items-center gap-1 truncate font-medium text-ink-muted">
-                {r.label}
-                {met && <Check className="h-3 w-3 text-success" aria-hidden="true" />}
+    <section className="space-y-4" aria-labelledby="budget-tradeoff" aria-busy={updating}>
+      <div>
+        <h2 id="budget-tradeoff" className="text-lg font-semibold">
+          Budget tradeoff
+        </h2>
+        <p className="text-sm text-ink-muted">
+          What this week costs, and what a different weekly budget would buy.
+        </p>
+      </div>
+      {updating && <BudgetUpdating />}
+      <div className={cn("grid gap-4 lg:grid-cols-3", updating && "pointer-events-none opacity-50")}>
+        <Card className="border-0 shadow-sm ring-1 ring-border lg:col-span-1 lg:self-start">
+          <CardContent className="space-y-1 p-4 sm:p-5">
+            <p className="text-xs uppercase tracking-wide text-ink-muted">This week costs</p>
+            <p className="flex items-baseline gap-2">
+              <span
+                data-testid="weekly-cost"
+                className={cn(
+                  "text-3xl font-bold tabular-nums",
+                  overBudget ? "text-warning" : "text-agent-budget",
+                )}
+              >
+                {fmtUsd(plan.weeklyCostUsd)}
               </span>
-              <span className="shrink-0 tabular-nums text-ink-subtle">
-                {fmtNumber(Math.round(r.value))} / {fmtNumber(r.target)} {r.unit}
-              </span>
-            </div>
-            <div className="h-1.5 w-full overflow-hidden rounded-full bg-surface-sunken" aria-hidden="true">
-              <div
-                className={cn("h-full rounded-full transition-[width] duration-500", fill)}
-                style={{ width: `${Math.min(100, ratio * 100)}%` }}
-              />
-            </div>
-          </li>
-        );
-      })}
-    </ul>
+              <span className="text-sm text-ink-muted">of your {fmtUsd(effectiveBudget)} budget</span>
+            </p>
+            <p className="text-xs text-ink-muted">
+              {overBudget
+                ? "Over budget: the agents accepted a small overage rather than break a health rule."
+                : `${fmtUsd(effectiveBudget - plan.weeklyCostUsd)} under budget, with every health rule kept.`}
+            </p>
+          </CardContent>
+        </Card>
+        <Card className="border-0 shadow-sm ring-1 ring-border lg:col-span-2">
+          <CardContent className="p-4 sm:p-5">
+            <BudgetSlider value={effectiveBudget} showInsights={false} />
+          </CardContent>
+        </Card>
+      </div>
+
+      {notes.length > 0 && (
+        <Card className={cn("border-0 shadow-sm ring-1 ring-agent-budget/25", updating && "opacity-50")}>
+          <CardContent className="p-4 sm:p-5">
+            <p className="mb-1 flex items-center gap-1.5 text-sm font-semibold text-agent-budget">
+              <Lightbulb className="h-4 w-4" aria-hidden="true" />
+              What would change
+            </p>
+            <p className="mb-3 text-xs text-ink-muted">
+              Straight from the optimizer: how much each rule or dollar is shaping this week.
+            </p>
+            <ul className="space-y-1.5 text-sm text-ink-muted" data-testid="budget-insights">
+              {notes.map((line) => (
+                <li key={line} className="flex gap-2">
+                  <span
+                    className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-agent-budget"
+                    aria-hidden="true"
+                  />
+                  <span>{line}</span>
+                </li>
+              ))}
+            </ul>
+          </CardContent>
+        </Card>
+      )}
+    </section>
   );
 }

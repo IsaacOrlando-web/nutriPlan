@@ -1,0 +1,15 @@
+{
+  "meals": [
+    {
+      "name": "Chicken burrito bowl",
+      "price": 3.42,
+      "ingredients": ["Chicken breast", "Brown rice", "Black beans", "Tomato", "Lettuce"]
+    },
+    {
+      "name": "Baked salmon with roasted vegetables",
+      "price": 4.86,
+      "ingredients": ["Salmon", "Broccoli", "Sweet potato", "Olive oil"]
+    }
+  ],
+  "source": "templates"
+}

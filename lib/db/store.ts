@@ -1,10 +1,7 @@
 // Store interface: the ONLY way application code touches persisted data. Owner: Backend.
 //
-// Two implementations exist:
-//   - MemoryStore   (lib/db/memory-store.ts)   JSON on disk under .data/, seeded with Alex and Maria. Zero setup.
-//   - SupabaseStore (lib/db/supabase-store.ts) Postgres through Supabase, matches supabase/migrations.
-// `getStore()` in lib/db/index.ts picks one from DATA_BACKEND. Agents and API routes never import an
-// implementation directly, so the whole app runs locally on day one and scales to Supabase unchanged.
+// MemoryStore is persisted as JSON on disk under .data/ and seeded with Alex and Maria.
+// `getStore()` in lib/db/index.ts is the only way application code obtains it.
 import type {
   AgentEvent,
   AgentRun,
@@ -16,8 +13,11 @@ import type {
   FoodLogEntry,
   MealPlan,
   MedicalConstraints,
+  PlannerSettings,
+  PlannerWeekState,
   Reading,
   UserProfile,
+  WeeklyMealPlan,
 } from "@/types/contracts";
 import type { KrogerConnection } from "@/lib/kroger/types";
 
@@ -52,8 +52,13 @@ export interface FoodSearchOptions {
   excludeTags?: string[];
 }
 
+export interface PlannerWeekRecord {
+  plan: WeeklyMealPlan | null;
+  state: PlannerWeekState | null;
+}
+
 export interface Store {
-  readonly kind: "memory" | "supabase";
+  readonly kind: "memory";
 
   // Auth identities
   createUser(user: AppUser): Promise<void>;
@@ -116,6 +121,15 @@ export interface Store {
   getKrogerConnection(userId: string): Promise<KrogerConnection | null>;
   saveKrogerConnection(userId: string, conn: KrogerConnection): Promise<void>;
   deleteKrogerConnection(userId: string): Promise<void>;
+
+  // Weekly meal planner (/plan): one record per user and Monday, plus per user settings and favorites.
+  getPlannerWeek(userId: string, weekStartDate: string): Promise<PlannerWeekRecord | null>;
+  /** Saved week plans whose Monday is in [fromWeek, toWeek] (inclusive), ascending by Monday. */
+  listPlannerWeekPlans(userId: string, fromWeek: string, toWeek: string): Promise<WeeklyMealPlan[]>;
+  savePlannerWeekPlan(userId: string, plan: WeeklyMealPlan): Promise<void>;
+  savePlannerWeekState(userId: string, weekStartDate: string, state: PlannerWeekState): Promise<void>;
+  getPlannerSettings(userId: string): Promise<PlannerSettings | null>;
+  savePlannerSettings(userId: string, settings: PlannerSettings): Promise<void>;
 
   // Demo helpers
   listUserIds(): Promise<string[]>;

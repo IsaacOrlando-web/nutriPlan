@@ -1,5 +1,5 @@
 // OAuth state: HMAC(userId.nonce) so the callback can trust which user started the flow. Owner: Backend.
-// Secret: KROGER_STATE_SECRET, else SUPABASE_SERVICE_ROLE_KEY, else KROGER_CLIENT_SECRET.
+// Secret: KROGER_STATE_SECRET, else KROGER_CLIENT_SECRET.
 import { createHmac, randomBytes, timingSafeEqual } from "node:crypto";
 import { KrogerError } from "./client";
 
@@ -9,7 +9,6 @@ export const STATE_MAX_AGE_SEC = 600;
 function secret(): string {
   const s =
     process.env.KROGER_STATE_SECRET ||
-    process.env.SUPABASE_SERVICE_ROLE_KEY ||
     process.env.KROGER_CLIENT_SECRET;
   if (!s) throw new KrogerError(503, "kroger_not_configured", "Kroger is not configured (no state secret)");
   return s;

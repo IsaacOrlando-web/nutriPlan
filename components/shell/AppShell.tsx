@@ -5,7 +5,7 @@ import {
   Home,
   Leaf,
   MessageCircle,
-  TrendingUp,
+  Target,
   UserCircle,
   UtensilsCrossed,
   type LucideIcon,
@@ -45,15 +45,21 @@ const NAV: NavItem[] = [
   { key: "log", label: "Log", href: "/log/photo", icon: Camera, match: (p) => p.startsWith("/log") },
   {
     key: "trends",
-    label: "Trends",
-    href: "/trends",
-    icon: TrendingUp,
-    match: (p) => p.startsWith("/trends"),
+    label: "Progress",
+    href: "/progress",
+    icon: Target,
+    match: (p) => p.startsWith("/progress") || p.startsWith("/trends"),
   },
   { key: "coach", label: "Coach", href: "/coach", icon: MessageCircle, match: (p) => p.startsWith("/coach") },
 ];
 
-export function AppShell({ children, isFormCompleted = true }: { children: ReactNode; isFormCompleted?: boolean }) {
+export function AppShell({
+  children,
+  isFormCompleted = true,
+}: {
+  children: ReactNode;
+  isFormCompleted?: boolean;
+}) {
   const pathname = usePathname();
   const profile = useProfile();
   const name = profile.data?.profile.name;
@@ -72,26 +78,27 @@ export function AppShell({ children, isFormCompleted = true }: { children: React
           NutriPlan AI
         </Link>
         <nav className="flex flex-1 flex-col gap-1 px-3">
-          {isFormCompleted && NAV.map((item) => {
-            const active = item.match(pathname);
-            return (
-              <Link
-                key={item.key}
-                href={item.href}
-                data-testid={`nav-${item.key}`}
-                aria-current={active ? "page" : undefined}
-                className={cn(
-                  "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
-                  active
-                    ? "bg-brand-soft text-brand-dark"
-                    : "text-ink-muted hover:bg-surface-sunken hover:text-ink",
-                )}
-              >
-                <item.icon className="h-6 w-6" aria-hidden="true" />
-                {item.label}
-              </Link>
-            );
-          })}
+          {isFormCompleted &&
+            NAV.map((item) => {
+              const active = item.match(pathname);
+              return (
+                <Link
+                  key={item.key}
+                  href={item.href}
+                  data-testid={`nav-${item.key}`}
+                  aria-current={active ? "page" : undefined}
+                  className={cn(
+                    "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
+                    active
+                      ? "bg-brand-soft text-brand-dark"
+                      : "text-ink-muted hover:bg-surface-sunken hover:text-ink",
+                  )}
+                >
+                  <item.icon className="h-6 w-6" aria-hidden="true" />
+                  {item.label}
+                </Link>
+              );
+            })}
         </nav>
         <div className="border-t p-3">
           <ProfileLink name={name} loading={profile.isLoading} />
@@ -124,24 +131,25 @@ export function AppShell({ children, isFormCompleted = true }: { children: React
         aria-label="Main navigation"
         className="pb-safe fixed inset-x-0 bottom-0 z-30 grid grid-cols-5 border-t bg-surface-raised/95 backdrop-blur lg:hidden"
       >
-        {isFormCompleted && NAV.map((item) => {
-          const active = item.match(pathname);
-          return (
-            <Link
-              key={item.key}
-              href={item.href}
-              data-testid={`nav-${item.key}`}
-              aria-current={active ? "page" : undefined}
-              className={cn(
-                "flex flex-col items-center gap-0.5 py-2 text-[11px] font-medium",
-                active ? "text-brand-dark" : "text-ink-muted",
-              )}
-            >
-              <item.icon className="h-6 w-6" aria-hidden="true" />
-              {item.label}
-            </Link>
-          );
-        })}
+        {isFormCompleted &&
+          NAV.map((item) => {
+            const active = item.match(pathname);
+            return (
+              <Link
+                key={item.key}
+                href={item.href}
+                data-testid={`nav-${item.key}`}
+                aria-current={active ? "page" : undefined}
+                className={cn(
+                  "flex flex-col items-center gap-0.5 py-2 text-[11px] font-medium",
+                  active ? "text-brand-dark" : "text-ink-muted",
+                )}
+              >
+                <item.icon className="h-6 w-6" aria-hidden="true" />
+                {item.label}
+              </Link>
+            );
+          })}
       </nav>
     </div>
   );

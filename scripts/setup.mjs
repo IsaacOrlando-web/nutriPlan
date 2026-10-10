@@ -94,10 +94,8 @@ if (dockerV) {
   const info = run("docker", ["info"], { quiet: true });
   if (info.status === 0) ok(`${dockerV} (daemon running)`);
   else
-    warn(
-      `${dockerV} installed but Docker Desktop is not running. Only needed for local Supabase (npm run db:start) and docker compose.`,
-    );
-} else warn("Docker not found. Optional: only needed for local Supabase and the container image.");
+    warn(`${dockerV} installed but Docker Desktop is not running. Only needed for the container image.`);
+} else warn("Docker not found. Optional: only needed for the container image.");
 
 if (nodeMajor < MIN_NODE || !npmV) {
   console.log("\nFix the failures above and run again.");
@@ -127,17 +125,7 @@ const env = { ...readEnvFile(envLocal), ...process.env };
 const has = (k) => Boolean(env[k] && String(env[k]).trim());
 const keys = ["ANTHROPIC_API_KEY", "OPENAI_API_KEY", "GOOGLE_GENERATIVE_AI_API_KEY"];
 for (const k of keys) console.log(`  ${has(k) ? "[set]  " : "[blank]"} ${k}`);
-const supabaseKeys = [
-  "NEXT_PUBLIC_SUPABASE_URL",
-  "NEXT_PUBLIC_SUPABASE_ANON_KEY",
-  "SUPABASE_URL",
-  "SUPABASE_SERVICE_ROLE_KEY",
-];
-for (const k of supabaseKeys) console.log(`  ${has(k) ? "[set]  " : "[blank]"} ${k}`);
-
 const mocks = env.NEXT_PUBLIC_USE_MOCKS === "true";
-const backend = env.DATA_BACKEND || "memory";
-const auth = env.AUTH_MODE === "supabase" ? "supabase" : "local";
 const anyKey = keys.some(has);
 const agentsMode =
   env.AGENTS_MODE === "scripted" || env.AGENTS_MODE === "live"
@@ -147,10 +135,8 @@ const agentsMode =
       : "scripted (auto)";
 console.log("");
 console.log(`  frontend data : ${mocks ? "MOCKS (/mocks/*.json, no API calls)" : "real API routes"}`);
-console.log(
-  `  data backend  : ${backend}${(backend === "supabase" && !(has("SUPABASE_URL") || has("NEXT_PUBLIC_SUPABASE_URL"))) || (backend === "supabase" && !has("SUPABASE_SERVICE_ROLE_KEY")) ? "  (missing SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY)" : ""}`,
-);
-console.log(`  auth mode     : ${auth}`);
+console.log(`  data backend  : local JSON (${env.MEMORY_STORE_FILE || ".data/store.json"})`);
+console.log("  auth mode     : local cookie");
 console.log(`  agents mode   : ${agentsMode}`);
 console.log(
   `  event delay   : ${env.AGENT_EVENT_DELAY_MS || "900"} ms, fallback ${env.AGENTS_FALLBACK === "false" ? "off" : "on"}`,

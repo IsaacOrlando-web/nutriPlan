@@ -15,6 +15,14 @@ export const MEAL_TYPE_LABELS: Record<MealType, string> = {
   snack: "Snack",
 };
 
+/** Badge tone per meal type (used by RecipeCard). */
+export const TYPE_VARIANT: Record<MealType, "warning" | "success" | "secondary" | "outline"> = {
+  breakfast: "warning",
+  lunch: "success",
+  dinner: "secondary",
+  snack: "outline",
+};
+
 export interface MealCardProps {
   meal: Meal;
   onOpen: (meal: Meal) => void;

@@ -82,3 +82,32 @@ export type { GlucoseModel } from "./glucoseResponse";
 export { simulate } from "./simulate";
 export type { SimulationResult, SimulationWeek } from "./simulate";
 export { sampleTaste, sampleBeta, seededRandom } from "./taste";
+// Weekly planner: recipe units, per-serving nutrition and cost from matched foods, serving scaling, shopping list.
+export {
+  analyzeRecipe,
+  densityGPerMl,
+  isMinorIngredient,
+  normalizeUnit,
+  roundKitchenQuantity,
+  scaleIngredients,
+  toBaseQuantity,
+  toGrams,
+  unitFamily,
+} from "./recipe-units";
+export type { RecipeAnalysis, UnitFamily } from "./recipe-units";
+export {
+  aggregateShopping,
+  applyShoppingState,
+  customItemToShopping,
+  emptyShoppingState,
+  formatQuantity,
+  groupByCategory,
+  normalizeCategory,
+  normalizeIngredientName,
+  pruneShoppingState,
+  sortShopping,
+} from "./shopping";
+export type { ShoppingListItem, ShoppingListView } from "./shopping";
+export { estimateItemPriceUsd, shelfPrice, sumPricesUsd } from "./shopping-prices";
+export { FLAT_SLOPE_KG_PER_WEEK, goalProgress } from "./progress";
+export type { GoalDirection, GoalProgress, GoalProgressInput } from "./progress";

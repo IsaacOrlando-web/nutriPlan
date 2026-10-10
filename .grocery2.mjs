@@ -1,0 +1,14 @@
+import { chromium } from "playwright";
+const b = await chromium.launch();
+const ctx = await b.newContext({ viewport: { width: 390, height: 844 }, geolocation: { latitude: 19.4326, longitude: -99.1332 }, permissions: ["geolocation"] });
+const p = await ctx.newPage();
+p.on("console", (m) => m.type() === "error" && console.log("console:", m.text().slice(0, 120)));
+await p.goto("http://localhost:3000/welcome");
+await p.getByTestId("cta-start").click();
+await p.waitForURL((u) => !u.pathname.startsWith("/welcome"), { timeout: 30000 });
+await p.goto("http://localhost:3000/grocery");
+await p.getByTestId("nearby-store-locate").click();
+await p.getByTestId("nearby-store-best").or(p.getByTestId("nearby-store-query")).waitFor({ timeout: 90000 });
+console.log((await p.getByTestId("nearby-store").innerText()).replace(/\n+/g, " | ").slice(0, 300));
+await p.screenshot({ path: "test-results/screens/grocery-390.png", fullPage: true });
+await b.close();

@@ -1,0 +1,15 @@
+{
+  "meals": [
+    {
+      "name": "Turkey and black bean lettuce wraps",
+      "price": 3.18,
+      "ingredients": ["Ground turkey", "Black beans", "Lettuce", "Avocado"]
+    },
+    {
+      "name": "Grilled tilapia with spinach and lentils",
+      "price": 3.95,
+      "ingredients": ["Tilapia", "Lentils", "Spinach", "Lemon"]
+    }
+  ],
+  "source": "templates"
+}

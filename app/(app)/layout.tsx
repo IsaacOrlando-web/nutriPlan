@@ -16,12 +16,16 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   const missingProfile = isApiRequestError(profile.error, 404);
   const isCompleted = Boolean(profile.data?.profile) || session.data?.hasProfile === true;
   const sessionMissingProfile =
-    !profile.data && session.data?.userId !== null && !isCompleted;
+    !profile.isPending && session.isSuccess && !profile.data && session.data.userId !== null && !isCompleted;
 
   useEffect(() => {
     if ((missingProfile || sessionMissingProfile) && pathname !== "/profile") router.replace("/profile");
   }, [missingProfile, pathname, router, sessionMissingProfile]);
 
-  if (pathname !== "/profile" && (profile.isPending || session.isPending || missingProfile || sessionMissingProfile)) return null;
+  if (
+    pathname !== "/profile" &&
+    (profile.isPending || session.isPending || missingProfile || sessionMissingProfile)
+  )
+    return null;
   return <AppShell isFormCompleted={isCompleted}>{children}</AppShell>;
 }

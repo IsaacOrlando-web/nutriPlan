@@ -21,12 +21,40 @@ export function error(status: number, message: string): NextResponse<{ error: st
   return NextResponse.json({ error: message }, { status });
 }
 
-export async function parseBody<T>(req: NextRequest, schema: ZodType<T, ZodTypeDef, unknown>): Promise<T> {
+export interface ParseBodyOptions {
+  /** Rejects larger bodies with 413 before parsing (checks Content-Length, then the actual size). */
+  maxBytes?: number;
+}
+
+export async function parseBody<T>(
+  req: NextRequest,
+  schema: ZodType<T, ZodTypeDef, unknown>,
+  opts: ParseBodyOptions = {},
+): Promise<T> {
   let raw: unknown;
-  try {
-    raw = await req.json();
-  } catch {
-    throw new HttpError(400, "Body must be JSON");
+  if (opts.maxBytes !== undefined) {
+    const declared = Number(req.headers.get("content-length"));
+    if (Number.isFinite(declared) && declared > opts.maxBytes)
+      throw new HttpError(413, "Request body is too large");
+    let text: string;
+    try {
+      text = await req.text();
+    } catch {
+      throw new HttpError(400, "Body must be JSON");
+    }
+    if (new TextEncoder().encode(text).length > opts.maxBytes)
+      throw new HttpError(413, "Request body is too large");
+    try {
+      raw = JSON.parse(text);
+    } catch {
+      throw new HttpError(400, "Body must be JSON");
+    }
+  } else {
+    try {
+      raw = await req.json();
+    } catch {
+      throw new HttpError(400, "Body must be JSON");
+    }
   }
   const result = schema.safeParse(raw);
   if (!result.success) {

@@ -14,10 +14,22 @@ import type {
   FoodLogEntry,
   MealPlan,
   MedicalConstraints,
+  PlannerSettings,
+  PlannerWeekState,
   Reading,
   UserProfile,
+  WeeklyMealPlan,
 } from "@/types/contracts";
-import { newId, nowIso, type AgentLogRecord, type AppUser, type FoodSearchOptions, type MealRating, type Store } from "./store";
+import {
+  newId,
+  nowIso,
+  type AgentLogRecord,
+  type AppUser,
+  type FoodSearchOptions,
+  type MealRating,
+  type PlannerWeekRecord,
+  type Store,
+} from "./store";
 import foodsJson from "@/scripts/data/foods.json";
 import templatesJson from "@/scripts/data/meal-templates.json";
 import { DEMO_PROFILES, demoReadings, type DemoUserKey } from "./seed/demo-users";
@@ -34,6 +46,9 @@ interface UserBucket {
   ratings: MealRating[];
   /** Optional so snapshots written before the Kroger integration still load. */
   kroger?: KrogerConnection | null;
+  /** Weekly planner records keyed by Monday (YYYY-MM-DD). Optional for older snapshots. */
+  plannerWeeks?: Record<string, PlannerWeekRecord>;
+  plannerSettings?: PlannerSettings | null;
 }
 
 interface Snapshot {
@@ -387,6 +402,38 @@ export class MemoryStore implements Store {
   async deleteKrogerConnection(userId: string) {
     const b = this.data.users[userId];
     if (b) b.kroger = null;
+    this.persist();
+  }
+
+  // ---------------------------------------------------------------- weekly planner
+  async getPlannerWeek(userId: string, weekStartDate: string) {
+    const rec = this.data.users[userId]?.plannerWeeks?.[weekStartDate];
+    return rec ? structuredClone(rec) : null;
+  }
+  async listPlannerWeekPlans(userId: string, fromWeek: string, toWeek: string) {
+    const weeks = this.data.users[userId]?.plannerWeeks ?? {};
+    return Object.keys(weeks)
+      .filter((w) => w >= fromWeek && w <= toWeek && weeks[w].plan)
+      .sort()
+      .map((w) => structuredClone(weeks[w].plan as WeeklyMealPlan));
+  }
+  async savePlannerWeekPlan(userId: string, plan: WeeklyMealPlan) {
+    const weeks = (this.bucket(userId).plannerWeeks ??= {});
+    const prev = weeks[plan.weekStartDate];
+    weeks[plan.weekStartDate] = { plan: structuredClone(plan), state: prev?.state ?? null };
+    this.persist();
+  }
+  async savePlannerWeekState(userId: string, weekStartDate: string, state: PlannerWeekState) {
+    const weeks = (this.bucket(userId).plannerWeeks ??= {});
+    weeks[weekStartDate] = { plan: weeks[weekStartDate]?.plan ?? null, state: structuredClone(state) };
+    this.persist();
+  }
+  async getPlannerSettings(userId: string) {
+    const s = this.data.users[userId]?.plannerSettings;
+    return s ? structuredClone(s) : null;
+  }
+  async savePlannerSettings(userId: string, settings: PlannerSettings) {
+    this.bucket(userId).plannerSettings = structuredClone(settings);
     this.persist();
   }
 
