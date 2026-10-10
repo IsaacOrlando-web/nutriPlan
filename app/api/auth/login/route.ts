@@ -6,6 +6,7 @@ import { z } from "zod";
 import type { SessionInfo } from "@/types/contracts";
 import { SESSION_COOKIE, authMode, resolveLocalUserId } from "@/lib/auth/session";
 import { getStore } from "@/lib/db";
+import { DEMO_EMAILS, DEMO_PASSWORD, DEMO_USER_IDS, type DemoUserKey } from "@/lib/db/seed/demo-users";
 import { HttpError, handler, json, parseBody } from "@/lib/api/http";
 
 export const runtime = "nodejs";
@@ -23,10 +24,16 @@ export const POST = handler(async (req: NextRequest) => {
   const store = getStore();
 
   if (authMode() === "supabase") {
-    if (!password) throw new HttpError(400, "Password is required");
+    // "Try as Alex / Maria" sends only the demo name; map it to the seeded account and its demo password.
+    const demo = (Object.keys(DEMO_USER_IDS) as DemoUserKey[]).find(
+      (k) => identifier.toLowerCase() === k || identifier.toLowerCase() === DEMO_EMAILS[k],
+    );
+    const email = demo ? DEMO_EMAILS[demo] : identifier;
+    const pass = password || (demo ? DEMO_PASSWORD : "");
+    if (!pass) throw new HttpError(400, "Password is required");
     const { createServerSupabase } = await import("@/lib/supabase/server");
     const supabase = await createServerSupabase();
-    const { data, error } = await supabase.auth.signInWithPassword({ email: identifier, password });
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password: pass });
     if (error || !data.user) throw new HttpError(400, error?.message ?? "Sign in failed");
     const info: SessionInfo = {
       userId: data.user.id,
@@ -38,7 +45,12 @@ export const POST = handler(async (req: NextRequest) => {
   }
 
   const { userId, email } = resolveLocalUserId(identifier);
-  const info: SessionInfo = { userId, email, mode: "local", hasProfile: (await store.getProfile(userId)) !== null };
+  const info: SessionInfo = {
+    userId,
+    email,
+    mode: "local",
+    hasProfile: (await store.getProfile(userId)) !== null,
+  };
   const res = json(info);
   res.cookies.set(SESSION_COOKIE, `${userId}|${email}`, {
     httpOnly: false,

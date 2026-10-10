@@ -10,6 +10,9 @@ export const DEMO_USER_IDS = {
 
 export type DemoUserKey = keyof typeof DEMO_USER_IDS;
 
+/** Password of the seeded Supabase demo accounts (supabase/seed.sql). */
+export const DEMO_PASSWORD = "demo1234";
+
 export const DEMO_EMAILS: Record<DemoUserKey, string> = {
   alex: "alex@demo.nutriplan.app",
   maria: "maria@demo.nutriplan.app",
