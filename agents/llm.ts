@@ -107,6 +107,13 @@ async function attempt<T>(choice: ModelChoice, args: CallObjectArgs<T>): Promise
   return result.object as T;
 }
 
+/** Errors a retry cannot fix: out of credits, bad key, retired model, request rejected by schema. */
+export function isPermanentProviderError(message: string): boolean {
+  return /no credits|insufficient_quota|exceeded your current quota|billing|invalid.*api key|incorrect api key|authentication|unauthorized|permission denied|no longer available|not found|does not exist|unsupported model/i.test(
+    message,
+  );
+}
+
 async function safeLog(record: { runId: string | null; agent: string; model: string; input: unknown; output: unknown; ms: number }): Promise<void> {
   try {
     await getStore().addAgentLog(record);
@@ -137,6 +144,8 @@ export async function callObjectWithModel<T>(args: CallObjectArgs<T>): Promise<C
         const msg = err instanceof Error ? err.message : String(err);
         errors.push(`${describeModel(choice)} try ${tryNo + 1}: ${msg.slice(0, 200)}`);
         await safeLog({ runId: args.runId ?? null, agent: args.agent, model: describeModel(choice), input: inputForLog, output: { error: msg.slice(0, 300) }, ms: Date.now() - t0 });
+        // Billing, auth and unknown-model errors will not fix themselves: skip the retry and move to the backup.
+        if (isPermanentProviderError(msg)) break;
       }
     }
   }

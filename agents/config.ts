@@ -18,7 +18,7 @@ export interface AgentModelConfig {
 }
 
 /** Per call timeout and retry policy for every LLM request. */
-export const LLM_TIMEOUT_MS = 15_000;
+export const LLM_TIMEOUT_MS = 12_000;
 export const LLM_RETRIES = 1;
 
 export const PROVIDER_ENV_KEYS: Record<Provider, string> = {
@@ -27,19 +27,20 @@ export const PROVIDER_ENV_KEYS: Record<Provider, string> = {
   google: "GOOGLE_GENERATIVE_AI_API_KEY",
 };
 
-const SONNET: ModelChoice = { provider: "anthropic", model: "claude-sonnet-4-5" };
-const HAIKU: ModelChoice = { provider: "anthropic", model: "claude-haiku-4-5" };
+// Verified against the providers on 2026-10-10 (scripts/check-models.mjs re-checks before a demo).
+const SONNET: ModelChoice = { provider: "anthropic", model: "claude-sonnet-5-5" };
+const HAIKU: ModelChoice = { provider: "anthropic", model: "claude-haiku-5-5" };
 const GPT_MINI: ModelChoice = { provider: "openai", model: "gpt-4.1-mini" };
-const GEMINI_FLASH: ModelChoice = { provider: "google", model: "gemini-2.5-flash" };
+const GEMINI_FLASH: ModelChoice = { provider: "google", model: "gemini-3.5-flash" };
 
 export const MODEL_TABLE: Record<AgentKey, AgentModelConfig> = {
-  doctor: { primary: SONNET, backup: GPT_MINI },
-  chef: { primary: GPT_MINI, backup: GEMINI_FLASH },
-  budget: { primary: HAIKU, backup: GPT_MINI },
+  doctor: { primary: SONNET, backup: GEMINI_FLASH },
+  chef: { primary: GEMINI_FLASH, backup: HAIKU }, // creative + fast; GPT mini when OpenAI credits exist (MODEL_CHEF)
+  budget: { primary: HAIKU, backup: GEMINI_FLASH },
   monitor: { primary: HAIKU, backup: GEMINI_FLASH },
-  orchestrator: { primary: SONNET, backup: GPT_MINI },
-  coach: { primary: SONNET, backup: GPT_MINI },
-  visionA: { primary: SONNET, backup: null },
+  orchestrator: { primary: SONNET, backup: GEMINI_FLASH },
+  coach: { primary: SONNET, backup: GEMINI_FLASH },
+  visionA: { primary: SONNET, backup: HAIKU },
   visionB: { primary: GEMINI_FLASH, backup: GPT_MINI },
 };
 
