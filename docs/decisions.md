@@ -21,3 +21,11 @@ One line per decision: id, date, what, why, consequences. Newest at the bottom. 
 `BudgetCurvePointSummary`, `BudgetCurveSummary` and `BudgetCurveResponse` were added to `/types/contracts.ts`
 (Lead) after Math shipped `math/curve.ts` and `GET /api/plan/curve`. The math-internal `BudgetCurvePoint`
 (with `days`) stays in `/math`. Frontend adds `api.plan.curve` to `/lib/api.ts` and wires the Plan slider to it.
+
+## D-013 Kroger response types promoted to contracts; grocery "Send to Kroger cart" wired (2026-10-10)
+
+`KrogerStatus`, `KrogerLocation`, `PricedGroceryItem`, `KrogerPriceResponse`, `KrogerCartItemInput` and
+`KrogerCartResponse` were added to `/types/contracts.ts` (Lead) after Backend shipped `lib/kroger/**` and
+`app/api/kroger/**`. `lib/kroger/types.ts` re-exports them and keeps only the persisted connection and raw
+Kroger API shapes. Frontend adds `api.kroger.*`, `lib/hooks/useKroger.ts` and `components/grocery/KrogerPanel.tsx`.
+The panel renders nothing until the server has `KROGER_CLIENT_ID` + `KROGER_CLIENT_SECRET` (docs/kroger-setup.md).

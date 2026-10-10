@@ -71,6 +71,15 @@ export const AGENT_NAMES: Record<AgentName, string> = {
   orchestrator: "Orchestrator",
 };
 
+/** One word per agent for legends: what each one is there to protect. */
+export const AGENT_ROLES: Record<AgentName, string> = {
+  doctor: "safety",
+  chef: "taste",
+  budget: "money",
+  monitor: "progress",
+  orchestrator: "referee",
+};
+
 export const KIND_LABELS: Record<AgentEventKind, string> = {
   proposal: "Proposal",
   objection: "Objection",

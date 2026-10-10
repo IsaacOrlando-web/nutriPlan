@@ -1,13 +1,36 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ArrowRight, Loader2 } from "lucide-react";
-import Link from "next/link";
+import { Activity, ArrowRight, Handshake, Loader2, Sigma, type LucideIcon } from "lucide-react";
 import { AgentAvatar } from "@/components/agents/AgentAvatar";
-import { AGENT_ORDER } from "@/components/agents/agent-theme";
+import { AGENT_ORDER, AGENT_ROLES } from "@/components/agents/agent-theme";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useLoginFlow } from "@/lib/hooks/useLoginFlow";
+
+const HOW_IT_WORKS: { step: string; title: string; body: string; icon: LucideIcon; tone: string }[] = [
+  {
+    step: "1",
+    title: "Negotiate",
+    body: "Doctor, Chef, Budget and Monitor argue over your week. Doctor's health rules never move.",
+    icon: Handshake,
+    tone: "bg-agent-doctor/10 text-agent-doctor",
+  },
+  {
+    step: "2",
+    title: "Optimize",
+    body: "A solver picks seven days of real meals that fit every rule and your budget. No guessing.",
+    icon: Sigma,
+    tone: "bg-agent-orchestrator/10 text-agent-orchestrator",
+  },
+  {
+    step: "3",
+    title: "Adapt",
+    body: "Monitor watches your weight and readings and rebuilds the week when the trend says so.",
+    icon: Activity,
+    tone: "bg-agent-monitor/10 text-agent-monitor",
+  },
+];
 
 export default function WelcomePage() {
   const { login, pending, error } = useLoginFlow("/");
@@ -28,7 +51,7 @@ export default function WelcomePage() {
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.1 + i * 0.08 }}
             >
-              <AgentAvatar agent={a} size="md" showLabel />
+              <AgentAvatar agent={a} size="md" showLabel sublabel={AGENT_ROLES[a]} />
             </motion.div>
           ))}
         </div>
@@ -67,6 +90,42 @@ export default function WelcomePage() {
           {error}
         </p>
       )}
+
+      <section aria-labelledby="how-it-works" className="space-y-3">
+        <h2 id="how-it-works" className="text-xs font-semibold uppercase tracking-wide text-ink-subtle">
+          How it works
+        </h2>
+        <ol className="grid gap-3 text-left sm:grid-cols-3">
+          {HOW_IT_WORKS.map((item, i) => {
+            const Icon = item.icon;
+            return (
+              <li
+                key={item.title}
+                className="relative flex gap-3 rounded-xl bg-surface-raised p-4 shadow-sm ring-1 ring-border sm:flex-col"
+              >
+                <span
+                  className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg ${item.tone}`}
+                >
+                  <Icon className="h-5 w-5" aria-hidden="true" />
+                </span>
+                <div className="min-w-0">
+                  <p className="font-semibold">
+                    <span className="text-ink-subtle">{item.step}. </span>
+                    {item.title}
+                  </p>
+                  <p className="text-sm text-ink-muted">{item.body}</p>
+                </div>
+                {i < HOW_IT_WORKS.length - 1 && (
+                  <ArrowRight
+                    className="absolute -right-4 top-1/2 hidden h-4 w-4 -translate-y-1/2 text-ink-subtle sm:block"
+                    aria-hidden="true"
+                  />
+                )}
+              </li>
+            );
+          })}
+        </ol>
+      </section>
     </div>
   );
 }

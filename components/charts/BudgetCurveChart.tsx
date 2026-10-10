@@ -69,6 +69,14 @@ export function BudgetCurveChart({ curve, current, applied, height = 132 }: Budg
           {saturation !== null && saturation < max && (
             <ReferenceArea x1={saturation} x2={max} fill={CHART.inkSubtle} fillOpacity={0.12} stroke="none" />
           )}
+          {/* Sweet spot: every dollar here still buys a better week. */}
+          <ReferenceArea
+            x1={minFeasible ?? min}
+            x2={saturation ?? max}
+            fill={CHART.brand}
+            fillOpacity={0.06}
+            stroke="none"
+          />
           <XAxis
             dataKey="budget"
             type="number"

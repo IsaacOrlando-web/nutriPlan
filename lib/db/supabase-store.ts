@@ -15,6 +15,7 @@ import type {
   Reading,
   UserProfile,
 } from "@/types/contracts";
+import type { KrogerConnection } from "@/lib/kroger/types";
 import type { AgentLogRecord, FoodSearchOptions, MealRating, Store } from "./store";
 import { DEMO_PROFILES, demoReadings, type DemoUserKey } from "./seed/demo-users";
 
@@ -31,7 +32,9 @@ export class SupabaseStore implements Store {
   }
 
   private async upsertData(table: string, keys: Record<string, unknown>, data: unknown): Promise<void> {
-    const { error } = await this.db.from(table).upsert({ ...keys, data, updated_at: new Date().toISOString() });
+    const { error } = await this.db
+      .from(table)
+      .upsert({ ...keys, data, updated_at: new Date().toISOString() });
     if (error) throw new Error(`[supabase] ${table}: ${error.message}`);
   }
 
@@ -87,7 +90,13 @@ export class SupabaseStore implements Store {
     return (data ?? []).map((r: Row) => r.data as Food);
   }
   async upsertFoods(foods: Food[]) {
-    const rows = foods.map((f) => ({ food_id: f.foodId, name: f.name, name_es: f.nameEs ?? null, data: f, tags: f.tags }));
+    const rows = foods.map((f) => ({
+      food_id: f.foodId,
+      name: f.name,
+      name_es: f.nameEs ?? null,
+      data: f,
+      tags: f.tags,
+    }));
     for (let i = 0; i < rows.length; i += 500) {
       const { error } = await this.db.from("foods").upsert(rows.slice(i, i + 500));
       if (error) throw new Error(`[supabase] foods upsert: ${error.message}`);
@@ -153,7 +162,11 @@ export class SupabaseStore implements Store {
     if (error) throw new Error(`[supabase] food_logs: ${error.message}`);
   }
   async listFoodLogs(userId: string, opts: { from?: string; to?: string; limit?: number } = {}) {
-    let q = this.db.from("food_logs").select("data").eq("user_id", userId).order("eaten_at", { ascending: true });
+    let q = this.db
+      .from("food_logs")
+      .select("data")
+      .eq("user_id", userId)
+      .order("eaten_at", { ascending: true });
     if (opts.from) q = q.gte("eaten_at", opts.from);
     if (opts.to) q = q.lt("eaten_at", opts.to);
     if (opts.limit) q = q.limit(opts.limit);
@@ -181,18 +194,16 @@ export class SupabaseStore implements Store {
     if (opts.limit) q = q.limit(opts.limit);
     const { data, error } = await q;
     if (error) throw new Error(`[supabase] readings: ${error.message}`);
-    return (data ?? []).map(
-      (r: Row): Reading => ({
-        readingId: r.reading_id as string,
-        userId: r.user_id as string,
-        type: r.type as Reading["type"],
-        value: Number(r.value),
-        ...(r.value2 !== null && r.value2 !== undefined ? { value2: Number(r.value2) } : {}),
-        unit: r.unit as Reading["unit"],
-        takenAt: new Date(r.taken_at as string).toISOString(),
-        ...(r.related_log_id ? { relatedLogId: r.related_log_id as string } : {}),
-      }),
-    );
+    return (data ?? []).map((r: Row): Reading => ({
+      readingId: r.reading_id as string,
+      userId: r.user_id as string,
+      type: r.type as Reading["type"],
+      value: Number(r.value),
+      ...(r.value2 !== null && r.value2 !== undefined ? { value2: Number(r.value2) } : {}),
+      unit: r.unit as Reading["unit"],
+      takenAt: new Date(r.taken_at as string).toISOString(),
+      ...(r.related_log_id ? { relatedLogId: r.related_log_id as string } : {}),
+    }));
   }
   async addMealRating(userId: string, rating: MealRating) {
     const { error } = await this.db
@@ -201,7 +212,10 @@ export class SupabaseStore implements Store {
     if (error) throw new Error(`[supabase] meal_ratings: ${error.message}`);
   }
   async listMealRatings(userId: string) {
-    const { data, error } = await this.db.from("meal_ratings").select("meal_name, liked").eq("user_id", userId);
+    const { data, error } = await this.db
+      .from("meal_ratings")
+      .select("meal_name, liked")
+      .eq("user_id", userId);
     if (error) throw new Error(`[supabase] meal_ratings: ${error.message}`);
     return (data ?? []).map((r: Row) => ({ mealName: r.meal_name as string, liked: r.liked as boolean }));
   }
@@ -222,7 +236,11 @@ export class SupabaseStore implements Store {
     return data ? toRun(data as Row) : null;
   }
   async listRuns(userId: string, opts: { limit?: number; since?: string } = {}) {
-    let q = this.db.from("agent_runs").select("*").eq("user_id", userId).order("created_at", { ascending: false });
+    let q = this.db
+      .from("agent_runs")
+      .select("*")
+      .eq("user_id", userId)
+      .order("created_at", { ascending: false });
     if (opts.since) q = q.gte("created_at", opts.since);
     if (opts.limit) q = q.limit(opts.limit);
     const { data, error } = await q;
@@ -246,19 +264,21 @@ export class SupabaseStore implements Store {
     if (error) throw new Error(`[supabase] agent_events: ${error.message}`);
   }
   async listEvents(runId: string) {
-    const { data, error } = await this.db.from("agent_events").select("*").eq("run_id", runId).order("at", { ascending: true });
+    const { data, error } = await this.db
+      .from("agent_events")
+      .select("*")
+      .eq("run_id", runId)
+      .order("at", { ascending: true });
     if (error) throw new Error(`[supabase] agent_events: ${error.message}`);
-    return (data ?? []).map(
-      (r: Row): AgentEvent => ({
-        eventId: r.event_id as string,
-        runId: r.run_id as string,
-        agent: r.agent as AgentEvent["agent"],
-        kind: r.kind as AgentEvent["kind"],
-        text: r.text as string,
-        at: new Date(r.at as string).toISOString(),
-        ...(r.data ? { data: r.data as Record<string, unknown> } : {}),
-      }),
-    );
+    return (data ?? []).map((r: Row): AgentEvent => ({
+      eventId: r.event_id as string,
+      runId: r.run_id as string,
+      agent: r.agent as AgentEvent["agent"],
+      kind: r.kind as AgentEvent["kind"],
+      text: r.text as string,
+      at: new Date(r.at as string).toISOString(),
+      ...(r.data ? { data: r.data as Record<string, unknown> } : {}),
+    }));
   }
   async waitForEvents(runId: string, afterCount: number, timeoutMs: number) {
     // Simple polling; the frontend may also subscribe to agent_events through Supabase Realtime.
@@ -283,6 +303,18 @@ export class SupabaseStore implements Store {
     if (error) console.warn(`[supabase] agent_logs: ${error.message}`);
   }
 
+  // kroger (table from supabase/migrations/0003_kroger.sql)
+  getKrogerConnection(userId: string) {
+    return this.one<KrogerConnection>("kroger_connections", { user_id: userId });
+  }
+  saveKrogerConnection(userId: string, conn: KrogerConnection) {
+    return this.upsertData("kroger_connections", { user_id: userId }, conn);
+  }
+  async deleteKrogerConnection(userId: string) {
+    const { error } = await this.db.from("kroger_connections").delete().eq("user_id", userId);
+    if (error) throw new Error(`[supabase] kroger_connections: ${error.message}`);
+  }
+
   // demo helpers
   async listUserIds() {
     const { data, error } = await this.db.from("profiles").select("user_id");
@@ -290,7 +322,16 @@ export class SupabaseStore implements Store {
     return (data ?? []).map((r: Row) => r.user_id as string);
   }
   async resetUser(userId: string) {
-    for (const table of ["meal_plans", "food_logs", "readings", "meal_ratings", "agent_runs", "medical_constraints", "daily_targets", "tdee_posteriors"]) {
+    for (const table of [
+      "meal_plans",
+      "food_logs",
+      "readings",
+      "meal_ratings",
+      "agent_runs",
+      "medical_constraints",
+      "daily_targets",
+      "tdee_posteriors",
+    ]) {
       const { error } = await this.db.from(table).delete().eq("user_id", userId);
       if (error) throw new Error(`[supabase] reset ${table}: ${error.message}`);
     }

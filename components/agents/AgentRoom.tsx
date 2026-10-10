@@ -14,7 +14,7 @@ import { keys } from "@/lib/hooks/keys";
 import { usePrefetchBudgetCurve } from "@/lib/hooks/useBudgetCurve";
 import { cn, plural } from "@/lib/utils";
 import type { AgentEvent, AgentName, MedicalConstraints } from "@/types/contracts";
-import { AGENT_ORDER, AGENT_THEME } from "./agent-theme";
+import { AGENT_NAMES, AGENT_ORDER, AGENT_ROLES, AGENT_THEME } from "./agent-theme";
 import { AgentAvatar } from "./AgentAvatar";
 import { AgentMessage } from "./AgentMessage";
 import { ConstraintStrip, type ConstraintChip } from "./ConstraintStrip";
@@ -29,6 +29,24 @@ const STATUS_LABEL: Record<Phase, string> = {
   error: "Connection lost",
 };
 const sleep = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
+
+/** The six stages a negotiation goes through, in order. Advanced by event kind and agent, never by time. */
+const PHASES = ["Rules", "Ideas", "Negotiation", "Optimize", "Verify", "Done"] as const;
+const EXPECTED_EVENTS = 20;
+
+function phaseIndex(events: AgentEvent[]): number {
+  let idx = -1;
+  for (const e of events) {
+    const tool = e.data?.tool;
+    if (e.kind === "decision") idx = Math.max(idx, 5);
+    else if (e.kind === "tool_call" && tool === "verifyPlan") idx = Math.max(idx, 4);
+    else if (e.kind === "tool_call" && tool === "optimizePlan") idx = Math.max(idx, 3);
+    else if (e.kind === "objection" || e.kind === "concession") idx = Math.max(idx, 2);
+    else if (e.agent === "chef") idx = Math.max(idx, 1);
+    else if (e.agent === "doctor") idx = Math.max(idx, 0);
+  }
+  return idx;
+}
 const delayFor = (e: AgentEvent) => (e.kind === "tool_call" ? 700 : 1300);
 
 /** Rules shown in the strip, derived from the stream itself. */
@@ -132,6 +150,7 @@ export function AgentRoom({ runId }: { runId: string }) {
   const speaking: AgentName | null = running && latest && !decided ? latest.agent : null;
   const optimizing = running && latest?.kind === "tool_call" && latest.data?.tool === "optimizePlan";
   const chips = useMemo(() => deriveChips(events), [events]);
+  const phaseIdx = useMemo(() => phaseIndex(events), [events]);
   const lastByAgent = useMemo(() => {
     const map = new Map<AgentName, string>();
     for (const e of events) if (e.kind !== "tool_call") map.set(e.agent, e.text);
@@ -154,8 +173,10 @@ export function AgentRoom({ runId }: { runId: string }) {
             {running && <span className="h-2 w-2 animate-pulse rounded-full bg-current" aria-hidden="true" />}
             {STATUS_LABEL[phase]}
           </Badge>
-          <span className="text-xs text-ink-subtle">
-            {events.length === 0 ? "no messages yet" : plural(events.length, "message")}
+          <span className="text-xs text-ink-subtle tabular-nums">
+            {events.length === 0
+              ? "no messages yet"
+              : `${plural(events.length, "message")} of about ${EXPECTED_EVENTS}`}
           </span>
         </div>
         <div className="flex items-center gap-2">
@@ -191,6 +212,10 @@ export function AgentRoom({ runId }: { runId: string }) {
         </div>
       </div>
 
+      <PhaseStepper current={phaseIdx} done={decided} />
+
+      <AgentLegend />
+
       <ConstraintStrip chips={chips} />
 
       <div className="grid gap-4 lg:grid-cols-12">
@@ -206,6 +231,7 @@ export function AgentRoom({ runId }: { runId: string }) {
                     agent={a}
                     size="md"
                     showLabel
+                    sublabel={AGENT_ROLES[a]}
                     speaking={speaking === a}
                     glow={decided}
                   />
@@ -307,7 +333,12 @@ export function AgentRoom({ runId }: { runId: string }) {
         <div className="min-w-0 lg:col-span-5">
           <Card className="flex h-[420px] flex-col overflow-hidden lg:h-[640px]">
             <div className="flex items-center justify-between border-b px-4 py-3">
-              <h2 className="text-sm font-semibold">Negotiation</h2>
+              <div>
+                <h2 className="text-sm font-semibold">Negotiation</h2>
+                <p className="text-[11px] text-ink-subtle">
+                  Bubbles are what agents say. Small grey lines are the tools they run.
+                </p>
+              </div>
               {phase === "error" && (
                 <span className="text-xs text-danger">Showing the saved negotiation</span>
               )}
@@ -365,7 +396,7 @@ function TableSeat({
   const isSpeaking = speaking === agent;
   return (
     <div className={cn("absolute flex w-40 flex-col items-center gap-2", SEAT_POS[pos])}>
-      <AgentAvatar agent={agent} size="lg" showLabel speaking={isSpeaking} glow={decided} />
+      <AgentAvatar agent={agent} size="lg" showLabel sublabel={AGENT_ROLES[agent]} speaking={isSpeaking} glow={decided} />
       <AnimatePresence mode="wait">
         {text && (
           <motion.p
@@ -383,5 +414,58 @@ function TableSeat({
         )}
       </AnimatePresence>
     </div>
+  );
+}
+
+/** Where the negotiation is, as six plain steps. */
+function PhaseStepper({ current, done }: { current: number; done: boolean }) {
+  return (
+    <ol
+      className="flex items-center gap-1 overflow-x-auto no-scrollbar text-[11px] sm:text-xs"
+      aria-label="Negotiation progress"
+      data-testid="agent-progress"
+    >
+      {PHASES.map((label, i) => {
+        const complete = i < current || done;
+        const active = i === current && !done;
+        return (
+          <li key={label} className="flex shrink-0 items-center gap-1">
+            <span
+              aria-current={active ? "step" : undefined}
+              className={cn(
+                "flex items-center gap-1.5 rounded-full px-2.5 py-1 font-medium transition-colors",
+                complete && "bg-brand-soft text-brand-dark",
+                active && "bg-ink text-white",
+                !complete && !active && "bg-surface-sunken text-ink-subtle",
+              )}
+            >
+              {active && <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-current" aria-hidden="true" />}
+              {label}
+            </span>
+            {i < PHASES.length - 1 && (
+              <span
+                className={cn("h-px w-3 sm:w-5", i < current || done ? "bg-brand" : "bg-border")}
+                aria-hidden="true"
+              />
+            )}
+          </li>
+        );
+      })}
+    </ol>
+  );
+}
+
+/** Who is in the room and what each one protects. */
+function AgentLegend() {
+  return (
+    <ul className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs text-ink-muted" aria-label="Who is in the room">
+      {[...AGENT_ORDER, "orchestrator" as const].map((a) => (
+        <li key={a} className="flex items-center gap-1.5">
+          <AgentAvatar agent={a} size="xs" />
+          <span className={cn("font-semibold", AGENT_THEME[a].text)}>{AGENT_NAMES[a]}</span>
+          <span>= {AGENT_ROLES[a]}</span>
+        </li>
+      ))}
+    </ul>
   );
 }

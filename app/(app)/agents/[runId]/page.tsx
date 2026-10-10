@@ -11,7 +11,7 @@ export default function AgentRoomPage() {
     <div className="space-y-5">
       <PageHeader
         title="Agent Room"
-        subtitle="Doctor, Chef, Budget and Monitor negotiate your week. Watch them live."
+        subtitle="Four AI agents negotiate your week. Doctor's rules never move."
       />
       <AgentRoom key={runId} runId={runId} />
     </div>

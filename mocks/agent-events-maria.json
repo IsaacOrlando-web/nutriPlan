@@ -5,7 +5,11 @@
     "agent": "orchestrator",
     "kind": "proposal",
     "text": "New plan for Maria: maintain goal, $70/week, 4 meals a day. Doctor first.",
-    "at": "2026-10-09T15:00:01.400Z"
+    "at": "2026-10-09T15:00:00.000Z",
+    "data": {
+      "trigger": "onboarding",
+      "reason": "Onboarding plan"
+    }
   },
   {
     "eventId": "maria-ev-02",
@@ -13,7 +17,7 @@
     "agent": "doctor",
     "kind": "tool_call",
     "text": "Reading guidelines.json for the rules that apply",
-    "at": "2026-10-09T15:00:02.800Z",
+    "at": "2026-10-09T15:00:01.400Z",
     "data": {
       "tool": "buildConstraints"
     }
@@ -23,8 +27,8 @@
     "runId": "maria-run-0001",
     "agent": "doctor",
     "kind": "proposal",
-    "text": "Floors and caps are set: at least 1200 kcal, under 1500 mg sodium, 28 g fiber.",
-    "at": "2026-10-09T15:00:04.200Z",
+    "text": "DGA floors and caps: at least 1200 kcal, under 1500 mg sodium, 28 g fiber.",
+    "at": "2026-10-09T15:00:02.800Z",
     "data": {
       "constraints": {
         "minCaloriesPerDay": 1200,
@@ -92,8 +96,14 @@
     "runId": "maria-run-0001",
     "agent": "doctor",
     "kind": "proposal",
-    "text": "Diabetes rules on: max 45 g carbs and glycemic load 20 per meal. Non negotiable.",
-    "at": "2026-10-09T15:00:05.600Z"
+    "text": "ADA diabetes rules: max 45 g carbs and glycemic load 20 per meal. Non negotiable.",
+    "at": "2026-10-09T15:00:04.200Z",
+    "data": {
+      "rules": [
+        "max_carbs_per_meal",
+        "max_glycemic_load_per_meal"
+      ]
+    }
   },
   {
     "eventId": "maria-ev-05",
@@ -101,17 +111,24 @@
     "agent": "doctor",
     "kind": "proposal",
     "text": "DASH rules on: sodium 1500 mg, potassium 3500+ mg, saturated fat 6%.",
-    "at": "2026-10-09T15:00:07.000Z"
+    "at": "2026-10-09T15:00:05.600Z",
+    "data": {
+      "rules": [
+        "max_sodium",
+        "min_potassium",
+        "max_sat_fat"
+      ]
+    }
   },
   {
     "eventId": "maria-ev-06",
     "runId": "maria-run-0001",
     "agent": "chef",
     "kind": "tool_call",
-    "text": "Searching the food database for ingredients",
-    "at": "2026-10-09T15:00:08.400Z",
+    "text": "Opening the recipe book and scoring every dish for Maria",
+    "at": "2026-10-09T15:00:07.000Z",
     "data": {
-      "tool": "searchFoods"
+      "tool": "getMealTemplates"
     }
   },
   {
@@ -119,10 +136,11 @@
     "runId": "maria-run-0001",
     "agent": "chef",
     "kind": "proposal",
-    "text": "I have 32 ideas: beans, chicken, mexican with real variety. Let me cook!",
-    "at": "2026-10-09T15:00:09.800Z",
+    "text": "I have 41 ideas: beans, chicken, mexican with real variety. Let me cook!",
+    "at": "2026-10-09T15:00:08.400Z",
     "data": {
-      "poolSize": 32
+      "poolSize": 41,
+      "source": "templates"
     }
   },
   {
@@ -131,9 +149,10 @@
     "agent": "budget",
     "kind": "tool_call",
     "text": "Pricing every candidate with computeTotals",
-    "at": "2026-10-09T15:00:11.200Z",
+    "at": "2026-10-09T15:00:09.800Z",
     "data": {
-      "tool": "computeTotals"
+      "tool": "computeTotals",
+      "candidates": 41
     }
   },
   {
@@ -141,10 +160,12 @@
     "runId": "maria-run-0001",
     "agent": "budget",
     "kind": "objection",
-    "text": "Tilapia, baked alone eats $10.40 of the $70. Swap half of it for lentils and tofu?",
-    "at": "2026-10-09T15:00:12.600Z",
+    "text": "Chicken breast, roasted alone eats $12.10 of the $70 across the pool. Lovely, so is rent. Once a week?",
+    "at": "2026-10-09T15:00:11.200Z",
     "data": {
-      "foodId": "tilapia"
+      "foodId": "chicken_breast",
+      "poolCostUsd": 12.1,
+      "swapFoodId": null
     }
   },
   {
@@ -152,18 +173,34 @@
     "runId": "maria-run-0001",
     "agent": "chef",
     "kind": "concession",
-    "text": "Fine, I keep tilapia once and lean on lentils and tofu for the rest. Flavor stays.",
-    "at": "2026-10-09T15:00:14.000Z"
+    "text": "Fine, I keep chicken breast once and lean on beans and eggs for the rest. Flavor stays.",
+    "at": "2026-10-09T15:00:12.600Z"
   },
   {
     "eventId": "maria-ev-11",
     "runId": "maria-run-0001",
     "agent": "doctor",
     "kind": "objection",
-    "text": "Two breakfast ideas push carbs past 45 g per meal. Those are out.",
-    "at": "2026-10-09T15:00:15.400Z",
+    "text": "13 ideas push carbs or glycemic load past the per meal caps even at the smallest portion. Out.",
+    "at": "2026-10-09T15:00:14.000Z",
     "data": {
-      "removed": 2
+      "tool": "reviewPool",
+      "removed": 13,
+      "candidateIds": [
+        "bean_breakfast_burrito",
+        "pb_banana_oatmeal",
+        "chicken_burrito_bowl",
+        "sweet_potato_tacos",
+        "chicken_veg_soup",
+        "chicken_beans_rice",
+        "beef_burrito_bowl",
+        "lentil_soup",
+        "one_pot_chicken_rice",
+        "pork_loin_potatoes",
+        "steak_rice_beans",
+        "stuffed_peppers",
+        "chicken_sheet_pan"
+      ]
     }
   },
   {
@@ -171,34 +208,133 @@
     "runId": "maria-run-0001",
     "agent": "chef",
     "kind": "concession",
-    "text": "Removed. I swap in a yogurt bowl with pumpkin seeds instead.",
-    "at": "2026-10-09T15:00:16.800Z"
+    "text": "Removed. I swap in egg and black bean breakfast burrito instead, lighter on the carbs and just as tasty.",
+    "at": "2026-10-09T15:00:15.400Z",
+    "data": {
+      "added": 6
+    }
   },
   {
     "eventId": "maria-ev-13",
     "runId": "maria-run-0001",
     "agent": "orchestrator",
     "kind": "tool_call",
-    "text": "Running the optimizer: 7 days, 4 slots a day, integer servings",
-    "at": "2026-10-09T15:00:18.200Z",
+    "text": "First solve: budget, protein, potassium and carb cap are the scarce resources. Chef: 6 new meals.",
+    "at": "2026-10-09T15:00:16.800Z",
     "data": {
-      "tool": "optimizePlan"
+      "tool": "optimizePlan",
+      "solve": 1,
+      "poolSize": 34,
+      "solveMs": 1571,
+      "brief": {
+        "count": 6,
+        "feasible": true,
+        "weeklyBudgetUsd": 70,
+        "weeklyCostUsd": 72.76,
+        "bindingConstraints": [
+          "weekly_budget",
+          "max_carbs_per_meal",
+          "max_sat_fat",
+          "min_potassium"
+        ],
+        "budgetBinding": true,
+        "proteinTargetG": 145,
+        "proteinShortDays": 3,
+        "proteinGapG": 20,
+        "sodiumSharePct": 63,
+        "costPerType": {
+          "breakfast": 2.74,
+          "lunch": 3.06,
+          "dinner": 3.54,
+          "snack": 1.06
+        },
+        "typeCounts": {
+          "dinner": 3,
+          "lunch": 3
+        },
+        "maxMealCostUsd": 2.25,
+        "minProteinG": 40,
+        "maxSodiumMg": null,
+        "maxCarbsG": 45,
+        "maxGlycemicLoad": 20,
+        "minFiberG": null,
+        "minPotassiumMg": 950,
+        "styles": [
+          "beans",
+          "chicken",
+          "mexican"
+        ],
+        "scarce": [
+          "budget",
+          "protein",
+          "potassium",
+          "carb cap"
+        ],
+        "needs": [
+          "high protein (at least 40 g)",
+          "under $2.25",
+          "under 45 g carbs",
+          "at least 950 mg potassium"
+        ],
+        "text": "First solve: budget, protein, potassium and carb cap are the scarce resources. Chef: 6 new meals."
+      }
     }
   },
   {
     "eventId": "maria-ev-14",
     "runId": "maria-run-0001",
-    "agent": "orchestrator",
+    "agent": "chef",
     "kind": "proposal",
-    "text": "Optimizer solved in 6.8 s. Weekly cost $67.84.",
-    "at": "2026-10-09T15:00:19.600Z",
+    "text": "Brief received: 6 high-protein, low-carb meals under $2.25. First up: chicken with cassava and salad, extra chicken thigh.",
+    "at": "2026-10-09T15:00:18.200Z",
     "data": {
-      "solveMs": 6809,
-      "weeklyCostUsd": 67.84
+      "brief": {
+        "needs": [
+          "high protein (at least 40 g)",
+          "under $2.25",
+          "under 45 g carbs",
+          "at least 950 mg potassium"
+        ],
+        "typeCounts": {
+          "dinner": 3,
+          "lunch": 3
+        }
+      },
+      "columns": [
+        "Chicken with cassava and salad, extra chicken thigh",
+        "Chicken thigh with rice and green beans, extra chicken thigh",
+        "Chipotle shredded chicken tostadas, extra chicken breast",
+        "Tofu edamame rice bowl",
+        "Ginger soy chicken rice bowl, extra chicken thigh",
+        "Chicken and cactus tacos, extra chicken breast"
+      ],
+      "source": "templates",
+      "count": 6
     }
   },
   {
     "eventId": "maria-ev-15",
+    "runId": "maria-run-0001",
+    "agent": "orchestrator",
+    "kind": "proposal",
+    "text": "Second solve used 3 of Chef's 6 new meals; weekly cost went from $72.76 to $69.04, inside the $70. Solved in 1.9 s.",
+    "at": "2026-10-09T15:00:19.600Z",
+    "data": {
+      "solve": 2,
+      "usedColumns": 3,
+      "offeredColumns": 6,
+      "kept": true,
+      "proteinDeviationBeforeG": 16,
+      "proteinDeviationAfterG": 28,
+      "weeklyCostBeforeUsd": 72.76,
+      "weeklyCostAfterUsd": 69.04,
+      "solveMs": 1883,
+      "solveSec": 1.9,
+      "shadowPricesMs": 8199
+    }
+  },
+  {
+    "eventId": "maria-ev-16",
     "runId": "maria-run-0001",
     "agent": "doctor",
     "kind": "tool_call",
@@ -210,26 +346,14 @@
     }
   },
   {
-    "eventId": "maria-ev-16",
+    "eventId": "maria-ev-17",
     "runId": "maria-run-0001",
     "agent": "doctor",
     "kind": "proposal",
     "text": "All seven days pass every rule. I am satisfied.",
-    "at": "2026-10-09T15:00:22.400Z"
-  },
-  {
-    "eventId": "maria-ev-17",
-    "runId": "maria-run-0001",
-    "agent": "budget",
-    "kind": "proposal",
-    "text": "Raising your budget by $5 would let Chef add greek yogurt with blueberries twice",
-    "at": "2026-10-09T15:00:23.800Z",
+    "at": "2026-10-09T15:00:22.400Z",
     "data": {
-      "shadowPrice": {
-        "constraint": "weekly_budget",
-        "value": 24.139,
-        "humanText": "Raising your budget by $5 would let Chef add greek yogurt with blueberries twice"
-      }
+      "violations": 0
     }
   },
   {
@@ -237,14 +361,30 @@
     "runId": "maria-run-0001",
     "agent": "budget",
     "kind": "proposal",
-    "text": "Grocery list ready: 40 items, $67.84 total.",
-    "at": "2026-10-09T15:00:25.200Z",
+    "text": "Raising your budget by $5 would let Chef add tilapia tacos with cabbage slaw twice",
+    "at": "2026-10-09T15:00:23.800Z",
     "data": {
-      "items": 40
+      "shadowPrice": {
+        "constraint": "weekly_budget",
+        "value": 43.812,
+        "humanText": "Raising your budget by $5 would let Chef add tilapia tacos with cabbage slaw twice"
+      }
     }
   },
   {
     "eventId": "maria-ev-19",
+    "runId": "maria-run-0001",
+    "agent": "budget",
+    "kind": "proposal",
+    "text": "Grocery list ready: 36 items, $69.04 total.",
+    "at": "2026-10-09T15:00:25.200Z",
+    "data": {
+      "items": 36,
+      "weeklyCostUsd": 69.04
+    }
+  },
+  {
+    "eventId": "maria-ev-20",
     "runId": "maria-run-0001",
     "agent": "monitor",
     "kind": "proposal",
@@ -252,14 +392,24 @@
     "at": "2026-10-09T15:00:26.600Z"
   },
   {
-    "eventId": "maria-ev-20",
+    "eventId": "maria-ev-21",
     "runId": "maria-run-0001",
     "agent": "orchestrator",
     "kind": "decision",
-    "text": "Plan v1 approved: 7 days, $67.84, zero rule violations.",
+    "text": "Plan v1 approved: 7 days, $69.04, zero rule violations.",
     "at": "2026-10-09T15:00:28.000Z",
     "data": {
-      "planId": "maria-plan-0001"
+      "planId": "maria-plan-0001",
+      "version": 1,
+      "bestEffort": false,
+      "concededAny": false,
+      "timingMs": {
+        "firstSolveMs": 1574,
+        "chefColumnsMs": 1,
+        "elapsedBeforeSecondSolveMs": 1579,
+        "secondSolveMs": 1887,
+        "shadowPricesMs": 8199
+      }
     }
   }
 ]

@@ -19,6 +19,8 @@ export interface AgentAvatarProps {
   /** Steady glow (decision reached). */
   glow?: boolean;
   showLabel?: boolean;
+  /** Small grey word under the name, for example the agent's role. */
+  sublabel?: string;
   className?: string;
 }
 
@@ -28,6 +30,7 @@ export function AgentAvatar({
   speaking = false,
   glow = false,
   showLabel = false,
+  sublabel,
   className,
 }: AgentAvatarProps) {
   const theme = AGENT_THEME[agent];
@@ -50,7 +53,12 @@ export function AgentAvatar({
       >
         <Icon className={s.icon} aria-hidden="true" />
       </div>
-      {showLabel && <span className={cn("text-xs font-semibold", theme.text)}>{AGENT_NAMES[agent]}</span>}
+      {showLabel && (
+        <span className="flex flex-col items-center leading-tight">
+          <span className={cn("text-xs font-semibold", theme.text)}>{AGENT_NAMES[agent]}</span>
+          {sublabel && <span className="text-[10px] text-ink-subtle">{sublabel}</span>}
+        </span>
+      )}
     </div>
   );
 }

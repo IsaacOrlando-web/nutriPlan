@@ -1,26 +1,30 @@
 // Generates every file in /mocks from real math so mock data is internally consistent. Owner: Lead.
 // Plans come from the actual optimizer, trends from the Kalman filter, totals from computeTotals.
-// Agent event mocks follow the spec's negotiation script (section 9) with numbers taken from the real plan.
+// Agent events and the plan come from a real scripted negotiation (the same orchestrator code the Agent Room
+// runs, AGENTS_MODE=scripted, no API keys), so mocks and fallback replays always match the live story.
 // Usage: npm run mocks
+process.env.AGENTS_MODE = "scripted";
+process.env.AGENT_EVENT_DELAY_MS = "0";
+process.env.AGENTS_FALLBACK = "false";
 import fs from "node:fs";
 import path from "node:path";
 import foodsList from "./data/foods.json";
-import templates from "./data/meal-templates.json";
 import type {
   AgentEvent,
-  CandidateMeal,
   DaySummary,
   Food,
   FoodLogEntry,
   GroceryItem,
   MealPlan,
-  OptimizeResult,
   UserProfile,
 } from "@/types/contracts";
 import { buildConstraints } from "@/agents/rules/engine";
+import { runPlanNegotiation } from "@/agents/orchestrator";
+import { MemoryStore } from "@/lib/db/memory-store";
+import { setStore } from "@/lib/db";
 import { buildGroceryList } from "@/agents/tools/math";
 import { calculateTargets } from "@/math/targets";
-import { optimizePlan } from "@/math/optimizer";
+import { verifyPlan } from "@/math/optimizer";
 import { computeTotals, emptyTotals, subtractTotals, sumTotals } from "@/math/totals";
 import { getTrends } from "@/math/kalman";
 import {
@@ -33,7 +37,6 @@ import {
 
 const OUT = path.resolve(__dirname, "../mocks");
 const FALLBACKS = path.resolve(__dirname, "../agents/fallbacks");
-const START = "2026-10-12";
 const TODAY = "2026-10-09";
 
 const foods: Record<string, Food> = Object.fromEntries((foodsList as Food[]).map((f) => [f.foodId, f]));
@@ -44,223 +47,42 @@ function write(dir: string, name: string, data: unknown) {
   console.log("wrote", path.relative(process.cwd(), path.join(dir, name)));
 }
 
-/** Chef-like taste scores from likes and dislikes, deterministic. */
-function poolFor(profile: UserProfile): CandidateMeal[] {
-  return (templates as Omit<CandidateMeal, "tasteScore">[]).map((t, i) => {
-    const text = `${t.name} ${t.cuisine} ${t.ingredients.map((x) => x.foodId).join(" ")}`.toLowerCase();
-    let score = 0.5 + ((i * 37) % 30) / 100;
-    for (const like of profile.likes) if (text.includes(like.toLowerCase().split(" ")[0])) score += 0.15;
-    for (const dislike of profile.dislikes)
-      if (text.includes(dislike.toLowerCase().split(" ")[0])) score -= 0.4;
-    return {
-      ...t,
-      tasteScore: Math.min(1, Math.max(0.05, score)),
-      pitch: t.pitch || `${t.name}, ${t.cuisine} style, ready in ${t.prepMinutes} minutes.`,
-    };
-  });
-}
-
-/** Grocery list aggregation lives in /agents/tools/math.ts (shared with the Orchestrator); output is identical. */
 export function groceryListFrom(plan: Pick<MealPlan, "days">): GroceryItem[] {
   return buildGroceryList(plan.days, foods);
-}
-
-function explain(plan: MealPlan, profile: UserProfile, result: OptimizeResult): void {
-  const budgetSp = result.shadowPrices.find((s) => s.constraint === "weekly_budget");
-  for (const d of plan.days) {
-    for (const m of d.meals) {
-      const sodiumShare = Math.round((m.totals.sodiumMg / plan.days[0].dayTotals.sodiumMg) * 100);
-      m.explanation = [
-        {
-          agent: "chef",
-          text: `${m.name}: ${m.cuisine} flavors you said you like, ${m.prepMinutes} minutes of prep.`,
-        },
-        {
-          agent: "doctor",
-          text: profile.conditions.includes("type2_diabetes")
-            ? `${m.totals.carbsG} g carbs and glycemic load ${m.totals.glycemicLoad}: inside the per meal caps.`
-            : `${m.totals.proteinG} g protein and ${m.totals.fiberG} g fiber keep you full while losing fat safely.`,
-        },
-        {
-          agent: "budget",
-          text: `$${m.totals.costUsd.toFixed(2)} for this meal, ${sodiumShare}% of today's sodium. ${budgetSp?.humanText ?? ""}`.trim(),
-        },
-      ];
-    }
-  }
-}
-
-function eventsFor(
-  key: DemoUserKey,
-  profile: UserProfile,
-  plan: MealPlan,
-  result: OptimizeResult,
-  runId: string,
-): AgentEvent[] {
-  const c = buildConstraints(profile);
-  const t0 = Date.parse(`${TODAY}T15:00:00Z`);
-  let i = 0;
-  const ev = (
-    agent: AgentEvent["agent"],
-    kind: AgentEvent["kind"],
-    text: string,
-    data?: Record<string, unknown>,
-  ): AgentEvent => ({
-    eventId: `${key}-ev-${String(++i).padStart(2, "0")}`,
-    runId,
-    agent,
-    kind,
-    text: text.length > 140 ? text.slice(0, 137) + "..." : text,
-    at: new Date(t0 + i * 1400).toISOString(),
-    ...(data ? { data } : {}),
-  });
-  const expensive = plan.groceryList.slice().sort((a, b) => b.costUsd - a.costUsd)[0];
-  const cheapProtein = key === "alex" ? "eggs and black beans" : "lentils and tofu";
-  const diabetic = profile.conditions.includes("type2_diabetes");
-  const out: AgentEvent[] = [
-    ev(
-      "orchestrator",
-      "proposal",
-      `New plan for ${profile.name}: ${profile.goal} goal, $${profile.weeklyBudgetUsd}/week, ${profile.mealsPerDay} meals a day. Doctor first.`,
-    ),
-    ev("doctor", "tool_call", "Reading guidelines.json for the rules that apply", {
-      tool: "buildConstraints",
-    }),
-    ev(
-      "doctor",
-      "proposal",
-      `Floors and caps are set: at least ${c.minCaloriesPerDay} kcal, under ${c.maxSodiumMgPerDay} mg sodium, ${c.minFiberG} g fiber.`,
-      { constraints: c },
-    ),
-  ];
-  if (diabetic)
-    out.push(
-      ev(
-        "doctor",
-        "proposal",
-        `Diabetes rules on: max ${c.maxCarbsPerMealG} g carbs and glycemic load ${c.maxGlycemicLoadPerMeal} per meal. Non negotiable.`,
-      ),
-    );
-  if (profile.conditions.includes("hypertension"))
-    out.push(
-      ev(
-        "doctor",
-        "proposal",
-        `DASH rules on: sodium ${c.maxSodiumMgPerDay} mg, potassium ${c.minPotassiumMgPerDay}+ mg, saturated fat ${c.maxSatFatPct}%.`,
-      ),
-    );
-  if (profile.allergies.length)
-    out.push(
-      ev(
-        "doctor",
-        "proposal",
-        `Allergy filter active: no ${profile.allergies.join(", ")} anywhere in the plan.`,
-      ),
-    );
-  out.push(
-    ev("chef", "tool_call", "Searching the food database for ingredients", { tool: "searchFoods" }),
-    ev(
-      "chef",
-      "proposal",
-      `I have ${Math.min(32, templates.length)} ideas: ${profile.likes.slice(0, 3).join(", ")} with real variety. Let me cook!`,
-      { poolSize: 32 },
-    ),
-    ev("budget", "tool_call", "Pricing every candidate with computeTotals", { tool: "computeTotals" }),
-    ev(
-      "budget",
-      "objection",
-      `${expensive?.name ?? "Salmon"} alone eats $${expensive?.costUsd.toFixed(2) ?? "9.00"} of the $${profile.weeklyBudgetUsd}. Swap half of it for ${cheapProtein}?`,
-      { foodId: expensive?.foodId },
-    ),
-    ev(
-      "chef",
-      "concession",
-      `Fine, I keep ${expensive?.name.split(",")[0].toLowerCase() ?? "salmon"} once and lean on ${cheapProtein} for the rest. Flavor stays.`,
-    ),
-    ev(
-      "doctor",
-      "objection",
-      diabetic
-        ? "Two breakfast ideas push carbs past 45 g per meal. Those are out."
-        : "One snack idea is 40% saturated fat. Out of the pool.",
-      { removed: 2 },
-    ),
-    ev("chef", "concession", "Removed. I swap in a yogurt bowl with pumpkin seeds instead."),
-    ev(
-      "orchestrator",
-      "tool_call",
-      `Running the optimizer: 7 days, ${plan.days[0].meals.length} slots a day, integer servings`,
-      { tool: "optimizePlan" },
-    ),
-    ev(
-      "orchestrator",
-      "proposal",
-      `Optimizer solved in ${(result.solveMs / 1000).toFixed(1)} s. Weekly cost $${plan.weeklyCostUsd.toFixed(2)}.`,
-      { solveMs: result.solveMs, weeklyCostUsd: plan.weeklyCostUsd },
-    ),
-    ev("doctor", "tool_call", "Re-checking every hard rule on the final plan", {
-      tool: "verifyPlan",
-      violations: 0,
-    }),
-    ev("doctor", "proposal", "All seven days pass every rule. I am satisfied."),
-  );
-  const sp = result.shadowPrices.find((s) => s.constraint === "weekly_budget");
-  if (sp) out.push(ev("budget", "proposal", sp.humanText, { shadowPrice: sp }));
-  out.push(
-    ev(
-      "budget",
-      "proposal",
-      `Grocery list ready: ${plan.groceryList.length} items, $${plan.weeklyCostUsd.toFixed(2)} total.`,
-      { items: plan.groceryList.length },
-    ),
-    ev(
-      "monitor",
-      "proposal",
-      "I will watch weight, glucose and logs daily and replan when the trend says so.",
-    ),
-    ev(
-      "orchestrator",
-      "decision",
-      `Plan v${plan.version} approved: ${plan.days.length} days, $${plan.weeklyCostUsd.toFixed(2)}, zero rule violations.`,
-      { planId: plan.planId },
-    ),
-  );
-  return out;
 }
 
 async function buildUser(key: DemoUserKey, profile: UserProfile) {
   const constraints = buildConstraints(profile);
   const targets = calculateTargets(profile, constraints);
-  const result = await optimizePlan(
-    {
-      pool: poolFor(profile),
-      foods,
-      targets,
-      constraints,
-      weeklyBudgetUsd: profile.weeklyBudgetUsd,
-      concessions: { maxRepeatsPerWeek: 2, budgetSlackPct: 0 },
-      startDate: START,
-      mealsPerDay: profile.mealsPerDay,
-    },
-    { timeLimitSec: 8 },
-  );
-  if (!result.feasible) throw new Error(`${key}: infeasible plan ${result.conflicts.join(",")}`);
-  const runId = `${key}-run-0001`;
-  const plan: MealPlan = {
-    planId: `${key}-plan-0001`,
+
+  // Fresh in-RAM store seeded with this user only; the negotiation reads templates and foods from it.
+  const store = new MemoryStore(null);
+  setStore(store);
+  await store.resetUser(profile.userId);
+  await store.saveProfile(profile);
+  await store.saveConstraints(profile.userId, constraints);
+  await store.saveTargets(profile.userId, targets);
+  const run = await store.createRun({ userId: profile.userId, trigger: "onboarding", reason: "Onboarding plan" });
+  const outcome = await runPlanNegotiation({
     userId: profile.userId,
-    version: 1,
+    runId: run.runId,
+    trigger: "onboarding",
     reason: "Onboarding plan",
+    store,
+    optimize: { timeLimitSec: 6 },
+  });
+  if (outcome.status !== "done" || !outcome.plan) throw new Error(`${key}: negotiation failed`);
+  const runId = `${key}-run-0001`;
+  const plan: MealPlan = { ...outcome.plan, planId: `${key}-plan-0001`, runId, version: 1, startDate: outcome.plan.startDate };
+  const events: AgentEvent[] = outcome.events.map((e, i) => ({
+    ...e,
+    eventId: `${key}-ev-${String(i + 1).padStart(2, "0")}`,
     runId,
-    startDate: START,
-    weeklyCostUsd: result.weeklyCostUsd,
-    days: result.days,
-    groceryList: groceryListFrom(result),
-    shadowPrices: result.shadowPrices,
-    bestEffort: !result.withinBudget,
-  };
-  explain(plan, profile, result);
-  const events = eventsFor(key, profile, plan, result, runId);
+    at: new Date(Date.parse(`${TODAY}T15:00:00Z`) + i * 1400).toISOString(),
+    ...(e.kind === "decision" ? { data: { ...(e.data ?? {}), planId: plan.planId } } : {}),
+  }));
+  const violations = verifyPlan(plan.days, constraints);
+  if (violations.length) throw new Error(`${key}: plan breaks rules: ${violations.join("; ")}`);
 
   write(OUT, `profile-${key}.json`, profile);
   write(OUT, `constraints-${key}.json`, constraints);
@@ -268,17 +90,11 @@ async function buildUser(key: DemoUserKey, profile: UserProfile) {
   write(OUT, `plan-${key}.json`, plan);
   write(OUT, `agent-events-${key}.json`, events);
   write(FALLBACKS, `${key}-plan-run.json`, {
-    run: {
-      runId,
-      userId: profile.userId,
-      trigger: "onboarding",
-      reason: "Onboarding plan",
-      status: "done",
-      createdAt: events[0].at,
-    },
+    run: { runId, userId: profile.userId, trigger: "onboarding", reason: "Onboarding plan", status: "done", createdAt: events[0].at },
     events,
     plan,
   });
+  console.log(`${key}: ${events.length} events, $${plan.weeklyCostUsd}, v${plan.version}`);
   return { plan, targets };
 }
 

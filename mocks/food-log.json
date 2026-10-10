@@ -17,13 +17,13 @@
       {
         "foodId": "pinto_beans",
         "name": "Pinto beans, cooked",
-        "grams": 172,
+        "grams": 86,
         "confidence": 0.86
       },
       {
         "foodId": "white_rice",
         "name": "White rice, cooked",
-        "grams": 93,
+        "grams": 186,
         "confidence": 0.86
       },
       {
@@ -34,18 +34,18 @@
       }
     ],
     "totals": {
-      "calories": 807,
-      "proteinG": 71.1,
-      "carbsG": 76.5,
-      "fatG": 23.4,
-      "fiberG": 18.1,
-      "sugarG": 3.5,
+      "calories": 805,
+      "proteinG": 65.9,
+      "carbsG": 80.1,
+      "fatG": 23,
+      "fiberG": 10.7,
+      "sugarG": 3.3,
       "addedSugarG": 0,
       "satFatG": 6.3,
       "sodiumMg": 209,
-      "potassiumMg": 1414,
-      "glycemicLoad": 30.7,
-      "costUsd": 2.32
+      "potassiumMg": 1071,
+      "glycemicLoad": 43.8,
+      "costUsd": 2.15
     },
     "flags": [
       {

@@ -407,6 +407,58 @@ export interface BudgetCurveResponse {
   cached: boolean;
 }
 
+// ---------------------------------------------------------------------------
+// Kroger integration (see docs/kroger-setup.md, D-013). Backend owns the implementation in /lib/kroger.
+// ---------------------------------------------------------------------------
+
+/** GET /api/kroger/status */
+export interface KrogerStatus {
+  configured: boolean; // server has KROGER_CLIENT_ID + SECRET
+  connected: boolean; // this user completed OAuth
+  location: { id: string; name: string } | null;
+}
+
+/** GET /api/kroger/locations?zip= */
+export interface KrogerLocation {
+  id: string;
+  name: string;
+  address: string;
+}
+
+/** A grocery item with its matched Kroger product and shelf price, when one was found. */
+export interface PricedGroceryItem extends GroceryItem {
+  kroger?: {
+    productId: string;
+    upc: string;
+    description: string;
+    brand?: string;
+    size: string;
+    unitPriceUsd: number;
+    packagesNeeded: number;
+    lineUsd: number;
+  };
+}
+
+/** POST /api/kroger/price */
+export interface KrogerPriceResponse {
+  items: PricedGroceryItem[];
+  totalUsd: number;
+  matched: number;
+  unmatched: string[];
+}
+
+/** POST /api/kroger/cart request item. */
+export interface KrogerCartItemInput {
+  upc: string;
+  quantity: number;
+}
+
+/** POST /api/kroger/cart response. */
+export interface KrogerCartResponse {
+  added: number;
+  skipped: string[];
+}
+
 /** Standard error body for every route. */
 export interface ApiError {
   error: string;

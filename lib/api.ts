@@ -42,6 +42,11 @@ import type {
   FoodLogEntry,
   GeneratePlanRequest,
   GeneratePlanResponse,
+  KrogerCartItemInput,
+  KrogerCartResponse,
+  KrogerLocation,
+  KrogerPriceResponse,
+  KrogerStatus,
   MealPlan,
   MonitorResult,
   PhotoLogResult,
@@ -77,7 +82,10 @@ export class ApiRequestError extends Error {
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
   const res = await fetch(path, {
     ...init,
-    headers: { ...(init?.body && !(init.body instanceof FormData) ? { "Content-Type": "application/json" } : {}), ...init?.headers },
+    headers: {
+      ...(init?.body && !(init.body instanceof FormData) ? { "Content-Type": "application/json" } : {}),
+      ...init?.headers,
+    },
     credentials: "same-origin",
   });
   if (!res.ok) {
@@ -130,16 +138,21 @@ async function mock<T>(load: (user: MockUser) => Promise<T>): Promise<T> {
 
 const mocks = {
   profile: (u: MockUser) => import(`@/mocks/profile-${u}.json`).then((m) => m.default as UserProfile),
-  constraints: (u: MockUser) => import(`@/mocks/constraints-${u}.json`).then((m) => m.default as ProfileBundle["constraints"]),
-  targets: (u: MockUser) => import(`@/mocks/targets-${u}.json`).then((m) => m.default as ProfileBundle["targets"]),
+  constraints: (u: MockUser) =>
+    import(`@/mocks/constraints-${u}.json`).then((m) => m.default as ProfileBundle["constraints"]),
+  targets: (u: MockUser) =>
+    import(`@/mocks/targets-${u}.json`).then((m) => m.default as ProfileBundle["targets"]),
   plan: (u: MockUser) => import(`@/mocks/plan-${u}.json`).then((m) => m.default as MealPlan),
-  curve: (u: MockUser) => import(`@/mocks/curve-${u}.json`).then((m) => m.default.curve as BudgetCurveSummary),
+  curve: (u: MockUser) =>
+    import(`@/mocks/curve-${u}.json`).then((m) => m.default.curve as BudgetCurveSummary),
   events: (u: MockUser) => import(`@/mocks/agent-events-${u}.json`).then((m) => m.default as AgentEvent[]),
   readings: (u: MockUser) => import(`@/mocks/readings-${u}.json`).then((m) => m.default as Reading[]),
   summary: (u: MockUser) => import(`@/mocks/summary-${u}.json`).then((m) => m.default as DaySummary),
   monitor: (u: MockUser) => import(`@/mocks/monitor-${u}.json`).then((m) => m.default as MonitorResult),
   trend: (type: ReadingType) =>
-    import(`@/mocks/trend-${type === "weight" ? "weight" : type === "bp" ? "bp" : "glucose"}.json`).then((m) => m.default as Trend),
+    import(`@/mocks/trend-${type === "weight" ? "weight" : type === "bp" ? "bp" : "glucose"}.json`).then(
+      (m) => m.default as Trend,
+    ),
   foodLog: () => import("@/mocks/food-log.json").then((m) => m.default as FoodLogEntry[]),
   foods: () => import("@/mocks/foods-sample.json").then((m) => m.default as Food[]),
 };
@@ -152,7 +165,12 @@ export const api = {
   auth: {
     session: (): Promise<SessionInfo> =>
       USE_MOCKS
-        ? mock(async (u) => ({ userId: u, email: `${u}@demo.nutriplan.app`, mode: "local" as const, hasProfile: true }))
+        ? mock(async (u) => ({
+            userId: u,
+            email: `${u}@demo.nutriplan.app`,
+            mode: "local" as const,
+            hasProfile: true,
+          }))
         : request("/api/auth/session"),
     login: (identifier: string): Promise<SessionInfo> =>
       USE_MOCKS
@@ -162,24 +180,37 @@ export const api = {
             return { userId: u, email: `${u}@demo.nutriplan.app`, mode: "local" as const, hasProfile: true };
           })
         : post("/api/auth/login", { identifier }),
-    logout: (): Promise<void> => (USE_MOCKS ? mock(async () => undefined) : request("/api/auth/logout", { method: "POST" })),
+    logout: (): Promise<void> =>
+      USE_MOCKS ? mock(async () => undefined) : request("/api/auth/logout", { method: "POST" }),
   },
 
   profile: {
     get: (): Promise<ProfileBundle> =>
       USE_MOCKS
-        ? mock(async (u) => ({ profile: await mocks.profile(u), constraints: await mocks.constraints(u), targets: await mocks.targets(u) }))
+        ? mock(async (u) => ({
+            profile: await mocks.profile(u),
+            constraints: await mocks.constraints(u),
+            targets: await mocks.targets(u),
+          }))
         : request("/api/profile"),
     save: (input: Omit<UserProfile, "userId">): Promise<ProfileBundle> =>
       USE_MOCKS
-        ? mock(async (u) => ({ profile: { ...(await mocks.profile(u)), ...input }, constraints: await mocks.constraints(u), targets: await mocks.targets(u) }))
+        ? mock(async (u) => ({
+            profile: { ...(await mocks.profile(u)), ...input },
+            constraints: await mocks.constraints(u),
+            targets: await mocks.targets(u),
+          }))
         : post("/api/profile", input),
   },
 
   foods: {
     search: (q: string, limit = 20): Promise<Food[]> =>
       USE_MOCKS
-        ? mock(async () => (await mocks.foods()).filter((f) => f.name.toLowerCase().includes(q.toLowerCase())).slice(0, limit))
+        ? mock(async () =>
+            (await mocks.foods())
+              .filter((f) => f.name.toLowerCase().includes(q.toLowerCase()))
+              .slice(0, limit),
+          )
         : request(`/api/foods/search?q=${encodeURIComponent(q)}&limit=${limit}`),
   },
 
@@ -214,11 +245,26 @@ export const api = {
       USE_MOCKS
         ? mock(async (u) => {
             const events = await mocks.events(u);
-            return { run: { runId, userId: u, trigger: "onboarding", reason: "Onboarding plan", status: "done", createdAt: events[0].at }, events };
+            return {
+              run: {
+                runId,
+                userId: u,
+                trigger: "onboarding",
+                reason: "Onboarding plan",
+                status: "done",
+                createdAt: events[0].at,
+              },
+              events,
+            };
           })
         : request(`/api/agents/runs/${encodeURIComponent(runId)}`),
     /** Live event stream. In mock mode the saved negotiation is replayed with realistic pacing. */
-    subscribe(runId: string, onEvent: (e: AgentEvent) => void, onDone: () => void, onError?: (err: Error) => void): () => void {
+    subscribe(
+      runId: string,
+      onEvent: (e: AgentEvent) => void,
+      onDone: () => void,
+      onError?: (err: Error) => void,
+    ): () => void {
       if (USE_MOCKS) {
         let cancelled = false;
         (async () => {
@@ -236,7 +282,9 @@ export const api = {
         };
       }
       const source = new EventSource(`/api/agents/stream?runId=${encodeURIComponent(runId)}`);
-      source.addEventListener("agent_event", (msg) => onEvent(JSON.parse((msg as MessageEvent).data) as AgentEvent));
+      source.addEventListener("agent_event", (msg) =>
+        onEvent(JSON.parse((msg as MessageEvent).data) as AgentEvent),
+      );
       source.addEventListener("done", () => {
         source.close();
         onDone();
@@ -271,7 +319,10 @@ export const api = {
               entry,
               votes: {
                 a: { model: "claude-sonnet", items: entry.items },
-                b: { model: "gemini-flash", items: entry.items.map((i) => ({ ...i, grams: Math.round(i.grams * 0.9) })) },
+                b: {
+                  model: "gemini-flash",
+                  items: entry.items.map((i) => ({ ...i, grams: Math.round(i.grams * 0.9) })),
+                },
                 agreement: entry.visionAgreement ?? 0.84,
               },
             };
@@ -287,14 +338,23 @@ export const api = {
     create: (body: CreateReadingRequest): Promise<CreateReadingResponse> =>
       USE_MOCKS
         ? mock(async (u) => ({
-            reading: { readingId: "mock", userId: u, type: body.type, value: body.value, ...(body.value2 ? { value2: body.value2 } : {}), unit: body.type === "weight" ? "kg" : body.type === "bp" ? "mmHg" : "mg/dL", takenAt: body.takenAt ?? new Date().toISOString() },
+            reading: {
+              readingId: "mock",
+              userId: u,
+              type: body.type,
+              value: body.value,
+              ...(body.value2 ? { value2: body.value2 } : {}),
+              unit: body.type === "weight" ? "kg" : body.type === "bp" ? "mmHg" : "mg/dL",
+              takenAt: body.takenAt ?? new Date().toISOString(),
+            },
             monitor: await mocks.monitor(u),
           }))
         : post("/api/readings", body),
   },
 
   trends: {
-    get: (type: ReadingType): Promise<Trend> => (USE_MOCKS ? mock(async () => mocks.trend(type)) : request(`/api/trends?type=${type}`)),
+    get: (type: ReadingType): Promise<Trend> =>
+      USE_MOCKS ? mock(async () => mocks.trend(type)) : request(`/api/trends?type=${type}`),
   },
 
   summary: {
@@ -306,18 +366,47 @@ export const api = {
     send: (body: CoachRequest): Promise<CoachResponse> =>
       USE_MOCKS
         ? mock(async () => ({
-            reply: "Great question. Your plan already covers that: dinner tonight is high in fiber and under your sodium cap. Want me to ask Chef for a swap?",
+            reply:
+              "Great question. Your plan already covers that: dinner tonight is high in fiber and under your sodium cap. Want me to ask Chef for a swap?",
             replanRunId: null,
           }))
         : post("/api/coach", body),
   },
 
   monitor: {
-    run: (): Promise<MonitorResult> => (USE_MOCKS ? mock(mocks.monitor) : request("/api/monitor/run", { method: "POST" })),
+    run: (): Promise<MonitorResult> =>
+      USE_MOCKS ? mock(mocks.monitor) : request("/api/monitor/run", { method: "POST" }),
   },
 
   demo: {
-    reset: (user: MockUser): Promise<void> => (USE_MOCKS ? mock(async () => undefined) : post("/api/demo/reset", { user })),
+    reset: (user: MockUser): Promise<void> =>
+      USE_MOCKS ? mock(async () => undefined) : post("/api/demo/reset", { user }),
+  },
+
+  /** Kroger: real shelf prices and "send to cart". Routes answer 503 { code: "kroger_not_configured" } without keys. */
+  kroger: {
+    status: (): Promise<KrogerStatus> =>
+      USE_MOCKS
+        ? mock(async () => ({ configured: false, connected: false, location: null }))
+        : request("/api/kroger/status"),
+    locations: (zip: string): Promise<{ locations: KrogerLocation[] }> =>
+      USE_MOCKS
+        ? mock(async () => ({ locations: [] }))
+        : request(`/api/kroger/locations?zip=${encodeURIComponent(zip)}`),
+    setLocation: (location: { locationId: string; name: string; zip: string }): Promise<void> =>
+      USE_MOCKS ? mock(async () => undefined) : post("/api/kroger/location", location),
+    /** Browser navigation target that starts the Kroger OAuth flow (ends back on /grocery?kroger=connected). */
+    connectUrl: "/api/kroger/connect",
+    disconnect: (): Promise<void> =>
+      USE_MOCKS ? mock(async () => undefined) : request("/api/kroger/connect", { method: "DELETE" }),
+    price: (): Promise<KrogerPriceResponse> =>
+      USE_MOCKS
+        ? mock(async () => ({ items: [], totalUsd: 0, matched: 0, unmatched: [] }))
+        : post("/api/kroger/price", {}),
+    cart: (items?: KrogerCartItemInput[]): Promise<KrogerCartResponse> =>
+      USE_MOCKS
+        ? mock(async () => ({ added: 0, skipped: [] }))
+        : post("/api/kroger/cart", items ? { items } : {}),
   },
 };
 

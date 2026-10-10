@@ -1,6 +1,6 @@
 "use client";
 
-import { TrendingDown, TrendingUp } from "lucide-react";
+import { Minus, TrendingDown, TrendingUp } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { TrendChart } from "@/components/charts/TrendChart";
@@ -20,10 +20,38 @@ import { fmtNumber } from "@/lib/utils";
 import type { ReadingType, Trend } from "@/types/contracts";
 
 type TrendTab = "weight" | "glucose_fasting" | "bp";
-const TABS: { id: TrendTab; label: string; testId: string; unit: string }[] = [
-  { id: "weight", label: "Weight", testId: "trend-tab-weight", unit: "kg" },
-  { id: "glucose_fasting", label: "Glucose", testId: "trend-tab-glucose", unit: "mg/dL" },
-  { id: "bp", label: "Blood pressure", testId: "trend-tab-bp", unit: "mmHg" },
+const TABS: {
+  id: TrendTab;
+  label: string;
+  testId: string;
+  unit: string;
+  metric: string;
+  decimals: number;
+}[] = [
+  {
+    id: "weight",
+    label: "Weight",
+    testId: "trend-tab-weight",
+    unit: "kg",
+    metric: "Your weight",
+    decimals: 1,
+  },
+  {
+    id: "glucose_fasting",
+    label: "Glucose",
+    testId: "trend-tab-glucose",
+    unit: "mg/dL",
+    metric: "Your fasting glucose",
+    decimals: 0,
+  },
+  {
+    id: "bp",
+    label: "Blood pressure",
+    testId: "trend-tab-bp",
+    unit: "mmHg",
+    metric: "Your blood pressure",
+    decimals: 0,
+  },
 ];
 const ALERT_LABEL: Record<Trend["alert"], string> = {
   none: "On track",
@@ -40,6 +68,27 @@ const ALERT_VARIANT: Record<Trend["alert"], "secondary" | "warning" | "danger" |
   too_fast: "danger",
 };
 
+/** One plain sentence from the alert and the weekly slope only. The numbers are the server's. */
+function headline(tab: (typeof TABS)[number], trend: Trend): string {
+  const slope = trend.slopePerWeek;
+  const rate = `about ${fmtNumber(Math.abs(slope), { maximumFractionDigits: tab.decimals })} ${tab.unit} per week`;
+  const direction = slope < 0 ? "down" : "up";
+  switch (trend.alert) {
+    case "stalled":
+      return `${tab.metric} has been flat lately: the trend moves ${rate}, which is about nothing.`;
+    case "rising":
+      return `${tab.metric} is rising ${rate}.`;
+    case "falling":
+      return `${tab.metric} is falling ${rate}.`;
+    case "too_fast":
+      return `${tab.metric} is changing too fast: ${direction} ${rate}.`;
+    default:
+      return Math.abs(slope) < 0.05
+        ? `${tab.metric} is holding steady.`
+        : `${tab.metric} is on track, moving ${direction} ${rate}.`;
+  }
+}
+
 export default function TrendsPage() {
   const profile = useProfile();
   const [showAll, setShowAll] = useState(false);
@@ -50,7 +99,7 @@ export default function TrendsPage() {
     <div className="space-y-6">
       <PageHeader
         title="Trends"
-        subtitle="A Kalman filter separates your true trend from day to day noise."
+        subtitle="Readings bounce around day to day. The math underneath finds the real direction and tells Monitor when to act."
         actions={
           !hasConditions && (
             <div className="flex items-center gap-2">
@@ -72,7 +121,7 @@ export default function TrendsPage() {
         </TabsList>
         {tabs.map((tab) => (
           <TabsContent key={tab.id} value={tab.id}>
-            <TrendPanel type={tab.id} unit={tab.unit} />
+            <TrendPanel tab={tab} />
           </TabsContent>
         ))}
       </Tabs>
@@ -80,16 +129,16 @@ export default function TrendsPage() {
   );
 }
 
-function TrendPanel({ type, unit }: { type: TrendTab; unit: string }) {
-  const trend = useTrend(type as ReadingType);
+function TrendPanel({ tab }: { tab: (typeof TABS)[number] }) {
+  const trend = useTrend(tab.id as ReadingType);
 
   if (trend.isLoading) return <LoadingState variant="chart" />;
   if (trend.error) return <ErrorState error={trend.error} onRetry={() => void trend.refetch()} />;
   if (!trend.data || trend.data.points.length === 0) {
     return (
       <EmptyState
-        title="No readings yet"
-        body="Log a few readings and the trend appears here."
+        title={`No ${tab.label.toLowerCase()} readings yet`}
+        body="Log a few readings and the trend line appears here."
         action={
           <Button asChild size="sm">
             <Link href="/log/reading">Log a reading</Link>
@@ -100,42 +149,50 @@ function TrendPanel({ type, unit }: { type: TrendTab; unit: string }) {
   }
   const data = trend.data;
   const slope = data.slopePerWeek;
-  const Icon = slope >= 0 ? TrendingUp : TrendingDown;
+  const Icon = Math.abs(slope) < 0.05 ? Minus : slope > 0 ? TrendingUp : TrendingDown;
   const last = data.points[data.points.length - 1];
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-wrap items-center gap-3">
-        <Badge data-testid="trend-alert" data-alert={data.alert} variant={ALERT_VARIANT[data.alert]}>
-          {ALERT_LABEL[data.alert]}
-        </Badge>
-        <span className="flex items-center gap-1 text-sm text-ink-muted">
-          <Icon className="h-4 w-4" aria-hidden="true" />
-          {fmtNumber(slope, { signDisplay: "always", maximumFractionDigits: 2 })} {unit} per week
-        </span>
-        <span className="text-sm text-ink-muted">
-          Trend now: {fmtNumber(last.filtered, { maximumFractionDigits: 1 })} {unit}
-        </span>
+      <div className="space-y-2">
+        <p className="text-base font-semibold sm:text-lg" data-testid="trend-headline">
+          {headline(tab, data)}
+        </p>
+        <div className="flex flex-wrap items-center gap-3 text-sm text-ink-muted">
+          <Badge data-testid="trend-alert" data-alert={data.alert} variant={ALERT_VARIANT[data.alert]}>
+            {ALERT_LABEL[data.alert]}
+          </Badge>
+          <span className="flex items-center gap-1 tabular-nums">
+            <Icon className="h-4 w-4" aria-hidden="true" />
+            {fmtNumber(slope, { signDisplay: "always", maximumFractionDigits: 2 })} {tab.unit} per week
+          </span>
+          <span className="tabular-nums">
+            Trend now: {fmtNumber(last.filtered, { maximumFractionDigits: 1 })} {tab.unit}
+          </span>
+        </div>
       </div>
-      <Card>
+      <Card className="border-0 shadow-sm ring-1 ring-border">
         <CardContent className="p-2 sm:p-4">
-          <TrendChart points={data.points} unit={unit} />
+          <TrendChart points={data.points} unit={tab.unit} />
         </CardContent>
       </Card>
-      <ul className="grid gap-2 text-sm text-ink-muted sm:grid-cols-3">
-        <li className="flex items-start gap-2 rounded-lg bg-surface-sunken px-3 py-2">
-          <span className="mt-1.5 h-2.5 w-2.5 shrink-0 rounded-full bg-ink-muted" aria-hidden="true" />
-          Dots are the readings you logged, noise included.
-        </li>
-        <li className="flex items-start gap-2 rounded-lg bg-surface-sunken px-3 py-2">
-          <span className="mt-2 h-0.5 w-4 shrink-0 rounded bg-brand" aria-hidden="true" />
-          The line is the filtered trend: where your body really is.
-        </li>
-        <li className="flex items-start gap-2 rounded-lg bg-surface-sunken px-3 py-2">
-          <span className="mt-1 h-3 w-4 shrink-0 rounded bg-brand/20" aria-hidden="true" />
-          The band is the range the trend is likely in.
-        </li>
-      </ul>
+      <p
+        className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-sm text-ink-muted"
+        aria-label="Chart legend"
+      >
+        <span className="flex items-center gap-1.5">
+          <span className="h-2.5 w-2.5 shrink-0 rounded-full bg-ink-muted" aria-hidden="true" />
+          Dots = what you logged.
+        </span>
+        <span className="flex items-center gap-1.5">
+          <span className="h-0.5 w-5 shrink-0 rounded bg-brand" aria-hidden="true" />
+          Line = your real trend after removing daily noise.
+        </span>
+        <span className="flex items-center gap-1.5">
+          <span className="h-3 w-5 shrink-0 rounded bg-brand/20" aria-hidden="true" />
+          Shaded = where the truth likely is.
+        </span>
+      </p>
     </div>
   );
 }

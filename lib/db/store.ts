@@ -19,6 +19,7 @@ import type {
   Reading,
   UserProfile,
 } from "@/types/contracts";
+import type { KrogerConnection } from "@/lib/kroger/types";
 
 export interface AgentLogRecord {
   runId: string | null;
@@ -69,9 +70,15 @@ export interface Store {
 
   // Logs and readings
   addFoodLog(entry: FoodLogEntry): Promise<void>;
-  listFoodLogs(userId: string, opts?: { from?: string; to?: string; limit?: number }): Promise<FoodLogEntry[]>;
+  listFoodLogs(
+    userId: string,
+    opts?: { from?: string; to?: string; limit?: number },
+  ): Promise<FoodLogEntry[]>;
   addReading(reading: Reading): Promise<void>;
-  listReadings(userId: string, opts?: { type?: Reading["type"]; from?: string; limit?: number }): Promise<Reading[]>;
+  listReadings(
+    userId: string,
+    opts?: { type?: Reading["type"]; from?: string; limit?: number },
+  ): Promise<Reading[]>;
   addMealRating(userId: string, rating: MealRating): Promise<void>;
   listMealRatings(userId: string): Promise<MealRating[]>;
 
@@ -85,6 +92,11 @@ export interface Store {
   /** Resolves with events appended after `afterEventId` (or any new event) or an empty list on timeout. */
   waitForEvents(runId: string, afterCount: number, timeoutMs: number): Promise<AgentEvent[]>;
   addAgentLog(log: AgentLogRecord): Promise<void>;
+
+  // Kroger connection (tokens + chosen store). Type lives in lib/kroger/types.ts until the Lead promotes it.
+  getKrogerConnection(userId: string): Promise<KrogerConnection | null>;
+  saveKrogerConnection(userId: string, conn: KrogerConnection): Promise<void>;
+  deleteKrogerConnection(userId: string): Promise<void>;
 
   // Demo helpers
   listUserIds(): Promise<string[]>;

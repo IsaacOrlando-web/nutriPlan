@@ -94,6 +94,10 @@ export function BudgetSlider({ value, showInsights = true, className }: BudgetSl
 
   return (
     <div className={cn("space-y-3", className)}>
+      <p className="text-sm text-ink-muted" data-testid="budget-explainer">
+        Drag to see what each weekly budget buys. The curve is computed by the optimizer, not guessed: higher
+        means a week that fits your rules and taste better.
+      </p>
       <div className="flex items-center justify-between gap-2">
         <Label htmlFor="budget-slider">Weekly budget</Label>
         <span className="text-lg font-bold tabular-nums text-agent-budget">
@@ -104,7 +108,10 @@ export function BudgetSlider({ value, showInsights = true, className }: BudgetSl
 
       {/* Curve: the real chart once computed, a skeleton bar while the optimizer sweeps the budgets. */}
       {summary ? (
-        <BudgetCurveChart curve={summary} current={local} applied={value} />
+        <>
+          <BudgetCurveChart curve={summary} current={local} applied={value} />
+          <CurveLegend />
+        </>
       ) : curve.error ? (
         <ErrorState
           error={curve.error}
@@ -180,6 +187,30 @@ export function BudgetSlider({ value, showInsights = true, className }: BudgetSl
         <BudgetInsights insights={summary.insights} />
       )}
     </div>
+  );
+}
+
+/** Words for the three regions of the chart, so nobody has to guess what the shading means. */
+function CurveLegend() {
+  return (
+    <ul className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-ink-muted" aria-label="Chart legend">
+      <li className="flex items-center gap-1.5">
+        <span className="h-3 w-4 rounded-sm bg-danger/20" aria-hidden="true" />
+        No safe plan
+      </li>
+      <li className="flex items-center gap-1.5">
+        <span className="h-3 w-4 rounded-sm bg-brand/15" aria-hidden="true" />
+        Sweet spot
+      </li>
+      <li className="flex items-center gap-1.5">
+        <span className="h-3 w-4 rounded-sm bg-ink-subtle/30" aria-hidden="true" />
+        No extra benefit
+      </li>
+      <li className="flex items-center gap-1.5">
+        <span className="h-0.5 w-4 rounded bg-brand" aria-hidden="true" />
+        Plan quality, 0 to 100
+      </li>
+    </ul>
   );
 }
 

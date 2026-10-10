@@ -5,7 +5,11 @@
     "agent": "orchestrator",
     "kind": "proposal",
     "text": "New plan for Alex: lose goal, $50/week, 3 meals a day. Doctor first.",
-    "at": "2026-10-09T15:00:01.400Z"
+    "at": "2026-10-09T15:00:00.000Z",
+    "data": {
+      "trigger": "onboarding",
+      "reason": "Onboarding plan"
+    }
   },
   {
     "eventId": "alex-ev-02",
@@ -13,7 +17,7 @@
     "agent": "doctor",
     "kind": "tool_call",
     "text": "Reading guidelines.json for the rules that apply",
-    "at": "2026-10-09T15:00:02.800Z",
+    "at": "2026-10-09T15:00:01.400Z",
     "data": {
       "tool": "buildConstraints"
     }
@@ -23,8 +27,8 @@
     "runId": "alex-run-0001",
     "agent": "doctor",
     "kind": "proposal",
-    "text": "Floors and caps are set: at least 1500 kcal, under 2300 mg sodium, 29 g fiber.",
-    "at": "2026-10-09T15:00:04.200Z",
+    "text": "DGA floors and caps: at least 1500 kcal, under 2300 mg sodium, 29 g fiber.",
+    "at": "2026-10-09T15:00:02.800Z",
     "data": {
       "constraints": {
         "minCaloriesPerDay": 1500,
@@ -76,18 +80,23 @@
     "runId": "alex-run-0001",
     "agent": "doctor",
     "kind": "proposal",
-    "text": "Allergy filter active: no peanut anywhere in the plan.",
-    "at": "2026-10-09T15:00:05.600Z"
+    "text": "Allergy and restriction filter active: no peanut. Excluded tags: peanut.",
+    "at": "2026-10-09T15:00:04.200Z",
+    "data": {
+      "excludedFoodTags": [
+        "peanut"
+      ]
+    }
   },
   {
     "eventId": "alex-ev-05",
     "runId": "alex-run-0001",
     "agent": "chef",
     "kind": "tool_call",
-    "text": "Searching the food database for ingredients",
-    "at": "2026-10-09T15:00:07.000Z",
+    "text": "Opening the recipe book and scoring every dish for Alex",
+    "at": "2026-10-09T15:00:05.600Z",
     "data": {
-      "tool": "searchFoods"
+      "tool": "getMealTemplates"
     }
   },
   {
@@ -95,10 +104,11 @@
     "runId": "alex-run-0001",
     "agent": "chef",
     "kind": "proposal",
-    "text": "I have 32 ideas: chicken, mexican, rice bowls with real variety. Let me cook!",
-    "at": "2026-10-09T15:00:08.400Z",
+    "text": "I have 33 ideas: chicken, mexican, rice bowls with real variety. Let me cook!",
+    "at": "2026-10-09T15:00:07.000Z",
     "data": {
-      "poolSize": 32
+      "poolSize": 33,
+      "source": "templates"
     }
   },
   {
@@ -107,9 +117,10 @@
     "agent": "budget",
     "kind": "tool_call",
     "text": "Pricing every candidate with computeTotals",
-    "at": "2026-10-09T15:00:09.800Z",
+    "at": "2026-10-09T15:00:08.400Z",
     "data": {
-      "tool": "computeTotals"
+      "tool": "computeTotals",
+      "candidates": 33
     }
   },
   {
@@ -117,10 +128,12 @@
     "runId": "alex-run-0001",
     "agent": "budget",
     "kind": "objection",
-    "text": "Chicken thigh, skinless, roasted alone eats $12.80 of the $50. Swap half of it for eggs and black beans?",
-    "at": "2026-10-09T15:00:11.200Z",
+    "text": "Chicken breast, roasted alone eats $8.80 of the $50 across the pool. Lovely, so is rent. Once a week?",
+    "at": "2026-10-09T15:00:09.800Z",
     "data": {
-      "foodId": "chicken_thigh"
+      "foodId": "chicken_breast",
+      "poolCostUsd": 8.8,
+      "swapFoodId": null
     }
   },
   {
@@ -128,37 +141,107 @@
     "runId": "alex-run-0001",
     "agent": "chef",
     "kind": "concession",
-    "text": "Fine, I keep chicken thigh once and lean on eggs and black beans for the rest. Flavor stays.",
-    "at": "2026-10-09T15:00:12.600Z"
+    "text": "Fine, I keep chicken breast once and lean on beans and eggs for the rest. Flavor stays.",
+    "at": "2026-10-09T15:00:11.200Z"
   },
   {
     "eventId": "alex-ev-10",
     "runId": "alex-run-0001",
     "agent": "doctor",
-    "kind": "objection",
-    "text": "One snack idea is 40% saturated fat. Out of the pool.",
-    "at": "2026-10-09T15:00:14.000Z",
+    "kind": "proposal",
+    "text": "Pool reviewed: no idea breaks a per meal cap at its smallest portion. Approved.",
+    "at": "2026-10-09T15:00:12.600Z",
     "data": {
-      "removed": 2
+      "tool": "reviewPool",
+      "removed": 0
     }
   },
   {
     "eventId": "alex-ev-11",
     "runId": "alex-run-0001",
-    "agent": "chef",
-    "kind": "concession",
-    "text": "Removed. I swap in a yogurt bowl with pumpkin seeds instead.",
-    "at": "2026-10-09T15:00:15.400Z"
+    "agent": "orchestrator",
+    "kind": "tool_call",
+    "text": "First solve: budget and protein are the scarce resources (budget binding at $50; protein 23 g under target on 7 days). Chef: 6 new meals.",
+    "at": "2026-10-09T15:00:14.000Z",
+    "data": {
+      "tool": "optimizePlan",
+      "solve": 1,
+      "poolSize": 33,
+      "solveMs": 4598,
+      "brief": {
+        "count": 6,
+        "feasible": true,
+        "weeklyBudgetUsd": 50,
+        "weeklyCostUsd": 49.93,
+        "bindingConstraints": [
+          "weekly_budget"
+        ],
+        "budgetBinding": true,
+        "proteinTargetG": 179,
+        "proteinShortDays": 7,
+        "proteinGapG": 23,
+        "sodiumSharePct": 59,
+        "costPerType": {
+          "breakfast": 1.65,
+          "lunch": 2.72,
+          "dinner": 2.76
+        },
+        "typeCounts": {
+          "dinner": 3,
+          "lunch": 3
+        },
+        "maxMealCostUsd": 2.15,
+        "minProteinG": 65,
+        "maxSodiumMg": null,
+        "maxCarbsG": null,
+        "maxGlycemicLoad": null,
+        "minFiberG": null,
+        "minPotassiumMg": null,
+        "styles": [
+          "chicken",
+          "mexican",
+          "rice bowls"
+        ],
+        "scarce": [
+          "budget",
+          "protein"
+        ],
+        "needs": [
+          "high protein (at least 65 g)",
+          "under $2.15"
+        ],
+        "text": "First solve: budget and protein are the scarce resources (budget binding at $50; protein 23 g under target on 7 days). Chef: 6 new meals."
+      }
+    }
   },
   {
     "eventId": "alex-ev-12",
     "runId": "alex-run-0001",
-    "agent": "orchestrator",
-    "kind": "tool_call",
-    "text": "Running the optimizer: 7 days, 3 slots a day, integer servings",
-    "at": "2026-10-09T15:00:16.800Z",
+    "agent": "chef",
+    "kind": "proposal",
+    "text": "Brief received: 6 high-protein meals under $2.15. Here they come: one-pot chicken and rice, extra chicken thigh and sardine tomato pasta.",
+    "at": "2026-10-09T15:00:15.400Z",
     "data": {
-      "tool": "optimizePlan"
+      "brief": {
+        "needs": [
+          "high protein (at least 65 g)",
+          "under $2.15"
+        ],
+        "typeCounts": {
+          "dinner": 3,
+          "lunch": 3
+        }
+      },
+      "columns": [
+        "One-pot chicken and rice, extra chicken thigh",
+        "Sardine tomato pasta",
+        "Chicken thigh with rice and green beans, extra chicken thigh",
+        "Chicken with pinto beans and rice, extra chicken thigh",
+        "Ginger soy chicken rice bowl, extra chicken thigh",
+        "Lentil spinach curry"
+      ],
+      "source": "templates",
+      "count": 6
     }
   },
   {
@@ -166,11 +249,20 @@
     "runId": "alex-run-0001",
     "agent": "orchestrator",
     "kind": "proposal",
-    "text": "Optimizer solved in 8.3 s. Weekly cost $49.95.",
-    "at": "2026-10-09T15:00:18.200Z",
+    "text": "Second solve used 3 of Chef's 6 new meals; protein deviation went from 23 g to 8 g. Solved in 6.1 s.",
+    "at": "2026-10-09T15:00:16.800Z",
     "data": {
-      "solveMs": 8330,
-      "weeklyCostUsd": 49.95
+      "solve": 2,
+      "usedColumns": 3,
+      "offeredColumns": 6,
+      "kept": true,
+      "proteinDeviationBeforeG": 23,
+      "proteinDeviationAfterG": 8,
+      "weeklyCostBeforeUsd": 49.93,
+      "weeklyCostAfterUsd": 49.73,
+      "solveMs": 6103,
+      "solveSec": 6.1,
+      "shadowPricesMs": 0
     }
   },
   {
@@ -179,7 +271,7 @@
     "agent": "doctor",
     "kind": "tool_call",
     "text": "Re-checking every hard rule on the final plan",
-    "at": "2026-10-09T15:00:19.600Z",
+    "at": "2026-10-09T15:00:18.200Z",
     "data": {
       "tool": "verifyPlan",
       "violations": 0
@@ -191,21 +283,24 @@
     "agent": "doctor",
     "kind": "proposal",
     "text": "All seven days pass every rule. I am satisfied.",
-    "at": "2026-10-09T15:00:21.000Z"
+    "at": "2026-10-09T15:00:19.600Z",
+    "data": {
+      "violations": 0
+    }
   },
   {
     "eventId": "alex-ev-16",
     "runId": "alex-run-0001",
     "agent": "budget",
     "kind": "proposal",
-    "text": "Raising your budget by $5 would let Chef add chipotle shredded chicken tostadas twice",
-    "at": "2026-10-09T15:00:22.400Z",
+    "text": "Budget is the binding constraint: $49.73 of your $50 is working. Every extra dollar buys variety.",
+    "at": "2026-10-09T15:00:21.000Z",
     "data": {
-      "shadowPrice": {
-        "constraint": "weekly_budget",
-        "value": 12.052,
-        "humanText": "Raising your budget by $5 would let Chef add chipotle shredded chicken tostadas twice"
-      }
+      "bindingConstraints": [
+        "weekly_budget",
+        "min_fiber"
+      ],
+      "weeklyCostUsd": 49.73
     }
   },
   {
@@ -213,10 +308,11 @@
     "runId": "alex-run-0001",
     "agent": "budget",
     "kind": "proposal",
-    "text": "Grocery list ready: 33 items, $49.95 total.",
-    "at": "2026-10-09T15:00:23.800Z",
+    "text": "Grocery list ready: 24 items, $49.73 total.",
+    "at": "2026-10-09T15:00:22.400Z",
     "data": {
-      "items": 33
+      "items": 24,
+      "weeklyCostUsd": 49.73
     }
   },
   {
@@ -225,17 +321,28 @@
     "agent": "monitor",
     "kind": "proposal",
     "text": "I will watch weight, glucose and logs daily and replan when the trend says so.",
-    "at": "2026-10-09T15:00:25.200Z"
+    "at": "2026-10-09T15:00:23.800Z"
   },
   {
     "eventId": "alex-ev-19",
     "runId": "alex-run-0001",
     "agent": "orchestrator",
     "kind": "decision",
-    "text": "Plan v1 approved: 7 days, $49.95, zero rule violations.",
-    "at": "2026-10-09T15:00:26.600Z",
+    "text": "Plan v1 approved: 7 days, $49.73, zero rule violations.",
+    "at": "2026-10-09T15:00:25.200Z",
     "data": {
-      "planId": "alex-plan-0001"
+      "planId": "alex-plan-0001",
+      "version": 1,
+      "bestEffort": false,
+      "concededAny": false,
+      "timingMs": {
+        "firstSolveMs": 4602,
+        "chefColumnsMs": 1,
+        "elapsedBeforeSecondSolveMs": 4610,
+        "secondSolveMs": 6104,
+        "shadowPricesMs": 0,
+        "shadowPricesDeferred": 1
+      }
     }
   }
 ]

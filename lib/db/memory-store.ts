@@ -17,7 +17,15 @@ import type {
   Reading,
   UserProfile,
 } from "@/types/contracts";
-import { newId, nowIso, type AgentLogRecord, type FoodSearchOptions, type MealRating, type Store } from "./store";
+import {
+  newId,
+  nowIso,
+  type AgentLogRecord,
+  type FoodSearchOptions,
+  type MealRating,
+  type Store,
+} from "./store";
+import type { KrogerConnection } from "@/lib/kroger/types";
 import foodsJson from "@/scripts/data/foods.json";
 import templatesJson from "@/scripts/data/meal-templates.json";
 import { DEMO_PROFILES, demoReadings, type DemoUserKey } from "./seed/demo-users";
@@ -31,6 +39,8 @@ interface UserBucket {
   logs: FoodLogEntry[];
   readings: Reading[];
   ratings: MealRating[];
+  /** Optional so snapshots written before the Kroger integration still load. */
+  kroger?: KrogerConnection | null;
 }
 
 interface Snapshot {
@@ -44,7 +54,16 @@ interface Snapshot {
 }
 
 function emptyBucket(): UserBucket {
-  return { profile: null, constraints: null, targets: null, tdee: null, plans: [], logs: [], readings: [], ratings: [] };
+  return {
+    profile: null,
+    constraints: null,
+    targets: null,
+    tdee: null,
+    plans: [],
+    logs: [],
+    readings: [],
+    ratings: [],
+  };
 }
 
 type Waiter = { afterCount: number; resolve: (events: AgentEvent[]) => void; timer: NodeJS.Timeout };
@@ -299,6 +318,20 @@ export class MemoryStore implements Store {
   async addAgentLog(log: AgentLogRecord) {
     this.data.agentLogs.push(log);
     if (this.data.agentLogs.length > 500) this.data.agentLogs.splice(0, this.data.agentLogs.length - 500);
+    this.persist();
+  }
+
+  // ---------------------------------------------------------------- kroger
+  async getKrogerConnection(userId: string) {
+    return this.data.users[userId]?.kroger ?? null;
+  }
+  async saveKrogerConnection(userId: string, conn: KrogerConnection) {
+    this.bucket(userId).kroger = conn;
+    this.persist();
+  }
+  async deleteKrogerConnection(userId: string) {
+    const b = this.data.users[userId];
+    if (b) b.kroger = null;
     this.persist();
   }
 
