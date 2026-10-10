@@ -1,0 +1,2286 @@
+[
+  {
+    "candidateId": "veggie_eggs_toast",
+    "type": "breakfast",
+    "name": "Veggie scrambled eggs with toast",
+    "cuisine": "American",
+    "recipeSteps": [
+      "Whisk eggs with a pinch of pepper",
+      "Wilt spinach in a nonstick pan, add eggs and scramble softly",
+      "Serve with toast and sliced tomato"
+    ],
+    "prepMinutes": 10,
+    "ingredients": [
+      {
+        "foodId": "eggs",
+        "minServings": 2,
+        "maxServings": 3
+      },
+      {
+        "foodId": "spinach",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "tomato",
+        "minServings": 0,
+        "maxServings": 1
+      },
+      {
+        "foodId": "ww_bread",
+        "minServings": 1,
+        "maxServings": 2
+      }
+    ],
+    "pitch": ""
+  },
+  {
+    "candidateId": "overnight_oats_berries",
+    "type": "breakfast",
+    "name": "Overnight oats with blueberries",
+    "cuisine": "American",
+    "recipeSteps": [
+      "Stir oats, chia and milk in a jar",
+      "Top with blueberries and refrigerate overnight",
+      "Eat cold or warm for 1 minute"
+    ],
+    "prepMinutes": 5,
+    "ingredients": [
+      {
+        "foodId": "oats",
+        "minServings": 1,
+        "maxServings": 2
+      },
+      {
+        "foodId": "milk",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "blueberries",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "chia_seeds",
+        "minServings": 1,
+        "maxServings": 1
+      }
+    ],
+    "pitch": ""
+  },
+  {
+    "candidateId": "yogurt_parfait",
+    "type": "breakfast",
+    "name": "Greek yogurt parfait with walnuts",
+    "cuisine": "American",
+    "recipeSteps": [
+      "Layer yogurt and sliced strawberries",
+      "Top with oats and chopped walnuts"
+    ],
+    "prepMinutes": 5,
+    "ingredients": [
+      {
+        "foodId": "greek_yogurt",
+        "minServings": 1,
+        "maxServings": 2
+      },
+      {
+        "foodId": "strawberries",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "walnuts",
+        "minServings": 0,
+        "maxServings": 1
+      },
+      {
+        "foodId": "oats",
+        "minServings": 0,
+        "maxServings": 1
+      }
+    ],
+    "pitch": ""
+  },
+  {
+    "candidateId": "ranchero_eggs",
+    "type": "breakfast",
+    "name": "Ranchero eggs with black beans",
+    "cuisine": "Mexican",
+    "recipeSteps": [
+      "Warm tortillas and beans",
+      "Fry eggs in a light film of oil",
+      "Top tortillas with beans, eggs, salsa and crumbled cheese"
+    ],
+    "prepMinutes": 15,
+    "ingredients": [
+      {
+        "foodId": "eggs",
+        "minServings": 2,
+        "maxServings": 3
+      },
+      {
+        "foodId": "corn_tortilla",
+        "minServings": 1,
+        "maxServings": 2
+      },
+      {
+        "foodId": "black_beans",
+        "minServings": 1,
+        "maxServings": 2
+      },
+      {
+        "foodId": "fresh_salsa",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "farmer_cheese",
+        "minServings": 0,
+        "maxServings": 1
+      }
+    ],
+    "pitch": ""
+  },
+  {
+    "candidateId": "pb_banana_oatmeal",
+    "type": "breakfast",
+    "name": "Peanut butter banana oatmeal",
+    "cuisine": "American",
+    "recipeSteps": [
+      "Simmer oats in milk for 4 minutes",
+      "Stir in peanut butter",
+      "Top with sliced banana"
+    ],
+    "prepMinutes": 8,
+    "ingredients": [
+      {
+        "foodId": "oats",
+        "minServings": 1,
+        "maxServings": 2
+      },
+      {
+        "foodId": "milk",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "banana",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "peanut_butter",
+        "minServings": 1,
+        "maxServings": 1
+      }
+    ],
+    "pitch": ""
+  },
+  {
+    "candidateId": "bean_breakfast_burrito",
+    "type": "breakfast",
+    "name": "Egg and black bean breakfast burrito",
+    "cuisine": "Mexican",
+    "recipeSteps": [
+      "Scramble eggs",
+      "Warm beans and tortilla",
+      "Fill tortilla with eggs, beans, salsa and cheese, then roll"
+    ],
+    "prepMinutes": 12,
+    "ingredients": [
+      {
+        "foodId": "flour_tortilla",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "eggs",
+        "minServings": 2,
+        "maxServings": 3
+      },
+      {
+        "foodId": "black_beans",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "fresh_salsa",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "cheddar",
+        "minServings": 0,
+        "maxServings": 1
+      }
+    ],
+    "pitch": ""
+  },
+  {
+    "candidateId": "cottage_mango_bowl",
+    "type": "breakfast",
+    "name": "Cottage cheese mango bowl",
+    "cuisine": "American",
+    "recipeSteps": [
+      "Spoon cottage cheese into a bowl",
+      "Top with mango and chia seeds"
+    ],
+    "prepMinutes": 4,
+    "ingredients": [
+      {
+        "foodId": "cottage_cheese",
+        "minServings": 1,
+        "maxServings": 2
+      },
+      {
+        "foodId": "mango",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "chia_seeds",
+        "minServings": 1,
+        "maxServings": 1
+      }
+    ],
+    "pitch": ""
+  },
+  {
+    "candidateId": "arepa_egg_avocado",
+    "type": "breakfast",
+    "name": "Corn arepa with egg and avocado",
+    "cuisine": "Venezuelan",
+    "recipeSteps": [
+      "Toast arepas on a dry griddle until crisp",
+      "Scramble eggs",
+      "Split arepas and fill with eggs, avocado and farmer cheese"
+    ],
+    "prepMinutes": 15,
+    "ingredients": [
+      {
+        "foodId": "arepa",
+        "minServings": 1,
+        "maxServings": 2
+      },
+      {
+        "foodId": "eggs",
+        "minServings": 1,
+        "maxServings": 2
+      },
+      {
+        "foodId": "avocado",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "farmer_cheese",
+        "minServings": 0,
+        "maxServings": 1
+      }
+    ],
+    "pitch": ""
+  },
+  {
+    "candidateId": "tofu_scramble",
+    "type": "breakfast",
+    "name": "Tofu veggie scramble with toast",
+    "cuisine": "American",
+    "recipeSteps": [
+      "Crumble tofu into a hot pan with peppers",
+      "Add spinach until wilted, season with turmeric and pepper",
+      "Serve with toast"
+    ],
+    "prepMinutes": 12,
+    "ingredients": [
+      {
+        "foodId": "tofu",
+        "minServings": 1,
+        "maxServings": 2
+      },
+      {
+        "foodId": "bell_pepper",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "spinach",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "ww_bread",
+        "minServings": 1,
+        "maxServings": 1
+      }
+    ],
+    "pitch": ""
+  },
+  {
+    "candidateId": "protein_oats_whites",
+    "type": "breakfast",
+    "name": "High-protein oatmeal with egg whites",
+    "cuisine": "American",
+    "recipeSteps": [
+      "Cook oats in milk",
+      "Whisk in egg whites over low heat until creamy",
+      "Top with blueberries"
+    ],
+    "prepMinutes": 8,
+    "ingredients": [
+      {
+        "foodId": "oats",
+        "minServings": 1,
+        "maxServings": 2
+      },
+      {
+        "foodId": "egg_whites",
+        "minServings": 2,
+        "maxServings": 4
+      },
+      {
+        "foodId": "blueberries",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "milk",
+        "minServings": 1,
+        "maxServings": 1
+      }
+    ],
+    "pitch": ""
+  },
+  {
+    "candidateId": "avocado_egg_toast",
+    "type": "breakfast",
+    "name": "Avocado toast with eggs",
+    "cuisine": "American",
+    "recipeSteps": [
+      "Toast bread",
+      "Mash avocado on toast",
+      "Top with eggs cooked your way and tomato slices"
+    ],
+    "prepMinutes": 8,
+    "ingredients": [
+      {
+        "foodId": "ww_bread",
+        "minServings": 1,
+        "maxServings": 2
+      },
+      {
+        "foodId": "avocado",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "eggs",
+        "minServings": 1,
+        "maxServings": 2
+      },
+      {
+        "foodId": "tomato",
+        "minServings": 0,
+        "maxServings": 1
+      }
+    ],
+    "pitch": ""
+  },
+  {
+    "candidateId": "papaya_yogurt_bowl",
+    "type": "breakfast",
+    "name": "Papaya yogurt bowl with pumpkin seeds",
+    "cuisine": "Latin",
+    "recipeSteps": [
+      "Cube papaya",
+      "Layer over yogurt",
+      "Sprinkle with pumpkin seeds and oats"
+    ],
+    "prepMinutes": 5,
+    "ingredients": [
+      {
+        "foodId": "greek_yogurt",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "papaya",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "pumpkin_seeds",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "oats",
+        "minServings": 0,
+        "maxServings": 1
+      }
+    ],
+    "pitch": ""
+  },
+  {
+    "candidateId": "cactus_egg_scramble",
+    "type": "breakfast",
+    "name": "Cactus and egg scramble",
+    "cuisine": "Mexican",
+    "recipeSteps": [
+      "Saute cactus until tender",
+      "Add eggs and scramble together",
+      "Serve with warm tortillas and salsa"
+    ],
+    "prepMinutes": 12,
+    "ingredients": [
+      {
+        "foodId": "eggs",
+        "minServings": 2,
+        "maxServings": 3
+      },
+      {
+        "foodId": "cactus",
+        "minServings": 1,
+        "maxServings": 2
+      },
+      {
+        "foodId": "corn_tortilla",
+        "minServings": 1,
+        "maxServings": 2
+      },
+      {
+        "foodId": "fresh_salsa",
+        "minServings": 1,
+        "maxServings": 1
+      }
+    ],
+    "pitch": ""
+  },
+  {
+    "candidateId": "spinach_mushroom_omelet",
+    "type": "breakfast",
+    "name": "Spinach mushroom omelet",
+    "cuisine": "American",
+    "recipeSteps": [
+      "Saute mushrooms and spinach",
+      "Pour in beaten eggs and cook until set",
+      "Fold with cheese"
+    ],
+    "prepMinutes": 12,
+    "ingredients": [
+      {
+        "foodId": "eggs",
+        "minServings": 2,
+        "maxServings": 3
+      },
+      {
+        "foodId": "mushrooms",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "spinach",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "cheddar",
+        "minServings": 0,
+        "maxServings": 1
+      }
+    ],
+    "pitch": ""
+  },
+  {
+    "candidateId": "chicken_burrito_bowl",
+    "type": "lunch",
+    "name": "Chicken burrito bowl",
+    "cuisine": "Mexican",
+    "recipeSteps": [
+      "Season and grill chicken, then slice",
+      "Warm rice and beans",
+      "Build bowl with corn, salsa and avocado"
+    ],
+    "prepMinutes": 20,
+    "ingredients": [
+      {
+        "foodId": "chicken_breast",
+        "minServings": 1,
+        "maxServings": 2
+      },
+      {
+        "foodId": "brown_rice",
+        "minServings": 1,
+        "maxServings": 3
+      },
+      {
+        "foodId": "black_beans",
+        "minServings": 1,
+        "maxServings": 2
+      },
+      {
+        "foodId": "fresh_salsa",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "corn",
+        "minServings": 0,
+        "maxServings": 1
+      },
+      {
+        "foodId": "avocado",
+        "minServings": 0,
+        "maxServings": 1
+      }
+    ],
+    "pitch": ""
+  },
+  {
+    "candidateId": "teriyaki_chicken_bowl",
+    "type": "lunch",
+    "name": "Ginger soy chicken rice bowl",
+    "cuisine": "Asian",
+    "recipeSteps": [
+      "Sear chicken thigh pieces",
+      "Steam broccoli",
+      "Toss chicken with soy sauce and ginger, serve over rice"
+    ],
+    "prepMinutes": 20,
+    "ingredients": [
+      {
+        "foodId": "chicken_thigh",
+        "minServings": 1,
+        "maxServings": 2
+      },
+      {
+        "foodId": "white_rice",
+        "minServings": 1,
+        "maxServings": 3
+      },
+      {
+        "foodId": "broccoli",
+        "minServings": 1,
+        "maxServings": 2
+      },
+      {
+        "foodId": "soy_sauce",
+        "minServings": 1,
+        "maxServings": 1
+      }
+    ],
+    "pitch": ""
+  },
+  {
+    "candidateId": "tuna_wrap",
+    "type": "lunch",
+    "name": "Tuna salad wrap",
+    "cuisine": "American",
+    "recipeSteps": [
+      "Mix tuna with a spoon of yogurt and lemon",
+      "Fill tortilla with greens, tomato and tuna",
+      "Roll tightly and slice"
+    ],
+    "prepMinutes": 8,
+    "ingredients": [
+      {
+        "foodId": "canned_tuna",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "flour_tortilla",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "greek_yogurt",
+        "minServings": 0,
+        "maxServings": 1
+      },
+      {
+        "foodId": "mixed_greens",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "tomato",
+        "minServings": 0,
+        "maxServings": 1
+      }
+    ],
+    "pitch": ""
+  },
+  {
+    "candidateId": "lentil_soup",
+    "type": "lunch",
+    "name": "Hearty lentil soup",
+    "cuisine": "Mediterranean",
+    "recipeSteps": [
+      "Saute onion and carrot",
+      "Add lentils, tomatoes and water, simmer 20 minutes",
+      "Season with cumin and lemon"
+    ],
+    "prepMinutes": 30,
+    "ingredients": [
+      {
+        "foodId": "lentils",
+        "minServings": 2,
+        "maxServings": 3
+      },
+      {
+        "foodId": "carrots",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "onion",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "canned_tomatoes",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "ww_bread",
+        "minServings": 0,
+        "maxServings": 1
+      }
+    ],
+    "pitch": ""
+  },
+  {
+    "candidateId": "chickpea_quinoa_salad",
+    "type": "lunch",
+    "name": "Chickpea quinoa salad",
+    "cuisine": "Mediterranean",
+    "recipeSteps": [
+      "Cook quinoa and cool",
+      "Chop cucumber and tomato",
+      "Toss everything with olive oil and lemon"
+    ],
+    "prepMinutes": 15,
+    "ingredients": [
+      {
+        "foodId": "chickpeas",
+        "minServings": 1,
+        "maxServings": 2
+      },
+      {
+        "foodId": "quinoa",
+        "minServings": 1,
+        "maxServings": 2
+      },
+      {
+        "foodId": "cucumber",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "tomato",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "olive_oil",
+        "minServings": 1,
+        "maxServings": 1
+      }
+    ],
+    "pitch": ""
+  },
+  {
+    "candidateId": "turkey_chili",
+    "type": "lunch",
+    "name": "Turkey and pinto bean chili",
+    "cuisine": "American",
+    "recipeSteps": [
+      "Brown turkey with onion and pepper",
+      "Add beans, tomatoes, chili powder and cumin",
+      "Simmer 20 minutes"
+    ],
+    "prepMinutes": 30,
+    "ingredients": [
+      {
+        "foodId": "ground_turkey",
+        "minServings": 1,
+        "maxServings": 2
+      },
+      {
+        "foodId": "pinto_beans",
+        "minServings": 1,
+        "maxServings": 2
+      },
+      {
+        "foodId": "canned_tomatoes",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "onion",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "bell_pepper",
+        "minServings": 1,
+        "maxServings": 1
+      }
+    ],
+    "pitch": ""
+  },
+  {
+    "candidateId": "chicken_fajita_wrap",
+    "type": "lunch",
+    "name": "Chicken fajita wrap",
+    "cuisine": "Mexican",
+    "recipeSteps": [
+      "Slice chicken, peppers and onion",
+      "Sear with fajita spices",
+      "Wrap in warm tortillas with avocado"
+    ],
+    "prepMinutes": 18,
+    "ingredients": [
+      {
+        "foodId": "chicken_breast",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "flour_tortilla",
+        "minServings": 1,
+        "maxServings": 2
+      },
+      {
+        "foodId": "bell_pepper",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "onion",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "avocado",
+        "minServings": 0,
+        "maxServings": 1
+      }
+    ],
+    "pitch": ""
+  },
+  {
+    "candidateId": "sweet_potato_tacos",
+    "type": "lunch",
+    "name": "Black bean and sweet potato tacos",
+    "cuisine": "Mexican",
+    "recipeSteps": [
+      "Roast cubed sweet potato",
+      "Warm beans with cumin",
+      "Fill tortillas, top with cabbage and salsa"
+    ],
+    "prepMinutes": 25,
+    "ingredients": [
+      {
+        "foodId": "corn_tortilla",
+        "minServings": 2,
+        "maxServings": 3
+      },
+      {
+        "foodId": "black_beans",
+        "minServings": 1,
+        "maxServings": 2
+      },
+      {
+        "foodId": "sweet_potato",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "cabbage",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "fresh_salsa",
+        "minServings": 1,
+        "maxServings": 1
+      }
+    ],
+    "pitch": ""
+  },
+  {
+    "candidateId": "shrimp_stir_fry",
+    "type": "lunch",
+    "name": "Shrimp and veggie stir fry",
+    "cuisine": "Asian",
+    "recipeSteps": [
+      "Stir fry vegetables over high heat",
+      "Add shrimp until pink",
+      "Toss with soy sauce and serve over rice"
+    ],
+    "prepMinutes": 15,
+    "ingredients": [
+      {
+        "foodId": "shrimp",
+        "minServings": 1,
+        "maxServings": 2
+      },
+      {
+        "foodId": "brown_rice",
+        "minServings": 1,
+        "maxServings": 2
+      },
+      {
+        "foodId": "mixed_veg",
+        "minServings": 1,
+        "maxServings": 2
+      },
+      {
+        "foodId": "soy_sauce",
+        "minServings": 1,
+        "maxServings": 1
+      }
+    ],
+    "pitch": ""
+  },
+  {
+    "candidateId": "hummus_chicken_pita",
+    "type": "lunch",
+    "name": "Hummus chicken pita",
+    "cuisine": "Mediterranean",
+    "recipeSteps": [
+      "Warm pita",
+      "Spread hummus inside",
+      "Fill with sliced chicken, cucumber and tomato"
+    ],
+    "prepMinutes": 10,
+    "ingredients": [
+      {
+        "foodId": "ww_pita",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "chicken_breast",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "hummus",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "cucumber",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "tomato",
+        "minServings": 0,
+        "maxServings": 1
+      }
+    ],
+    "pitch": ""
+  },
+  {
+    "candidateId": "egg_fried_rice",
+    "type": "lunch",
+    "name": "Egg fried rice",
+    "cuisine": "Asian",
+    "recipeSteps": [
+      "Scramble eggs and set aside",
+      "Fry rice and vegetables in a hot pan",
+      "Fold in eggs and soy sauce"
+    ],
+    "prepMinutes": 15,
+    "ingredients": [
+      {
+        "foodId": "eggs",
+        "minServings": 2,
+        "maxServings": 3
+      },
+      {
+        "foodId": "white_rice",
+        "minServings": 1,
+        "maxServings": 3
+      },
+      {
+        "foodId": "mixed_veg",
+        "minServings": 1,
+        "maxServings": 2
+      },
+      {
+        "foodId": "soy_sauce",
+        "minServings": 1,
+        "maxServings": 1
+      }
+    ],
+    "pitch": ""
+  },
+  {
+    "candidateId": "tofu_edamame_bowl",
+    "type": "lunch",
+    "name": "Tofu edamame rice bowl",
+    "cuisine": "Asian",
+    "recipeSteps": [
+      "Pan sear tofu cubes",
+      "Warm edamame and rice",
+      "Top with shredded carrot and soy sauce"
+    ],
+    "prepMinutes": 20,
+    "ingredients": [
+      {
+        "foodId": "tofu",
+        "minServings": 1,
+        "maxServings": 2
+      },
+      {
+        "foodId": "edamame",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "brown_rice",
+        "minServings": 1,
+        "maxServings": 2
+      },
+      {
+        "foodId": "carrots",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "soy_sauce",
+        "minServings": 1,
+        "maxServings": 1
+      }
+    ],
+    "pitch": ""
+  },
+  {
+    "candidateId": "salmon_salad",
+    "type": "lunch",
+    "name": "Salmon salad bowl",
+    "cuisine": "American",
+    "recipeSteps": [
+      "Bake or pan sear salmon",
+      "Toss greens and cucumber with olive oil and lemon",
+      "Top with quinoa and flaked salmon"
+    ],
+    "prepMinutes": 15,
+    "ingredients": [
+      {
+        "foodId": "salmon",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "mixed_greens",
+        "minServings": 1,
+        "maxServings": 2
+      },
+      {
+        "foodId": "quinoa",
+        "minServings": 0,
+        "maxServings": 1
+      },
+      {
+        "foodId": "cucumber",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "olive_oil",
+        "minServings": 1,
+        "maxServings": 1
+      }
+    ],
+    "pitch": ""
+  },
+  {
+    "candidateId": "chicken_beans_rice",
+    "type": "lunch",
+    "name": "Chicken with pinto beans and rice",
+    "cuisine": "Latin",
+    "recipeSteps": [
+      "Season chicken with garlic and cumin, then bake",
+      "Warm beans and rice",
+      "Serve with a cabbage lime slaw"
+    ],
+    "prepMinutes": 25,
+    "ingredients": [
+      {
+        "foodId": "chicken_thigh",
+        "minServings": 1,
+        "maxServings": 2
+      },
+      {
+        "foodId": "pinto_beans",
+        "minServings": 1,
+        "maxServings": 2
+      },
+      {
+        "foodId": "white_rice",
+        "minServings": 1,
+        "maxServings": 2
+      },
+      {
+        "foodId": "cabbage",
+        "minServings": 1,
+        "maxServings": 1
+      }
+    ],
+    "pitch": ""
+  },
+  {
+    "candidateId": "chicken_veg_soup",
+    "type": "lunch",
+    "name": "Mexican chicken vegetable soup",
+    "cuisine": "Mexican",
+    "recipeSteps": [
+      "Simmer chicken in water with garlic and onion",
+      "Add potato, carrot and zucchini until tender",
+      "Shred chicken back in and serve with cabbage and lime"
+    ],
+    "prepMinutes": 35,
+    "ingredients": [
+      {
+        "foodId": "chicken_breast",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "potato",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "carrots",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "zucchini",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "corn",
+        "minServings": 0,
+        "maxServings": 1
+      },
+      {
+        "foodId": "cabbage",
+        "minServings": 1,
+        "maxServings": 1
+      }
+    ],
+    "pitch": ""
+  },
+  {
+    "candidateId": "tuna_chickpea_salad",
+    "type": "lunch",
+    "name": "Tuna chickpea salad",
+    "cuisine": "Mediterranean",
+    "recipeSteps": [
+      "Drain tuna and chickpeas",
+      "Toss with greens, tomato, olive oil and lemon"
+    ],
+    "prepMinutes": 8,
+    "ingredients": [
+      {
+        "foodId": "canned_tuna",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "chickpeas",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "mixed_greens",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "tomato",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "olive_oil",
+        "minServings": 1,
+        "maxServings": 1
+      }
+    ],
+    "pitch": ""
+  },
+  {
+    "candidateId": "beef_burrito_bowl",
+    "type": "lunch",
+    "name": "Beef and bean burrito bowl",
+    "cuisine": "Mexican",
+    "recipeSteps": [
+      "Brown beef with taco spices",
+      "Warm rice and beans",
+      "Build bowl and top with salsa and cheese"
+    ],
+    "prepMinutes": 20,
+    "ingredients": [
+      {
+        "foodId": "lean_ground_beef",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "brown_rice",
+        "minServings": 1,
+        "maxServings": 2
+      },
+      {
+        "foodId": "black_beans",
+        "minServings": 1,
+        "maxServings": 2
+      },
+      {
+        "foodId": "fresh_salsa",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "cheddar",
+        "minServings": 0,
+        "maxServings": 1
+      }
+    ],
+    "pitch": ""
+  },
+  {
+    "candidateId": "cactus_chicken_tacos",
+    "type": "lunch",
+    "name": "Chicken and cactus tacos",
+    "cuisine": "Mexican",
+    "recipeSteps": [
+      "Grill chicken and cactus",
+      "Slice both into strips",
+      "Serve in tortillas with salsa and avocado"
+    ],
+    "prepMinutes": 20,
+    "ingredients": [
+      {
+        "foodId": "corn_tortilla",
+        "minServings": 2,
+        "maxServings": 3
+      },
+      {
+        "foodId": "chicken_breast",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "cactus",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "fresh_salsa",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "avocado",
+        "minServings": 0,
+        "maxServings": 1
+      }
+    ],
+    "pitch": ""
+  },
+  {
+    "candidateId": "lentil_spinach_curry",
+    "type": "lunch",
+    "name": "Lentil spinach curry",
+    "cuisine": "Indian",
+    "recipeSteps": [
+      "Saute onion with curry spices",
+      "Add lentils and tomatoes, simmer 15 minutes",
+      "Stir in spinach, serve over rice"
+    ],
+    "prepMinutes": 30,
+    "ingredients": [
+      {
+        "foodId": "lentils",
+        "minServings": 2,
+        "maxServings": 3
+      },
+      {
+        "foodId": "spinach",
+        "minServings": 1,
+        "maxServings": 2
+      },
+      {
+        "foodId": "canned_tomatoes",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "brown_rice",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "onion",
+        "minServings": 1,
+        "maxServings": 1
+      }
+    ],
+    "pitch": ""
+  },
+  {
+    "candidateId": "chicken_avocado_sandwich",
+    "type": "lunch",
+    "name": "Chicken avocado sandwich",
+    "cuisine": "American",
+    "recipeSteps": [
+      "Toast bread",
+      "Layer sliced chicken, avocado, tomato and greens"
+    ],
+    "prepMinutes": 10,
+    "ingredients": [
+      {
+        "foodId": "ww_bread",
+        "minServings": 2,
+        "maxServings": 2
+      },
+      {
+        "foodId": "chicken_breast",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "avocado",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "tomato",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "mixed_greens",
+        "minServings": 1,
+        "maxServings": 1
+      }
+    ],
+    "pitch": ""
+  },
+  {
+    "candidateId": "salmon_sweet_potato",
+    "type": "dinner",
+    "name": "Baked salmon, sweet potato and broccoli",
+    "cuisine": "American",
+    "recipeSteps": [
+      "Roast sweet potato 25 minutes",
+      "Bake salmon for the last 12 minutes",
+      "Steam broccoli and drizzle everything with olive oil"
+    ],
+    "prepMinutes": 30,
+    "ingredients": [
+      {
+        "foodId": "salmon",
+        "minServings": 1,
+        "maxServings": 2
+      },
+      {
+        "foodId": "sweet_potato",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "broccoli",
+        "minServings": 1,
+        "maxServings": 2
+      },
+      {
+        "foodId": "olive_oil",
+        "minServings": 1,
+        "maxServings": 1
+      }
+    ],
+    "pitch": ""
+  },
+  {
+    "candidateId": "chicken_sheet_pan",
+    "type": "dinner",
+    "name": "Chicken and veggie sheet pan",
+    "cuisine": "American",
+    "recipeSteps": [
+      "Cube chicken, potato and vegetables",
+      "Toss with olive oil and herbs",
+      "Roast 25 minutes at 425F"
+    ],
+    "prepMinutes": 35,
+    "ingredients": [
+      {
+        "foodId": "chicken_breast",
+        "minServings": 1,
+        "maxServings": 2
+      },
+      {
+        "foodId": "zucchini",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "bell_pepper",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "potato",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "olive_oil",
+        "minServings": 1,
+        "maxServings": 1
+      }
+    ],
+    "pitch": ""
+  },
+  {
+    "candidateId": "turkey_taco_skillet",
+    "type": "dinner",
+    "name": "Turkey taco skillet",
+    "cuisine": "Mexican",
+    "recipeSteps": [
+      "Brown turkey with taco spices",
+      "Add beans, corn and peppers",
+      "Serve over rice"
+    ],
+    "prepMinutes": 25,
+    "ingredients": [
+      {
+        "foodId": "ground_turkey",
+        "minServings": 1,
+        "maxServings": 2
+      },
+      {
+        "foodId": "black_beans",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "corn",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "bell_pepper",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "brown_rice",
+        "minServings": 0,
+        "maxServings": 2
+      }
+    ],
+    "pitch": ""
+  },
+  {
+    "candidateId": "turkey_spaghetti",
+    "type": "dinner",
+    "name": "Spaghetti with turkey meat sauce",
+    "cuisine": "Italian",
+    "recipeSteps": [
+      "Boil pasta",
+      "Brown turkey with onion, add tomatoes and simmer",
+      "Toss with pasta and zucchini"
+    ],
+    "prepMinutes": 25,
+    "ingredients": [
+      {
+        "foodId": "ww_pasta",
+        "minServings": 2,
+        "maxServings": 3
+      },
+      {
+        "foodId": "ground_turkey",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "canned_tomatoes",
+        "minServings": 1,
+        "maxServings": 2
+      },
+      {
+        "foodId": "onion",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "zucchini",
+        "minServings": 0,
+        "maxServings": 1
+      }
+    ],
+    "pitch": ""
+  },
+  {
+    "candidateId": "tilapia_tacos",
+    "type": "dinner",
+    "name": "Tilapia tacos with cabbage slaw",
+    "cuisine": "Mexican",
+    "recipeSteps": [
+      "Season and bake tilapia",
+      "Toss cabbage with lime",
+      "Fill tortillas with fish, slaw, salsa and avocado"
+    ],
+    "prepMinutes": 20,
+    "ingredients": [
+      {
+        "foodId": "tilapia",
+        "minServings": 1,
+        "maxServings": 2
+      },
+      {
+        "foodId": "corn_tortilla",
+        "minServings": 2,
+        "maxServings": 3
+      },
+      {
+        "foodId": "cabbage",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "avocado",
+        "minServings": 0,
+        "maxServings": 1
+      },
+      {
+        "foodId": "fresh_salsa",
+        "minServings": 1,
+        "maxServings": 1
+      }
+    ],
+    "pitch": ""
+  },
+  {
+    "candidateId": "steak_rice_beans",
+    "type": "dinner",
+    "name": "Grilled steak with rice and beans",
+    "cuisine": "Mexican",
+    "recipeSteps": [
+      "Marinate steak in lime and garlic, then grill",
+      "Warm rice and beans",
+      "Slice steak and serve with salsa"
+    ],
+    "prepMinutes": 25,
+    "ingredients": [
+      {
+        "foodId": "flank_steak",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "white_rice",
+        "minServings": 1,
+        "maxServings": 2
+      },
+      {
+        "foodId": "pinto_beans",
+        "minServings": 1,
+        "maxServings": 2
+      },
+      {
+        "foodId": "fresh_salsa",
+        "minServings": 1,
+        "maxServings": 1
+      }
+    ],
+    "pitch": ""
+  },
+  {
+    "candidateId": "shrimp_fajitas",
+    "type": "dinner",
+    "name": "Shrimp fajitas",
+    "cuisine": "Mexican",
+    "recipeSteps": [
+      "Sear peppers and onion",
+      "Add shrimp with fajita spices",
+      "Serve in warm tortillas with avocado"
+    ],
+    "prepMinutes": 20,
+    "ingredients": [
+      {
+        "foodId": "shrimp",
+        "minServings": 1,
+        "maxServings": 2
+      },
+      {
+        "foodId": "bell_pepper",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "onion",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "corn_tortilla",
+        "minServings": 2,
+        "maxServings": 3
+      },
+      {
+        "foodId": "avocado",
+        "minServings": 0,
+        "maxServings": 1
+      }
+    ],
+    "pitch": ""
+  },
+  {
+    "candidateId": "chicken_rice_greenbeans",
+    "type": "dinner",
+    "name": "Chicken thigh with rice and green beans",
+    "cuisine": "American",
+    "recipeSteps": [
+      "Roast chicken thighs",
+      "Steam green beans",
+      "Serve with rice"
+    ],
+    "prepMinutes": 30,
+    "ingredients": [
+      {
+        "foodId": "chicken_thigh",
+        "minServings": 1,
+        "maxServings": 2
+      },
+      {
+        "foodId": "brown_rice",
+        "minServings": 1,
+        "maxServings": 2
+      },
+      {
+        "foodId": "green_beans",
+        "minServings": 1,
+        "maxServings": 2
+      },
+      {
+        "foodId": "olive_oil",
+        "minServings": 0,
+        "maxServings": 1
+      }
+    ],
+    "pitch": ""
+  },
+  {
+    "candidateId": "pork_loin_potatoes",
+    "type": "dinner",
+    "name": "Pork loin with potatoes and green beans",
+    "cuisine": "American",
+    "recipeSteps": [
+      "Roast pork loin with herbs",
+      "Roast potatoes alongside",
+      "Steam green beans"
+    ],
+    "prepMinutes": 35,
+    "ingredients": [
+      {
+        "foodId": "pork_loin",
+        "minServings": 1,
+        "maxServings": 2
+      },
+      {
+        "foodId": "potato",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "green_beans",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "olive_oil",
+        "minServings": 1,
+        "maxServings": 1
+      }
+    ],
+    "pitch": ""
+  },
+  {
+    "candidateId": "stuffed_peppers",
+    "type": "dinner",
+    "name": "Black bean quinoa stuffed peppers",
+    "cuisine": "Mexican",
+    "recipeSteps": [
+      "Halve peppers",
+      "Fill with beans, quinoa and corn",
+      "Bake 25 minutes and top with cheese"
+    ],
+    "prepMinutes": 35,
+    "ingredients": [
+      {
+        "foodId": "bell_pepper",
+        "minServings": 1,
+        "maxServings": 2
+      },
+      {
+        "foodId": "black_beans",
+        "minServings": 1,
+        "maxServings": 2
+      },
+      {
+        "foodId": "quinoa",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "corn",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "cheddar",
+        "minServings": 0,
+        "maxServings": 1
+      }
+    ],
+    "pitch": ""
+  },
+  {
+    "candidateId": "lentil_bolognese",
+    "type": "dinner",
+    "name": "Lentil bolognese",
+    "cuisine": "Italian",
+    "recipeSteps": [
+      "Saute onion and carrot",
+      "Add lentils and tomatoes, simmer 20 minutes",
+      "Serve over pasta"
+    ],
+    "prepMinutes": 30,
+    "ingredients": [
+      {
+        "foodId": "lentils",
+        "minServings": 2,
+        "maxServings": 3
+      },
+      {
+        "foodId": "ww_pasta",
+        "minServings": 1,
+        "maxServings": 2
+      },
+      {
+        "foodId": "canned_tomatoes",
+        "minServings": 1,
+        "maxServings": 2
+      },
+      {
+        "foodId": "carrots",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "onion",
+        "minServings": 1,
+        "maxServings": 1
+      }
+    ],
+    "pitch": ""
+  },
+  {
+    "candidateId": "tofu_broccoli_stir_fry",
+    "type": "dinner",
+    "name": "Tofu broccoli stir fry",
+    "cuisine": "Asian",
+    "recipeSteps": [
+      "Press and cube tofu, sear until golden",
+      "Stir fry broccoli",
+      "Toss with soy sauce and serve over rice"
+    ],
+    "prepMinutes": 20,
+    "ingredients": [
+      {
+        "foodId": "tofu",
+        "minServings": 1,
+        "maxServings": 2
+      },
+      {
+        "foodId": "broccoli",
+        "minServings": 1,
+        "maxServings": 2
+      },
+      {
+        "foodId": "brown_rice",
+        "minServings": 1,
+        "maxServings": 2
+      },
+      {
+        "foodId": "soy_sauce",
+        "minServings": 1,
+        "maxServings": 1
+      }
+    ],
+    "pitch": ""
+  },
+  {
+    "candidateId": "chipotle_chicken_tostadas",
+    "type": "dinner",
+    "name": "Chipotle shredded chicken tostadas",
+    "cuisine": "Mexican",
+    "recipeSteps": [
+      "Simmer shredded chicken with tomato, onion and chipotle",
+      "Crisp tortillas in the oven",
+      "Top with tinga, cabbage and farmer cheese"
+    ],
+    "prepMinutes": 30,
+    "ingredients": [
+      {
+        "foodId": "chicken_breast",
+        "minServings": 1,
+        "maxServings": 2
+      },
+      {
+        "foodId": "corn_tortilla",
+        "minServings": 2,
+        "maxServings": 3
+      },
+      {
+        "foodId": "canned_tomatoes",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "onion",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "cabbage",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "farmer_cheese",
+        "minServings": 0,
+        "maxServings": 1
+      }
+    ],
+    "pitch": ""
+  },
+  {
+    "candidateId": "one_pot_chicken_rice",
+    "type": "dinner",
+    "name": "One-pot chicken and rice",
+    "cuisine": "Latin",
+    "recipeSteps": [
+      "Brown chicken",
+      "Saute pepper and onion, add rice and broth",
+      "Nestle chicken and vegetables, simmer covered 20 minutes"
+    ],
+    "prepMinutes": 40,
+    "ingredients": [
+      {
+        "foodId": "chicken_thigh",
+        "minServings": 1,
+        "maxServings": 2
+      },
+      {
+        "foodId": "white_rice",
+        "minServings": 1,
+        "maxServings": 2
+      },
+      {
+        "foodId": "mixed_veg",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "bell_pepper",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "onion",
+        "minServings": 1,
+        "maxServings": 1
+      }
+    ],
+    "pitch": ""
+  },
+  {
+    "candidateId": "salmon_rice_bowl",
+    "type": "dinner",
+    "name": "Salmon rice bowl",
+    "cuisine": "Asian",
+    "recipeSteps": [
+      "Bake salmon and flake",
+      "Warm rice and edamame",
+      "Top with cucumber and avocado"
+    ],
+    "prepMinutes": 20,
+    "ingredients": [
+      {
+        "foodId": "salmon",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "white_rice",
+        "minServings": 1,
+        "maxServings": 2
+      },
+      {
+        "foodId": "edamame",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "cucumber",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "avocado",
+        "minServings": 0,
+        "maxServings": 1
+      }
+    ],
+    "pitch": ""
+  },
+  {
+    "candidateId": "beef_broccoli",
+    "type": "dinner",
+    "name": "Beef and broccoli",
+    "cuisine": "Asian",
+    "recipeSteps": [
+      "Slice steak thin and sear",
+      "Add broccoli and a splash of water",
+      "Toss with soy sauce, serve over rice"
+    ],
+    "prepMinutes": 25,
+    "ingredients": [
+      {
+        "foodId": "flank_steak",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "broccoli",
+        "minServings": 1,
+        "maxServings": 2
+      },
+      {
+        "foodId": "brown_rice",
+        "minServings": 1,
+        "maxServings": 2
+      },
+      {
+        "foodId": "soy_sauce",
+        "minServings": 1,
+        "maxServings": 1
+      }
+    ],
+    "pitch": ""
+  },
+  {
+    "candidateId": "sardine_tomato_pasta",
+    "type": "dinner",
+    "name": "Sardine tomato pasta",
+    "cuisine": "Italian",
+    "recipeSteps": [
+      "Boil pasta",
+      "Warm tomatoes with garlic, add sardines",
+      "Toss with pasta and spinach"
+    ],
+    "prepMinutes": 20,
+    "ingredients": [
+      {
+        "foodId": "sardines",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "ww_pasta",
+        "minServings": 1,
+        "maxServings": 2
+      },
+      {
+        "foodId": "canned_tomatoes",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "spinach",
+        "minServings": 1,
+        "maxServings": 1
+      }
+    ],
+    "pitch": ""
+  },
+  {
+    "candidateId": "chicken_cassava_salad",
+    "type": "dinner",
+    "name": "Chicken with cassava and salad",
+    "cuisine": "Latin",
+    "recipeSteps": [
+      "Boil cassava until tender",
+      "Roast chicken with garlic and lime",
+      "Serve with cabbage tomato salad and avocado"
+    ],
+    "prepMinutes": 35,
+    "ingredients": [
+      {
+        "foodId": "chicken_thigh",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "cassava",
+        "minServings": 1,
+        "maxServings": 2
+      },
+      {
+        "foodId": "cabbage",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "tomato",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "avocado",
+        "minServings": 0,
+        "maxServings": 1
+      }
+    ],
+    "pitch": ""
+  },
+  {
+    "candidateId": "chickpea_spinach_stew",
+    "type": "dinner",
+    "name": "Chickpea spinach stew",
+    "cuisine": "Mediterranean",
+    "recipeSteps": [
+      "Saute onion",
+      "Add sweet potato, chickpeas and tomatoes, simmer 20 minutes",
+      "Stir in spinach"
+    ],
+    "prepMinutes": 30,
+    "ingredients": [
+      {
+        "foodId": "chickpeas",
+        "minServings": 1,
+        "maxServings": 2
+      },
+      {
+        "foodId": "spinach",
+        "minServings": 1,
+        "maxServings": 2
+      },
+      {
+        "foodId": "canned_tomatoes",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "sweet_potato",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "onion",
+        "minServings": 1,
+        "maxServings": 1
+      }
+    ],
+    "pitch": ""
+  },
+  {
+    "candidateId": "tilapia_quinoa",
+    "type": "dinner",
+    "name": "Lemon tilapia with quinoa and zucchini",
+    "cuisine": "Mediterranean",
+    "recipeSteps": [
+      "Bake tilapia with lemon",
+      "Saute zucchini in olive oil",
+      "Serve over quinoa"
+    ],
+    "prepMinutes": 25,
+    "ingredients": [
+      {
+        "foodId": "tilapia",
+        "minServings": 1,
+        "maxServings": 2
+      },
+      {
+        "foodId": "quinoa",
+        "minServings": 1,
+        "maxServings": 2
+      },
+      {
+        "foodId": "zucchini",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "olive_oil",
+        "minServings": 1,
+        "maxServings": 1
+      }
+    ],
+    "pitch": ""
+  },
+  {
+    "candidateId": "apple_pb",
+    "type": "snack",
+    "name": "Apple with peanut butter",
+    "cuisine": "American",
+    "recipeSteps": [
+      "Slice apple",
+      "Serve with peanut butter"
+    ],
+    "prepMinutes": 2,
+    "ingredients": [
+      {
+        "foodId": "apple",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "peanut_butter",
+        "minServings": 1,
+        "maxServings": 1
+      }
+    ],
+    "pitch": ""
+  },
+  {
+    "candidateId": "yogurt_berries",
+    "type": "snack",
+    "name": "Greek yogurt with blueberries",
+    "cuisine": "American",
+    "recipeSteps": [
+      "Top yogurt with blueberries"
+    ],
+    "prepMinutes": 2,
+    "ingredients": [
+      {
+        "foodId": "greek_yogurt",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "blueberries",
+        "minServings": 1,
+        "maxServings": 1
+      }
+    ],
+    "pitch": ""
+  },
+  {
+    "candidateId": "hummus_veggies",
+    "type": "snack",
+    "name": "Hummus and veggie sticks",
+    "cuisine": "Mediterranean",
+    "recipeSteps": [
+      "Cut carrots and cucumber into sticks",
+      "Serve with hummus"
+    ],
+    "prepMinutes": 5,
+    "ingredients": [
+      {
+        "foodId": "hummus",
+        "minServings": 1,
+        "maxServings": 2
+      },
+      {
+        "foodId": "carrots",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "cucumber",
+        "minServings": 1,
+        "maxServings": 1
+      }
+    ],
+    "pitch": ""
+  },
+  {
+    "candidateId": "almonds_orange",
+    "type": "snack",
+    "name": "Almonds and an orange",
+    "cuisine": "American",
+    "recipeSteps": [
+      "Portion almonds",
+      "Peel orange"
+    ],
+    "prepMinutes": 1,
+    "ingredients": [
+      {
+        "foodId": "almonds",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "orange",
+        "minServings": 1,
+        "maxServings": 1
+      }
+    ],
+    "pitch": ""
+  },
+  {
+    "candidateId": "boiled_eggs_cucumber",
+    "type": "snack",
+    "name": "Hard-boiled eggs and cucumber",
+    "cuisine": "American",
+    "recipeSteps": [
+      "Boil eggs 10 minutes and cool",
+      "Serve with cucumber slices"
+    ],
+    "prepMinutes": 12,
+    "ingredients": [
+      {
+        "foodId": "eggs",
+        "minServings": 1,
+        "maxServings": 2
+      },
+      {
+        "foodId": "cucumber",
+        "minServings": 1,
+        "maxServings": 1
+      }
+    ],
+    "pitch": ""
+  },
+  {
+    "candidateId": "cottage_strawberries",
+    "type": "snack",
+    "name": "Cottage cheese with strawberries",
+    "cuisine": "American",
+    "recipeSteps": [
+      "Top cottage cheese with sliced strawberries"
+    ],
+    "prepMinutes": 2,
+    "ingredients": [
+      {
+        "foodId": "cottage_cheese",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "strawberries",
+        "minServings": 1,
+        "maxServings": 1
+      }
+    ],
+    "pitch": ""
+  },
+  {
+    "candidateId": "edamame_snack",
+    "type": "snack",
+    "name": "Steamed edamame",
+    "cuisine": "Asian",
+    "recipeSteps": [
+      "Steam edamame",
+      "Sprinkle lightly with chili flakes"
+    ],
+    "prepMinutes": 5,
+    "ingredients": [
+      {
+        "foodId": "edamame",
+        "minServings": 1,
+        "maxServings": 2
+      }
+    ],
+    "pitch": ""
+  },
+  {
+    "candidateId": "banana_milk",
+    "type": "snack",
+    "name": "Banana and a glass of milk",
+    "cuisine": "American",
+    "recipeSteps": [
+      "Pour milk",
+      "Enjoy with banana"
+    ],
+    "prepMinutes": 1,
+    "ingredients": [
+      {
+        "foodId": "banana",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "milk",
+        "minServings": 1,
+        "maxServings": 1
+      }
+    ],
+    "pitch": ""
+  },
+  {
+    "candidateId": "popcorn_cheese",
+    "type": "snack",
+    "name": "Popcorn and string cheese",
+    "cuisine": "American",
+    "recipeSteps": [
+      "Air pop popcorn",
+      "Serve with string cheese"
+    ],
+    "prepMinutes": 5,
+    "ingredients": [
+      {
+        "foodId": "popcorn",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "string_cheese",
+        "minServings": 1,
+        "maxServings": 1
+      }
+    ],
+    "pitch": ""
+  },
+  {
+    "candidateId": "pumpkin_seeds_kiwi",
+    "type": "snack",
+    "name": "Pumpkin seeds and kiwi",
+    "cuisine": "Latin",
+    "recipeSteps": [
+      "Portion pumpkin seeds",
+      "Slice kiwi"
+    ],
+    "prepMinutes": 2,
+    "ingredients": [
+      {
+        "foodId": "pumpkin_seeds",
+        "minServings": 1,
+        "maxServings": 1
+      },
+      {
+        "foodId": "kiwi",
+        "minServings": 1,
+        "maxServings": 1
+      }
+    ],
+    "pitch": ""
+  }
+]

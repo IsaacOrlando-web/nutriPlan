@@ -1,0 +1,133 @@
+{
+  "$comment": "Health rules with sources. Owner: Agents (Doctor). The ONLY source of medical limits. Never edit numbers without a cited source.",
+  "version": "2026-10-09",
+  "sources": {
+    "dga": {
+      "name": "Dietary Guidelines for Americans, 2020-2025",
+      "url": "https://www.dietaryguidelines.gov/sites/default/files/2020-12/Dietary_Guidelines_for_Americans_2020-2025.pdf"
+    },
+    "ada": {
+      "name": "American Diabetes Association, Standards of Care in Diabetes (Section 5: Facilitating Positive Health Behaviors)",
+      "url": "https://diabetesjournals.org/care/issue/48/Supplement_1"
+    },
+    "dash": {
+      "name": "NHLBI, DASH Eating Plan",
+      "url": "https://www.nhlbi.nih.gov/education/dash-eating-plan"
+    },
+    "aha_satfat": {
+      "name": "American Heart Association, Saturated Fat",
+      "url": "https://www.heart.org/en/healthy-living/healthy-eating/eat-smart/fats/saturated-fats"
+    },
+    "nkf": {
+      "name": "National Kidney Foundation, Potassium and Your CKD Diet",
+      "url": "https://www.kidney.org/atoz/content/potassium"
+    },
+    "nasem": {
+      "name": "NASEM, Dietary Reference Intakes for Sodium and Potassium (2019)",
+      "url": "https://nap.nationalacademies.org/catalog/25353/dietary-reference-intakes-for-sodium-and-potassium"
+    },
+    "nih_calories": {
+      "name": "NIH NHLBI, Aim for a Healthy Weight: low calorie diets",
+      "url": "https://www.nhlbi.nih.gov/health/educational/lose_wt/eat/calories.htm"
+    }
+  },
+  "everyone": {
+    "fiberGPer1000Kcal": 14,
+    "addedSugarMaxPctKcal": 10,
+    "sodiumMaxMg": 2300,
+    "satFatMaxPct": 10,
+    "calorieFloor": { "female": 1200, "male": 1500 },
+    "rules": [
+      { "rule": "min_fiber", "why": "About 14 g of fiber per 1,000 kcal supports digestion, fullness and heart health.", "source": "dga" },
+      { "rule": "max_added_sugar", "why": "Added sugar under 10% of calories leaves room for nutrient dense food.", "source": "dga" },
+      { "rule": "max_sodium", "why": "Sodium under 2,300 mg a day lowers the risk of high blood pressure.", "source": "dga" },
+      { "rule": "max_sat_fat", "why": "Saturated fat under 10% of calories protects your heart.", "source": "dga" },
+      { "rule": "min_calories", "why": "Eating below this floor makes it hard to get enough nutrients and is not safe without medical supervision.", "source": "nih_calories" },
+      { "rule": "allergies_excluded", "why": "Foods you are allergic to are removed in code before any meal is planned.", "source": "dga" }
+    ]
+  },
+  "conditions": {
+    "type2_diabetes": {
+      "maxCarbsPerMealG": 45,
+      "maxGlycemicLoadPerMeal": 20,
+      "addedSugarMaxPctKcal": 5,
+      "rules": [
+        { "rule": "max_carbs_per_meal", "why": "Spreading carbs evenly, about 45 g per meal, keeps blood sugar steadier.", "source": "ada" },
+        { "rule": "max_glycemic_load_per_meal", "why": "A glycemic load of 20 or less per meal avoids sharp glucose spikes.", "source": "ada" },
+        { "rule": "max_added_sugar", "why": "Stricter added sugar limit (5% of calories) for diabetes.", "source": "ada" }
+      ]
+    },
+    "hypertension": {
+      "sodiumMaxMg": 1500,
+      "potassiumMinMg": 3500,
+      "satFatMaxPct": 6,
+      "rules": [
+        { "rule": "max_sodium", "why": "The DASH plan limits sodium to 1,500 mg a day to lower blood pressure.", "source": "dash" },
+        { "rule": "min_potassium", "why": "At least 3,500 mg of potassium a day from food helps balance sodium.", "source": "dash" },
+        { "rule": "max_sat_fat", "why": "Saturated fat under 6% of calories for people with high blood pressure.", "source": "aha_satfat" }
+      ]
+    },
+    "high_cholesterol": {
+      "satFatMaxPct": 6,
+      "rules": [
+        { "rule": "max_sat_fat", "why": "Saturated fat under 6% of calories helps lower LDL cholesterol.", "source": "aha_satfat" }
+      ]
+    },
+    "kidney_disease": {
+      "neverRaisePotassium": true,
+      "rules": [
+        { "rule": "no_potassium_target", "why": "With kidney disease we never raise potassium. Please check your potassium needs with your doctor.", "source": "nkf" }
+      ]
+    }
+  },
+  "potassiumAffectingMedications": {
+    "$comment": "Lowercase substrings. ACE inhibitors, ARBs, potassium sparing diuretics, aldosterone antagonists.",
+    "patterns": [
+      "lisinopril", "enalapril", "ramipril", "benazepril", "captopril", "quinapril", "fosinopril", "perindopril", "trandolapril", "moexipril",
+      "losartan", "valsartan", "irbesartan", "olmesartan", "candesartan", "telmisartan", "azilsartan", "eprosartan",
+      "spironolactone", "eplerenone", "amiloride", "triamterene", "finerenone",
+      "potassium chloride", "trimethoprim"
+    ],
+    "rule": { "rule": "no_potassium_target", "why": "One of your medications can raise potassium, so we never push it higher. Please check with your doctor.", "source": "nkf" }
+  },
+  "allergyTags": {
+    "peanut": ["peanut"],
+    "peanuts": ["peanut"],
+    "tree_nut": ["nuts"],
+    "tree nuts": ["nuts"],
+    "nuts": ["nuts", "peanut"],
+    "shellfish": ["shellfish"],
+    "fish": ["fish"],
+    "egg": ["egg"],
+    "eggs": ["egg"],
+    "milk": ["dairy"],
+    "dairy": ["dairy"],
+    "lactose": ["dairy"],
+    "soy": ["soy"],
+    "wheat": ["gluten"],
+    "gluten": ["gluten"],
+    "sesame": ["sesame"]
+  },
+  "restrictionTags": {
+    "vegetarian": ["meat", "poultry", "beef", "pork", "fish", "shellfish"],
+    "pescatarian": ["meat", "poultry", "beef", "pork"],
+    "vegan": ["meat", "poultry", "beef", "pork", "fish", "shellfish", "dairy", "egg", "honey"],
+    "halal": ["pork"],
+    "kosher": ["pork", "shellfish"],
+    "no_pork": ["pork"],
+    "no_beef": ["beef"],
+    "gluten_free": ["gluten"],
+    "dairy_free": ["dairy"]
+  },
+  "dangerReadings": {
+    "glucoseLowMgDl": 70,
+    "glucoseHighMgDl": 300,
+    "bpSystolicHigh": 180,
+    "bpDiastolicHigh": 120,
+    "source": "ada"
+  },
+  "safeRates": {
+    "maxLossKgPerWeek": 1.0,
+    "maxLossPctBodyWeightPerWeek": 1.0
+  }
+}

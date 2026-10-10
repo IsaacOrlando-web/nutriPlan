@@ -1,0 +1,35 @@
+# dependencies
+node_modules/
+
+# next
+.next/
+out/
+build/
+next-env.d.ts
+*.tsbuildinfo
+
+# testing
+coverage/
+playwright-report/
+test-results/
+blob-report/
+
+# env (never commit secrets)
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# local data written by the in-memory store
+.data/
+
+# supabase cli
+supabase/.temp/
+supabase/.branches/
+
+# misc
+.DS_Store
+Thumbs.db
+*.log
+.vercel
+.claude/settings.local.json
