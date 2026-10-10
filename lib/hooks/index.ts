@@ -9,6 +9,7 @@ export { useFoodLogs, useCreateLog, useUploadPhoto, usePhotoLog, useInvalidateHe
 export { useReadings, useCreateReading, useTrend } from "./useReadings";
 export { useSummary } from "./useSummary";
 export { useCoach } from "./useCoach";
+export { useRecipeIdeas } from "./useRecipeIdeas";
 export { useMonitorRun } from "./useMonitorRun";
 export { useLoginFlow, SESSION_COOKIE } from "./useLoginFlow";
 export { useMediaQuery, useIsLaptop } from "./useMediaQuery";

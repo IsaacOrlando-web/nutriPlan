@@ -2,7 +2,6 @@
 // ALL shared types. Every role imports from here. Only the Lead edits this file.
 // Units: kilograms, centimeters, kcal, grams, milligrams, US dollars.
 
-
 export type Sex = "male" | "female";
 export type ActivityLevel = "sedentary" | "light" | "moderate" | "active" | "very_active";
 export type Goal = "lose" | "maintain" | "gain";
@@ -371,6 +370,21 @@ export interface CoachRequest {
 export interface CoachResponse {
   reply: string;
   replanRunId: string | null;
+}
+
+/** One recipe idea from POST /api/agents/recipes. The LLM names it; code maps ingredients to foods and prices it. */
+export interface RecipeIdea {
+  name: string;
+  /** USD, computed by /math from the mapped foods' prices. Never from the LLM. */
+  price: number;
+  /** Food names from the foods table, in recipe order. */
+  ingredients: string[];
+}
+
+/** POST /api/agents/recipes response. */
+export interface RecipeIdeasResponse {
+  meals: RecipeIdea[];
+  source: "llm" | "templates";
 }
 
 /** POST /api/upload response. */

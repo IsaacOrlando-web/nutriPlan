@@ -9,6 +9,7 @@ import { LoadingState } from "@/components/common/LoadingState";
 import { PageHeader } from "@/components/common/PageHeader";
 import { BudgetSlider } from "@/components/meals/BudgetSlider";
 import { MealCard } from "@/components/meals/MealCard";
+import { RecipeIdeas } from "@/components/meals/RecipeIdeas";
 import { planReasonSentence } from "@/components/meals/planReason";
 import { WhySheet } from "@/components/meals/WhySheet";
 import { Badge } from "@/components/ui/badge";
@@ -17,12 +18,14 @@ import { Card, CardContent } from "@/components/ui/card";
 import { useBudgetCurve } from "@/lib/hooks/useBudgetCurve";
 import { usePlan } from "@/lib/hooks/usePlan";
 import { useProfile } from "@/lib/hooks/useProfile";
+import { useRecipeIdeas } from "@/lib/hooks/useRecipeIdeas";
 import { cn, fmtDate, fmtNumber, fmtUsd, todayIso } from "@/lib/utils";
 import type { Meal, MealPlan } from "@/types/contracts";
 
 export default function PlanPage() {
   const plan = usePlan();
   const profile = useProfile();
+  const recipes = useRecipeIdeas();
 
   return (
     <div data-testid="plan-screen" className="space-y-6">
@@ -35,10 +38,28 @@ export default function PlanPage() {
             title="No plan yet"
             body="Answer a few questions and Doctor, Chef, Budget and Monitor will build your first week."
             action={
-              <Button asChild>
-                <Link href="/onboarding">Build my plan</Link>
-              </Button>
+              <div className="flex flex-col items-center gap-2">
+                <Button
+                  data-testid="plan-build"
+                  onClick={() => recipes.mutate()}
+                  disabled={recipes.isPending}
+                >
+                  {recipes.isPending ? "Building..." : "Build my plan"}
+                </Button>
+                <Link
+                  href="/onboarding"
+                  className="text-sm text-ink-muted underline-offset-4 hover:underline"
+                >
+                  Answer a few questions first
+                </Link>
+              </div>
             }
+          />
+          <RecipeIdeas
+            meals={recipes.data?.meals}
+            isLoading={recipes.isPending}
+            error={recipes.error}
+            onRetry={() => recipes.mutate()}
           />
         </>
       )}

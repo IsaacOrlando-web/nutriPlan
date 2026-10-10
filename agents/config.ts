@@ -1,11 +1,11 @@
 // Agent model table and run mode. Owner: Agents.
 // Model ids live ONLY here. Env overrides: MODEL_DOCTOR, MODEL_CHEF, MODEL_BUDGET, MODEL_MONITOR,
-// MODEL_ORCHESTRATOR, MODEL_COACH, MODEL_VISION_A, MODEL_VISION_B as "provider:model-id" or "model-id".
+// MODEL_ORCHESTRATOR, MODEL_COACH, MODEL_RECIPES, MODEL_VISION_A, MODEL_VISION_B as "provider:model-id" or "model-id".
 // AGENTS_MODE=live|scripted (default: live when any provider key is present, scripted otherwise).
 
 export type Provider = "anthropic" | "openai" | "google";
 export type AgentKey =
-  "doctor" | "chef" | "budget" | "monitor" | "orchestrator" | "coach" | "visionA" | "visionB";
+  "doctor" | "chef" | "budget" | "monitor" | "orchestrator" | "coach" | "recipes" | "visionA" | "visionB";
 export type AgentsMode = "live" | "scripted";
 
 export interface ModelChoice {
@@ -29,6 +29,7 @@ export const LLM_RETRIES = 0;
 export const AGENT_TIMEOUT_MS: Partial<Record<AgentKey, number>> = {
   chef: 10_000,
   coach: 10_000,
+  recipes: 10_000,
   visionA: 10_000,
   visionB: 10_000,
 };
@@ -41,6 +42,7 @@ export const AGENT_MAX_OUTPUT_TOKENS: Record<AgentKey, number> = {
   monitor: 600,
   orchestrator: 600,
   coach: 900,
+  recipes: 700,
   visionA: 800,
   visionB: 800,
 };
@@ -76,6 +78,8 @@ export const MODEL_TABLE: Record<AgentKey, AgentModelConfig> = {
   monitor: { primary: HAIKU, backup: GEMINI_FLASH },
   orchestrator: { primary: SONNET, backup: GEMINI_FLASH },
   coach: { primary: SONNET, backup: GEMINI_FLASH },
+  // Recipe ideas on /plan run on OpenAI (OPENAI_API_KEY); without it the route answers from templates.
+  recipes: { primary: GPT_MINI, backup: null },
   visionA: { primary: SONNET, backup: HAIKU },
   visionB: { primary: GEMINI_FLASH, backup: GPT_MINI },
 };
@@ -87,6 +91,7 @@ const ENV_OVERRIDE: Record<AgentKey, string> = {
   monitor: "MODEL_MONITOR",
   orchestrator: "MODEL_ORCHESTRATOR",
   coach: "MODEL_COACH",
+  recipes: "MODEL_RECIPES",
   visionA: "MODEL_VISION_A",
   visionB: "MODEL_VISION_B",
 };

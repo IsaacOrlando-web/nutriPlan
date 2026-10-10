@@ -14,6 +14,7 @@
 //   GET  /api/plan/current            MealPlan
 //   GET  /api/agents/runs/[runId]     AgentRunDetail
 //   GET  /api/agents/stream?runId=    Server Sent Events of AgentEvent, closes after "decision"
+//   POST /api/agents/recipes          RecipeIdeasResponse                (2 ideas from the stored profile)
 //   POST /api/upload                  multipart file -> UploadResponse
 //   POST /api/log                     CreateLogRequest -> CreateLogResponse
 //   POST /api/log/photo               { photoUrl, eatenAt? } -> PhotoLogResult
@@ -53,6 +54,7 @@ import type {
   ProfileBundle,
   Reading,
   ReadingType,
+  RecipeIdeasResponse,
   SessionInfo,
   Trend,
   UploadResponse,
@@ -155,6 +157,7 @@ const mocks = {
   readings: (u: MockUser) => import(`@/mocks/readings-${u}.json`).then((m) => m.default as Reading[]),
   summary: (u: MockUser) => import(`@/mocks/summary-${u}.json`).then((m) => m.default as DaySummary),
   monitor: (u: MockUser) => import(`@/mocks/monitor-${u}.json`).then((m) => m.default as MonitorResult),
+  recipes: (u: MockUser) => import(`@/mocks/recipes-${u}.json`).then((m) => m.default as RecipeIdeasResponse),
   trend: (type: ReadingType) =>
     import(`@/mocks/trend-${type === "weight" ? "weight" : type === "bp" ? "bp" : "glucose"}.json`).then(
       (m) => m.default as Trend,
@@ -186,9 +189,16 @@ export const api = {
             return { userId: u, email: `${u}@demo.nutriplan.app`, mode: "local" as const, hasProfile: true };
           })
         : post("/api/auth/login", { email, password }),
-    signup: (input: { name: string; email: string; password: string }): Promise<{ message: string; authenticated?: boolean }> =>
-      USE_MOCKS ? mock(async () => ({ message: "Check your email to verify your account." })) : post("/api/auth/signup", input),
-    logout: (): Promise<void> => (USE_MOCKS ? mock(async () => undefined) : request("/api/auth/logout", { method: "POST" })),
+    signup: (input: {
+      name: string;
+      email: string;
+      password: string;
+    }): Promise<{ message: string; authenticated?: boolean }> =>
+      USE_MOCKS
+        ? mock(async () => ({ message: "Check your email to verify your account." }))
+        : post("/api/auth/signup", input),
+    logout: (): Promise<void> =>
+      USE_MOCKS ? mock(async () => undefined) : request("/api/auth/logout", { method: "POST" }),
   },
 
   profile: {
@@ -265,6 +275,9 @@ export const api = {
             };
           })
         : request(`/api/agents/runs/${encodeURIComponent(runId)}`),
+    /** Two recipe ideas (name, price, ingredients) written by OpenAI from the stored profile, priced by /math. */
+    recipes: (): Promise<RecipeIdeasResponse> =>
+      USE_MOCKS ? mock(mocks.recipes) : request("/api/agents/recipes", { method: "POST" }),
     /** Live event stream. In mock mode the saved negotiation is replayed with realistic pacing. */
     subscribe(
       runId: string,
