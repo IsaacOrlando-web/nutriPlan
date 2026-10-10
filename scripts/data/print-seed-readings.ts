@@ -1,0 +1,122 @@
+// Prints supabase/seed.sql from the single source of truth (demo-users.ts, foods.json, meal-templates.json,
+// mocks/profile-*.json). Owner: Backend.
+//   npx tsx scripts/data/print-seed-readings.ts > supabase/seed.sql
+// Readings are emitted relative to now() so the demo always looks current after `supabase db reset`.
+import fs from "node:fs";
+import path from "node:path";
+import { DEMO_EMAILS, DEMO_USER_IDS, demoReadings, type DemoUserKey } from "@/lib/db/seed/demo-users";
+import type { CandidateMeal, Food, Reading, UserProfile } from "@/types/contracts";
+
+const ROOT = path.resolve(__dirname, "../..");
+const DEMO_PASSWORD = "demo1234";
+const DAY_MS = 86_400_000;
+
+function sqlString(s: string): string {
+  return `'${s.replace(/'/g, "''")}'`;
+}
+
+function sqlJson(value: unknown): string {
+  return `${sqlString(JSON.stringify(value))}::jsonb`;
+}
+
+function sqlTextArray(items: string[]): string {
+  return items.length ? `array[${items.map(sqlString).join(", ")}]::text[]` : "'{}'::text[]";
+}
+
+/** takenAt relative to the generation end date -> SQL expression relative to now() (UTC midnight based). */
+function relativeTimestamp(takenAt: string, endDate: string): string {
+  const taken = Date.parse(takenAt);
+  const takenMidnight = Math.floor(taken / DAY_MS) * DAY_MS;
+  const daysBefore = Math.round((Date.parse(`${endDate}T00:00:00Z`) - takenMidnight) / DAY_MS);
+  const hours = ((taken - takenMidnight) / 3_600_000).toFixed(2);
+  return `(date_trunc('day', timezone('utc', now())) - interval '${daysBefore} days' + interval '${hours} hours')`;
+}
+
+function userRows(key: DemoUserKey): string {
+  const id = DEMO_USER_IDS[key];
+  const email = DEMO_EMAILS[key];
+  return [
+    `insert into auth.users (instance_id, id, aud, role, email, encrypted_password, email_confirmed_at, raw_app_meta_data, raw_user_meta_data, created_at, updated_at, confirmation_token, recovery_token, email_change, email_change_token_new, email_change_token_current, phone_change, phone_change_token, reauthentication_token, is_sso_user)`,
+    `values ('00000000-0000-0000-0000-000000000000', '${id}', 'authenticated', 'authenticated', ${sqlString(email)}, crypt(${sqlString(DEMO_PASSWORD)}, gen_salt('bf')), now(), '{"provider":"email","providers":["email"]}'::jsonb, ${sqlJson({ name: key === "alex" ? "Alex" : "Maria", demo: true })}, now(), now(), '', '', '', '', '', '', '', '', false)`,
+    `on conflict (id) do update set encrypted_password = excluded.encrypted_password, email = excluded.email, updated_at = now();`,
+    `insert into auth.identities (id, user_id, provider_id, identity_data, provider, last_sign_in_at, created_at, updated_at)`,
+    `values ('${id}', '${id}', '${id}', ${sqlJson({ sub: id, email, email_verified: true })}, 'email', now(), now(), now())`,
+    `on conflict (provider_id, provider) do nothing;`,
+  ].join("\n");
+}
+
+function profileRow(profile: UserProfile): string {
+  return `insert into profiles (user_id, data) values ('${profile.userId}', ${sqlJson(profile)}) on conflict (user_id) do update set data = excluded.data, updated_at = now();`;
+}
+
+function readingRows(readings: Reading[], endDate: string): string {
+  const values = readings.map(
+    (r) =>
+      `  ('${r.userId}', ${sqlString(r.type)}, ${r.value}, ${r.value2 ?? "null"}, ${sqlString(r.unit)}, ${relativeTimestamp(r.takenAt, endDate)})`,
+  );
+  return `insert into readings (user_id, type, value, value2, unit, taken_at) values\n${values.join(",\n")};`;
+}
+
+function foodRows(foods: Food[]): string {
+  const values = foods.map(
+    (f) =>
+      `  (${sqlString(f.foodId)}, ${sqlString(f.name)}, ${f.nameEs ? sqlString(f.nameEs) : "null"}, ${sqlJson(f)}, ${sqlTextArray(f.tags)})`,
+  );
+  return `insert into foods (food_id, name, name_es, data, tags) values\n${values.join(",\n")}\non conflict (food_id) do update set name = excluded.name, name_es = excluded.name_es, data = excluded.data, tags = excluded.tags, updated_at = now();`;
+}
+
+function templateRows(templates: Omit<CandidateMeal, "tasteScore">[]): string {
+  const values = templates.map((t) => `  (${sqlString(t.candidateId)}, ${sqlJson(t)})`);
+  return `insert into meal_templates (template_id, data) values\n${values.join(",\n")}\non conflict (template_id) do update set data = excluded.data, updated_at = now();`;
+}
+
+async function main() {
+  const endDate = new Date().toISOString().slice(0, 10);
+  const foods = JSON.parse(fs.readFileSync(path.join(ROOT, "scripts/data/foods.json"), "utf8")) as Food[];
+  const templates = JSON.parse(
+    fs.readFileSync(path.join(ROOT, "scripts/data/meal-templates.json"), "utf8"),
+  ) as Omit<CandidateMeal, "tasteScore">[];
+  const profiles: Record<DemoUserKey, UserProfile> = {
+    alex: JSON.parse(fs.readFileSync(path.join(ROOT, "mocks/profile-alex.json"), "utf8")) as UserProfile,
+    maria: JSON.parse(fs.readFileSync(path.join(ROOT, "mocks/profile-maria.json"), "utf8")) as UserProfile,
+  };
+
+  const out: string[] = [
+    "-- GENERATED by scripts/data/print-seed-readings.ts. Do not edit by hand; rerun:",
+    "--   npx tsx scripts/data/print-seed-readings.ts > supabase/seed.sql",
+    "-- Demo users alex@demo.nutriplan.app / maria@demo.nutriplan.app, password demo1234.",
+    "-- Readings are 21 days ending today (relative to now()), from lib/db/seed/demo-users.ts.",
+    "",
+    "begin;",
+    "",
+    "-- ---------------------------------------------------------------- demo auth users",
+  ];
+  for (const key of ["alex", "maria"] as DemoUserKey[]) out.push(userRows(key), "");
+
+  out.push("-- ---------------------------------------------------------------- profiles");
+  for (const key of ["alex", "maria"] as DemoUserKey[]) out.push(profileRow(profiles[key]));
+  out.push("");
+
+  out.push("-- ---------------------------------------------------------------- readings (21 days)");
+  out.push(
+    "delete from readings where user_id in ('" + DEMO_USER_IDS.alex + "', '" + DEMO_USER_IDS.maria + "');",
+  );
+  for (const key of ["alex", "maria"] as DemoUserKey[])
+    out.push(readingRows(demoReadings(key, endDate), endDate), "");
+
+  out.push(`-- ---------------------------------------------------------------- foods (${foods.length})`);
+  out.push(foodRows(foods), "");
+
+  out.push(
+    `-- ---------------------------------------------------------------- meal templates (${templates.length})`,
+  );
+  out.push(templateRows(templates), "");
+
+  out.push("commit;", "");
+  process.stdout.write(out.join("\n"));
+}
+
+main().catch((err) => {
+  console.error(err);
+  process.exit(1);
+});

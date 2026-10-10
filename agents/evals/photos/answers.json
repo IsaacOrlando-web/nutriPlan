@@ -1,0 +1,33 @@
+[
+  {
+    "photoUrl": "/demo/lunch-bowl.jpg",
+    "description": "Chicken rice bowl: grilled chicken breast over brown rice with steamed broccoli.",
+    "expected": [
+      { "foodId": "chicken_breast", "gramsRange": [100, 140] },
+      { "foodId": "brown_rice", "gramsRange": [120, 180] },
+      { "foodId": "broccoli", "gramsRange": [70, 110] }
+    ],
+    "expectLogged": true
+  },
+  {
+    "photoUrl": "/demo/salmon-plate.jpg",
+    "description": "Baked salmon fillet with quinoa and green beans.",
+    "expected": [
+      { "foodId": "salmon", "gramsRange": [110, 150] },
+      { "foodId": "quinoa", "gramsRange": [120, 160] },
+      { "foodId": "green_beans", "gramsRange": [80, 120] }
+    ],
+    "expectLogged": true
+  },
+  {
+    "photoUrl": "/demo/bean-tacos.jpg",
+    "description": "Two corn tortillas with black beans, fresh salsa and avocado.",
+    "expected": [
+      { "foodId": "black_beans", "gramsRange": [100, 140] },
+      { "foodId": "corn_tortilla", "gramsRange": [40, 60] },
+      { "foodId": "fresh_salsa", "gramsRange": [40, 80] },
+      { "foodId": "avocado", "gramsRange": [35, 65] }
+    ],
+    "expectLogged": true
+  }
+]

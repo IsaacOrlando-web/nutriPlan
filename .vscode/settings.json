@@ -1,0 +1,25 @@
+{
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.codeActionsOnSave": { "source.fixAll.eslint": "explicit" },
+  "files.eol": "\n",
+  "files.insertFinalNewline": true,
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "typescript.enablePromptUseWorkspaceTsdk": true,
+  "typescript.preferences.importModuleSpecifier": "non-relative",
+  "tailwindCSS.experimental.classRegex": [
+    ["cva\\(([^)]*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"],
+    ["cn\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)"]
+  ],
+  "i18n-ally.localesPaths": ["i18n"],
+  "i18n-ally.keystyle": "nested",
+  "files.exclude": { "**/.next": true, "**/tsconfig.tsbuildinfo": true },
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/.next": true,
+    "**/playwright-report": true,
+    "**/test-results": true,
+    "**/.data": true
+  },
+  "files.associations": { ".env.example": "dotenv" }
+}

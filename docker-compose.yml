@@ -1,0 +1,37 @@
+# NutriPlan AI: single `web` service running the standalone Next.js image.
+#   docker compose up --build        -> http://localhost:3000
+# Memory store data persists in ./.data on the host. Keys and mode overrides come from .env.local (optional).
+services:
+  web:
+    build:
+      context: .
+      args:
+        NEXT_PUBLIC_USE_MOCKS: "false"
+    ports:
+      - "3000:3000"
+    env_file:
+      - path: .env.local
+        required: false
+    environment:
+      DATA_BACKEND: ${DATA_BACKEND:-memory}
+      MEMORY_STORE_FILE: .data/store.json
+      AUTH_MODE: ${AUTH_MODE:-local}
+      AGENTS_FALLBACK: ${AGENTS_FALLBACK:-true}
+      AGENT_EVENT_DELAY_MS: ${AGENT_EVENT_DELAY_MS:-900}
+    volumes:
+      - ./.data:/app/.data
+    restart: unless-stopped
+
+# ---------------------------------------------------------------------------
+# Local Supabase is intentionally NOT a compose service.
+# The Supabase CLI manages its own set of containers (Postgres, Auth, Storage, Studio, Realtime):
+#   npm run db:start      # = npx supabase start   (needs Docker Desktop running)
+#   npm run db:reset      # applies supabase/migrations and seed.sql
+#   npm run db:stop
+# To point this web container at it, set in .env.local:
+#   DATA_BACKEND=supabase
+#   SUPABASE_URL=http://host.docker.internal:54321      (the CLI prints the API URL and keys)
+#   SUPABASE_SERVICE_ROLE_KEY=<service_role key from `npx supabase status`>
+# host.docker.internal resolves to the host on Docker Desktop (Windows and Mac). On Linux add
+#   extra_hosts: ["host.docker.internal:host-gateway"] to the web service.
+# ---------------------------------------------------------------------------

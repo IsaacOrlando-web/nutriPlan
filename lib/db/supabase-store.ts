@@ -87,7 +87,7 @@ export class SupabaseStore implements Store {
     return (data ?? []).map((r: Row) => r.data as Food);
   }
   async upsertFoods(foods: Food[]) {
-    const rows = foods.map((f) => ({ food_id: f.foodId, name: f.name, data: f, tags: f.tags }));
+    const rows = foods.map((f) => ({ food_id: f.foodId, name: f.name, name_es: f.nameEs ?? null, data: f, tags: f.tags }));
     for (let i = 0; i < rows.length; i += 500) {
       const { error } = await this.db.from("foods").upsert(rows.slice(i, i + 500));
       if (error) throw new Error(`[supabase] foods upsert: ${error.message}`);

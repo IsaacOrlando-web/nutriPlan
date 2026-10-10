@@ -1,0 +1,48 @@
+{
+  "$comment": "Checks applied to every eval user by agents/evals/run-evals.ts. Each check names what it asserts; the script implements it.",
+  "checks": [
+    { "id": "run_done", "description": "The run finishes with status done and no fallback replay." },
+    { "id": "event_count", "description": "Between 15 and 25 events per run.", "min": 15, "max": 25 },
+    { "id": "objection_and_concession", "description": "At least one objection and one concession event." },
+    { "id": "text_length", "description": "Every event text is 140 characters or fewer.", "max": 140 },
+    {
+      "id": "decision_last",
+      "description": "Exactly one decision event and it is the last event; it carries data.planId."
+    },
+    { "id": "tool_calls_named", "description": "Every tool_call event carries data.tool." },
+    {
+      "id": "doctor_constraints_data",
+      "description": "The Doctor's first proposal carries data.constraints equal to the stored constraints at the end of the run (never relaxed)."
+    },
+    {
+      "id": "plan_saved",
+      "description": "A MealPlan with 7 days and mealsPerDay meals per day is saved as the current plan."
+    },
+    {
+      "id": "verify_plan_clean",
+      "description": "verifyPlan on the saved plan returns no violations (feasible, or bestEffort only over budget)."
+    },
+    {
+      "id": "best_effort_only_budget",
+      "description": "bestEffort plans cost more than the budget but still pass every rule."
+    },
+    {
+      "id": "no_excluded_tags",
+      "description": "No plan item carries any of the excluded food tags (allergies and restrictions)."
+    },
+    {
+      "id": "per_meal_caps",
+      "description": "For diabetic users every meal is within maxCarbsPerMealG and maxGlycemicLoadPerMeal."
+    },
+    {
+      "id": "grocery_list",
+      "description": "The grocery list is non-empty and its total cost matches the plan's weekly cost within $0.50."
+    },
+    { "id": "explanations", "description": "Every meal has explanations from chef, doctor and budget." },
+    {
+      "id": "numbers_from_math",
+      "description": "Every number in event texts also appears in constraints, profile, plan or optimizer output (scripted mode guarantees this; the check guards regressions)."
+    }
+  ],
+  "photos": "agents/evals/photos/answers.json holds three answer keys for the scripted vision path (agents/vision/analyze.ts templates)."
+}

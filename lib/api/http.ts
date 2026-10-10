@@ -1,7 +1,7 @@
 // Route handler helpers: JSON responses, Zod validation, uniform `{ error }` bodies. Owner: Backend.
 // Every /app/api route uses these so error format and status codes stay consistent.
 import { NextResponse, type NextRequest } from "next/server";
-import type { ZodSchema } from "zod";
+import type { ZodType, ZodTypeDef } from "zod";
 import { UnauthorizedError } from "@/lib/auth/session";
 
 export class HttpError extends Error {
@@ -21,7 +21,7 @@ export function error(status: number, message: string): NextResponse<{ error: st
   return NextResponse.json({ error: message }, { status });
 }
 
-export async function parseBody<T>(req: NextRequest, schema: ZodSchema<T>): Promise<T> {
+export async function parseBody<T>(req: NextRequest, schema: ZodType<T, ZodTypeDef, unknown>): Promise<T> {
   let raw: unknown;
   try {
     raw = await req.json();
@@ -36,7 +36,7 @@ export async function parseBody<T>(req: NextRequest, schema: ZodSchema<T>): Prom
   return result.data;
 }
 
-export function parseQuery<T>(req: NextRequest, schema: ZodSchema<T>): T {
+export function parseQuery<T>(req: NextRequest, schema: ZodType<T, ZodTypeDef, unknown>): T {
   const obj = Object.fromEntries(req.nextUrl.searchParams.entries());
   const result = schema.safeParse(obj);
   if (!result.success) {
