@@ -15,7 +15,6 @@ function isPublic(pathname: string): boolean {
 }
 
 function hasCookieSession(req: NextRequest): boolean {
-  if (process.env.AUTH_MODE === "supabase") return req.cookies.getAll().some((c) => c.name.startsWith("sb-"));
   if (req.cookies.has(SESSION_COOKIE)) return true;
   // Mock login has no server-issued JWT; only allow its demo cookie in mock mode.
   return process.env.NEXT_PUBLIC_USE_MOCKS === "true" && req.cookies.has(MOCK_SESSION_COOKIE);

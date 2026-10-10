@@ -26,6 +26,14 @@
 //   POST /api/coach                   CoachRequest -> CoachResponse
 //   POST /api/monitor/run             MonitorResult
 //   POST /api/plan/rate               { mealName, liked }
+//   GET  /api/meal-plans?weekStart=   WeekPlanResponse                   (weekly recipe planner)
+//   POST /api/meal-plans/generate     GenerateWeekRequest -> GenerateWeekResponse
+//   POST /api/recipes/generate        ReplaceRecipeRequest -> ReplaceRecipeResponse (swap one recipe)
+//   PATCH /api/meal-plans/state       UpdateWeekStateRequest -> PlannerWeekState (grocery ticks)
+//
+// External, public, no keys (browser -> OpenStreetMap), only after the user taps "Find a store near me":
+//   POST https://overpass-api.de/api/interpreter          supermarkets around a point
+//   GET  https://nominatim.openstreetmap.org/search      city or ZIP -> coordinates
 //   POST /api/demo/reset              { user: "alex" | "maria" }         (demo helper)
 import type {
   AgentEvent,
@@ -43,6 +51,8 @@ import type {
   FoodLogEntry,
   GeneratePlanRequest,
   GeneratePlanResponse,
+  GenerateWeekRequest,
+  GenerateWeekResponse,
   KrogerCartItemInput,
   KrogerCartResponse,
   KrogerLocation,
@@ -50,15 +60,22 @@ import type {
   KrogerStatus,
   MealPlan,
   MonitorResult,
+  PlannerWeekState,
   PhotoLogResult,
   ProfileBundle,
   Reading,
   ReadingType,
+  Recipe,
   RecipeIdeasResponse,
+  ReplaceRecipeRequest,
+  ReplaceRecipeResponse,
   SessionInfo,
   Trend,
+  UpdateWeekStateRequest,
   UploadResponse,
   UserProfile,
+  WeekPlanResponse,
+  WeeklyMealPlan,
 } from "@/types/contracts";
 
 export interface BudgetCurveParams {
@@ -67,6 +84,17 @@ export interface BudgetCurveParams {
   step?: number;
   budget?: number;
   refresh?: boolean;
+}
+
+/** A shop near the user, from OpenStreetMap. UI only (not a shared contract). */
+export interface NearbyStore {
+  id: string;
+  name: string;
+  kind: "supermarket" | "greengrocer" | "convenience";
+  address: string | null;
+  lat: number;
+  lng: number;
+  distanceKm: number;
 }
 
 export const USE_MOCKS = process.env.NEXT_PUBLIC_USE_MOCKS === "true";
@@ -162,9 +190,178 @@ const mocks = {
     import(`@/mocks/trend-${type === "weight" ? "weight" : type === "bp" ? "bp" : "glucose"}.json`).then(
       (m) => m.default as Trend,
     ),
+  photoLog: () => import("@/mocks/photo-log.json").then((m) => m.default as PhotoLogResult),
   foodLog: () => import("@/mocks/food-log.json").then((m) => m.default as FoodLogEntry[]),
   foods: () => import("@/mocks/foods-sample.json").then((m) => m.default as Food[]),
+  weeklyPlan: (u: MockUser) =>
+    import(`@/mocks/weekly-plan-${u}.json`).then((m) => m.default as WeeklyMealPlan),
 };
+
+// Mock weekly planner: one in-memory week per demo user so swaps and regenerations stick for the session.
+const mockWeeks = new Map<MockUser, WeeklyMealPlan>();
+const mockWeekStates = new Map<string, PlannerWeekState>();
+const emptyWeekState = (): PlannerWeekState => ({
+  completed: {},
+  shopping: { checked: {}, quantityOverrides: {}, removed: [], customItems: [] },
+});
+let mockSwapCursor = 0;
+
+function shiftIsoDate(iso: string, days: number): string {
+  const d = new Date(`${iso}T00:00:00Z`);
+  d.setUTCDate(d.getUTCDate() + days);
+  return d.toISOString().slice(0, 10);
+}
+
+async function mockWeek(u: MockUser, weekStart: string): Promise<WeeklyMealPlan> {
+  const current = mockWeeks.get(u);
+  if (current?.weekStartDate === weekStart) return current;
+  const base = structuredClone(current ?? (await mocks.weeklyPlan(u)));
+  const week: WeeklyMealPlan = {
+    ...base,
+    weekStartDate: weekStart,
+    days: base.days.map((d, i) => ({ ...d, date: shiftIsoDate(weekStart, i) })),
+  };
+  mockWeeks.set(u, week);
+  return week;
+}
+
+const MOCK_MEAL_TYPES = ["breakfast", "lunch", "dinner"] as const;
+
+/** Same recipes, each day gets the dishes of the next day, so every date changes. */
+async function mockRegenerateWeek(u: MockUser, weekStart: string): Promise<WeeklyMealPlan> {
+  const week = await mockWeek(u, weekStart);
+  const next: WeeklyMealPlan = {
+    ...week,
+    id: `${u}-week-${weekStart}-${Date.now()}`,
+    createdAt: new Date().toISOString(),
+    days: week.days.map((d, i) => {
+      const from = week.days[(i + 1) % week.days.length];
+      return { date: d.date, breakfast: from.breakfast, lunch: from.lunch, dinner: from.dinner };
+    }),
+  };
+  mockWeeks.set(u, next);
+  return next;
+}
+
+/** Picks another recipe of the same meal type from the week, round robin, and swaps it into that day only. */
+async function mockReplaceRecipe(u: MockUser, req: ReplaceRecipeRequest): Promise<ReplaceRecipeResponse> {
+  const week = await mockWeek(u, req.weekStartDate);
+  const day = week.days.find((d) => d.date === req.date);
+  if (!day) throw new ApiRequestError(404, "That day is not in this week's plan");
+  const current = day[req.mealType];
+  const pool = new Map<string, Recipe>();
+  const base = await mocks.weeklyPlan(u);
+  for (const d of [...week.days, ...base.days]) {
+    for (const t of MOCK_MEAL_TYPES)
+      if (t === req.mealType && d[t].title !== current.title) pool.set(d[t].title, d[t]);
+  }
+  const options = [...pool.values()];
+  if (options.length === 0) throw new ApiRequestError(422, "No other recipe of this type to swap in");
+  const picked = options[mockSwapCursor++ % options.length];
+  const recipe: Recipe = { ...picked, id: `${req.date}-${req.mealType}-${Date.now()}` };
+  const plan: WeeklyMealPlan = {
+    ...week,
+    days: week.days.map((d) => (d.date === req.date ? { ...d, [req.mealType]: recipe } : d)),
+  };
+  mockWeeks.set(u, plan);
+  return { recipe, plan };
+}
+
+// ---------------------------------------------------------------------------
+// OpenStreetMap helpers (public endpoints; the browser sends the coordinates only after a tap).
+// ---------------------------------------------------------------------------
+
+const MOCK_STORES: NearbyStore[] = [
+  {
+    id: "mock-store-1",
+    name: "Supermercado demo",
+    kind: "supermarket",
+    address: "Av. Juárez 120, Centro",
+    lat: 19.4352,
+    lng: -99.1412,
+    distanceKm: 0.8,
+  },
+  {
+    id: "mock-store-2",
+    name: "Frutería La Esquina",
+    kind: "greengrocer",
+    address: "Calle Madero 45, Centro",
+    lat: 19.4339,
+    lng: -99.1365,
+    distanceKm: 1.1,
+  },
+];
+
+const STORE_KINDS: NearbyStore["kind"][] = ["supermarket", "greengrocer", "convenience"];
+
+/** Great circle distance in km (display only: "0.8 km away"). */
+function distanceKm(lat1: number, lng1: number, lat2: number, lng2: number): number {
+  const rad = (d: number) => (d * Math.PI) / 180;
+  const a =
+    Math.sin(rad(lat2 - lat1) / 2) ** 2 +
+    Math.cos(rad(lat1)) * Math.cos(rad(lat2)) * Math.sin(rad(lng2 - lng1) / 2) ** 2;
+  return 6371 * 2 * Math.asin(Math.sqrt(a));
+}
+
+interface OverpassElement {
+  type: string;
+  id: number;
+  lat?: number;
+  lon?: number;
+  center?: { lat: number; lon: number };
+  tags?: Record<string, string>;
+}
+
+async function overpassShops(lat: number, lng: number, radiusM: number): Promise<NearbyStore[]> {
+  const query = `[out:json][timeout:15];nwr["shop"~"^(supermarket|greengrocer|convenience)$"]["name"](around:${radiusM},${lat},${lng});out center 60;`;
+  const res = await fetch("https://overpass-api.de/api/interpreter", {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: `data=${encodeURIComponent(query)}`,
+  });
+  if (!res.ok) throw new ApiRequestError(res.status, "Could not reach OpenStreetMap to find stores.");
+  const { elements } = (await res.json()) as { elements: OverpassElement[] };
+  return elements.flatMap((el) => {
+    const pLat = el.lat ?? el.center?.lat;
+    const pLng = el.lon ?? el.center?.lon;
+    const tags = el.tags ?? {};
+    const kind = tags.shop as NearbyStore["kind"];
+    if (pLat === undefined || pLng === undefined || !tags.name || !STORE_KINDS.includes(kind)) return [];
+    const street = [tags["addr:street"], tags["addr:housenumber"]].filter(Boolean).join(" ");
+    const address = [street, tags["addr:city"] ?? tags["addr:suburb"]].filter(Boolean).join(", ") || null;
+    return [
+      {
+        id: `${el.type}/${el.id}`,
+        name: tags.name,
+        kind,
+        address,
+        lat: pLat,
+        lng: pLng,
+        distanceKm: distanceKm(lat, lng, pLat, pLng),
+      },
+    ];
+  });
+}
+
+/** Supermarkets first (they carry the whole list), then by distance. Widens the search once when nothing is close. */
+async function fetchNearbyStores(lat: number, lng: number): Promise<NearbyStore[]> {
+  let shops = await overpassShops(lat, lng, 3000);
+  if (!shops.some((s) => s.kind === "supermarket")) shops = await overpassShops(lat, lng, 8000);
+  return shops.sort(
+    (a, b) => STORE_KINDS.indexOf(a.kind) - STORE_KINDS.indexOf(b.kind) || a.distanceKm - b.distanceKm,
+  );
+}
+
+async function geocodePlace(query: string): Promise<{ lat: number; lng: number; label: string } | null> {
+  const res = await fetch(
+    `https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(query)}`,
+    { headers: { Accept: "application/json" } },
+  );
+  if (!res.ok) throw new ApiRequestError(res.status, "Could not look up that place.");
+  const hits = (await res.json()) as { lat: string; lon: string; display_name: string }[];
+  const hit = hits[0];
+  return hit ? { lat: Number(hit.lat), lng: Number(hit.lon), label: hit.display_name } : null;
+}
 
 // ---------------------------------------------------------------------------
 // Public API
@@ -257,6 +454,45 @@ export const api = {
       USE_MOCKS ? mock(async () => undefined) : post("/api/plan/rate", { mealName, liked }),
   },
 
+  /** Weekly recipe planner (the LLM writes recipes; /math prices them). Generation can take a while live. */
+  planner: {
+    week: (weekStart: string): Promise<WeekPlanResponse> =>
+      USE_MOCKS
+        ? mock(async (u) => ({
+            plan: await mockWeek(u, weekStart),
+            state: mockWeekStates.get(`${u}:${weekStart}`) ?? emptyWeekState(),
+          }))
+        : request(`/api/meal-plans?weekStart=${weekStart}`),
+    generateWeek: (body: GenerateWeekRequest): Promise<GenerateWeekResponse> =>
+      USE_MOCKS
+        ? mock(async (u) => ({ plan: await mockRegenerateWeek(u, body.weekStartDate) }))
+        : post("/api/meal-plans/generate", body),
+    replaceRecipe: (body: ReplaceRecipeRequest): Promise<ReplaceRecipeResponse> =>
+      USE_MOCKS ? mock((u) => mockReplaceRecipe(u, body)) : post("/api/recipes/generate", body),
+    /** Completed meals and grocery edits (ticks) for one week. `shopping` replaces the stored shopping state. */
+    updateState: (body: UpdateWeekStateRequest): Promise<PlannerWeekState> =>
+      USE_MOCKS
+        ? mock(async (u) => {
+            const key = `${u}:${body.weekStartDate}`;
+            const prev = mockWeekStates.get(key) ?? emptyWeekState();
+            const next: PlannerWeekState = {
+              completed: { ...prev.completed, ...body.completed },
+              shopping: body.shopping ?? prev.shopping,
+            };
+            mockWeekStates.set(key, next);
+            return next;
+          })
+        : request("/api/meal-plans/state", { method: "PATCH", body: JSON.stringify(body) }),
+  },
+
+  /** Nearby shops from OpenStreetMap (public APIs, no keys). Called only after the user asks. */
+  places: {
+    nearbyStores: (lat: number, lng: number): Promise<NearbyStore[]> =>
+      USE_MOCKS ? mock(async () => MOCK_STORES.map((st) => ({ ...st }))) : fetchNearbyStores(lat, lng),
+    geocode: (query: string): Promise<{ lat: number; lng: number; label: string } | null> =>
+      USE_MOCKS ? mock(async () => ({ lat: 19.4326, lng: -99.1332, label: query })) : geocodePlace(query),
+  },
+
   agents: {
     run: (runId: string): Promise<AgentRunDetail> =>
       USE_MOCKS
@@ -333,19 +569,8 @@ export const api = {
     photo: (photoUrl: string, eatenAt?: string): Promise<PhotoLogResult> =>
       USE_MOCKS
         ? mock(async () => {
-            const entry = (await mocks.foodLog())[0];
-            return {
-              logged: true,
-              entry,
-              votes: {
-                a: { model: "claude-sonnet", items: entry.items },
-                b: {
-                  model: "gemini-flash",
-                  items: entry.items.map((i) => ({ ...i, grams: Math.round(i.grams * 0.9) })),
-                },
-                agreement: entry.visionAgreement ?? 0.84,
-              },
-            };
+            const result = await mocks.photoLog();
+            return { ...result, entry: { ...result.entry, photoUrl } };
           })
         : post("/api/log/photo", { photoUrl, eatenAt }),
   },

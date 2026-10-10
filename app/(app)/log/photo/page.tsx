@@ -104,9 +104,15 @@ function PhotoTab() {
 
   const confirm = async () => {
     if (!result) return;
+    // The question is about an item only one model saw. The first option confirms it, so log it too.
+    const confirmsDisputed = result.entry.question !== null && answer === result.entry.question.options[0];
+    const disputed = [...result.votes.a.items, ...result.votes.b.items].filter(
+      (v) => !result.entry.items.some((i) => i.foodId === v.foodId),
+    );
+    const items = confirmsDisputed ? [...result.entry.items, ...disputed] : result.entry.items;
     try {
       const res = await create.mutateAsync({
-        items: result.entry.items.map((i) => ({
+        items: items.map((i) => ({
           foodId: i.foodId,
           grams: i.grams,
           confidence: i.confidence,

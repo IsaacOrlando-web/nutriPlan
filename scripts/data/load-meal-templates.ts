@@ -1,5 +1,5 @@
 // Validates scripts/data/meal-templates.json against foods.json and upserts the templates into the store. Owner: Backend.
-//   npm run data:templates                 (DATA_BACKEND=memory writes .data/store.json; =supabase writes meal_templates)
+//   npm run data:templates                 (writes the local JSON store)
 //   npm run data:templates -- --check      validate only
 import fs from "node:fs";
 import path from "node:path";

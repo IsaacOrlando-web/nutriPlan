@@ -10,6 +10,7 @@ import { useIsLaptop } from "@/lib/hooks/useMediaQuery";
 import { fmtNumber, fmtUsd, plural } from "@/lib/utils";
 import type { Meal, ShadowPrice } from "@/types/contracts";
 import { MEAL_TYPE_LABELS } from "./MealCard";
+import { mealImageUrl } from "./meal-image";
 
 export interface WhySheetProps {
   meal: Meal | null;
@@ -28,6 +29,11 @@ export function WhySheet({ meal, shadowPrices, curveInsight, onClose }: WhySheet
         {meal && (
           <>
             <SheetHeader>
+              <img
+                src={mealImageUrl(meal)}
+                alt={`${meal.name} dish`}
+                className="h-44 w-full rounded-lg object-cover"
+              />
               <div className="flex items-center gap-2">
                 <Badge variant="secondary">{MEAL_TYPE_LABELS[meal.type]}</Badge>
                 <span className="text-xs text-ink-subtle">{meal.cuisine}</span>

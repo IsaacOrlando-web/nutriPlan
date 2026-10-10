@@ -1,7 +1,20 @@
 // Coach agent: the person's day to day guide. Owner: Agents.
 // Live: LLM with a code-built context (every number comes from math). Scripted: rule-based replies that
 // name tonight's dinner, quote remaining calories from math and trigger a replan on budget requests.
-import type { CoachMessage, CoachResponse, Meal, MealTotals, PlanDay } from "@/types/contracts";
+import type {
+  CoachMessage,
+  CoachResponse,
+  FoodLogEntry,
+  Meal,
+  MealPlan,
+  MealTotals,
+  PlanDay,
+  PlannerPreferences,
+  PlannerWeekState,
+  Reading,
+  UserProfile,
+  WeeklyMealPlan,
+} from "@/types/contracts";
 import { getStore } from "@/lib/db";
 import type { Store } from "@/lib/db/store";
 import { CoachReplySchema } from "./schemas";
@@ -19,13 +32,17 @@ export interface CoachOptions {
 
 interface CoachContext {
   profileSummary: string;
+  profile: UserProfile;
   constraintsSummary: string;
   rules: { rule: string; why: string; source: string }[];
   today: string;
+  plan: MealPlan | null;
   planDay: PlanDay | null;
   planVersion: number | null;
   weeklyCostUsd: number | null;
   weeklyBudgetUsd: number;
+  foodLogs: FoodLogEntry[];
+  readings: Reading[];
   eaten: MealTotals;
   remaining: MealTotals;
   targets: {
@@ -37,6 +54,22 @@ interface CoachContext {
     sodiumMg: number;
   };
   alerts: string[];
+  /** The /plan weekly planner: the week containing today (or the last selected week) with its recipes. */
+  weeklyPlanner: {
+    weekStartDate: string;
+    plan: WeeklyMealPlan | null;
+    state: PlannerWeekState | null;
+    preferences: PlannerPreferences | null;
+    favoriteRecipes: string[];
+  };
+}
+
+/** Monday (YYYY-MM-DD, UTC) of the week that contains `isoDate`. */
+export function mondayOf(isoDate: string): string {
+  const d = new Date(`${isoDate.slice(0, 10)}T00:00:00.000Z`);
+  const shift = (d.getUTCDay() + 6) % 7;
+  d.setUTCDate(d.getUTCDate() - shift);
+  return d.toISOString().slice(0, 10);
 }
 
 function mealByType(day: PlanDay | null, type: Meal["type"]): Meal | null {
@@ -52,6 +85,7 @@ async function buildContext(store: Store, userId: string): Promise<CoachContext>
     from: `${today}T00:00:00.000Z`,
     to: `${today}T23:59:59.999Z`,
   });
+  const readings = await store.listReadings(userId);
   const eaten = sumTotals(logs.map((l) => l.totals));
   const targetTotals: MealTotals = {
     ...emptyTotals(),
@@ -64,7 +98,16 @@ async function buildContext(store: Store, userId: string): Promise<CoachContext>
     potassiumMg: targets.potassiumMg,
   };
   const remaining = subtractTotals(targetTotals, eaten);
-  const readings = await store.listReadings(userId);
+  const settings = await store.getPlannerSettings(userId);
+  let weekStartDate = mondayOf(today);
+  let week = await store.getPlannerWeek(userId, weekStartDate);
+  if (!week?.plan && settings?.selectedWeek && settings.selectedWeek !== weekStartDate) {
+    const selected = await store.getPlannerWeek(userId, settings.selectedWeek);
+    if (selected?.plan) {
+      weekStartDate = settings.selectedWeek;
+      week = selected;
+    }
+  }
   const alerts: string[] = [];
   const w = getTrends(readings, "weight", profile.goal);
   if (w.alert !== "none") alerts.push(`weight ${w.alert} (${w.slopePerWeek} kg/week)`);
@@ -74,13 +117,17 @@ async function buildContext(store: Store, userId: string): Promise<CoachContext>
   if (b.alert !== "none") alerts.push(`blood pressure ${b.alert} (${b.slopePerWeek} mmHg per week)`);
   return {
     profileSummary: profileSummary(profile),
+    profile,
     constraintsSummary: constraints.summary,
     rules: constraints.reasons,
     today,
+    plan,
     planDay,
     planVersion: plan?.version ?? null,
     weeklyCostUsd: plan?.weeklyCostUsd ?? null,
     weeklyBudgetUsd: profile.weeklyBudgetUsd,
+    foodLogs: logs,
+    readings,
     eaten,
     remaining,
     targets: {
@@ -92,6 +139,13 @@ async function buildContext(store: Store, userId: string): Promise<CoachContext>
       sodiumMg: targets.sodiumMg,
     },
     alerts,
+    weeklyPlanner: {
+      weekStartDate,
+      plan: week?.plan ?? null,
+      state: week?.state ?? null,
+      preferences: settings?.preferences ?? null,
+      favoriteRecipes: settings?.favorites.map((r) => r.title) ?? [],
+    },
   };
 }
 
@@ -243,17 +297,24 @@ export async function runCoach(
         agent: "coach",
         schema: CoachReplySchema,
         system: loadPrompt("coach"),
-        prompt: `Context (JSON, all numbers computed by code):\n${JSON.stringify({ ...ctx, planDay: ctx.planDay ? { date: ctx.planDay.date, meals: ctx.planDay.meals.map((m) => ({ type: m.type, name: m.name, cuisine: m.cuisine, prepMinutes: m.prepMinutes, totals: m.totals, explanation: m.explanation })) } : null })}\n\nConversation:\n${transcript}\n\nReply as the Coach.`,
+        prompt: `Context (complete code-built user data; all numbers are computed by code):\n${JSON.stringify(ctx)}\n\nConversation:\n${transcript}\n\nReply as the Coach.`,
         temperature: 0.6,
       });
-      if (onlyAllowedNumbers(llm.reply, contextNumbers(ctx)))
+      // Numbers the person typed may be echoed back; everything else must come from the code-built context.
+      const allowed = [
+        ...contextNumbers(ctx),
+        ...messages.flatMap((m) => m.content.match(/\d+(?:\.\d+)?/g) ?? []),
+      ];
+      if (onlyAllowedNumbers(llm.reply, allowed))
         out = { reply: llm.reply, wantsReplan: llm.wantsReplan, replanReason: llm.replanReason };
-      else
+      else {
+        console.warn("[coach] llm reply used a number not in the context; using the scripted reply");
         out = {
           ...out,
           wantsReplan: out.wantsReplan || llm.wantsReplan,
           replanReason: out.replanReason ?? llm.replanReason,
         };
+      }
     } catch (err) {
       if (!(err instanceof NoLlmError)) console.warn("[coach] llm reply skipped:", (err as Error).message);
     }

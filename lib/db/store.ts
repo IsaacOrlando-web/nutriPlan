@@ -1,10 +1,7 @@
 // Store interface: the ONLY way application code touches persisted data. Owner: Backend.
 //
-// Two implementations exist:
-//   - MemoryStore   (lib/db/memory-store.ts)   JSON on disk under .data/, seeded with Alex and Maria. Zero setup.
-//   - SupabaseStore (lib/db/supabase-store.ts) Postgres through Supabase, matches supabase/migrations.
-// `getStore()` in lib/db/index.ts picks one from DATA_BACKEND. Agents and API routes never import an
-// implementation directly, so the whole app runs locally on day one and scales to Supabase unchanged.
+// MemoryStore is persisted as JSON on disk under .data/ and seeded with Alex and Maria.
+// `getStore()` in lib/db/index.ts is the only way application code obtains it.
 import type {
   AgentEvent,
   AgentRun,
@@ -61,7 +58,7 @@ export interface PlannerWeekRecord {
 }
 
 export interface Store {
-  readonly kind: "memory" | "supabase";
+  readonly kind: "memory";
 
   // Auth identities
   createUser(user: AppUser): Promise<void>;

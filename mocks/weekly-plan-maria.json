@@ -1,0 +1,1661 @@
+{
+  "id": "maria-week-2026-10-05",
+  "userId": "00000000-0000-4000-8000-0000000a7a1a",
+  "weekStartDate": "2026-10-05",
+  "language": "en",
+  "createdAt": "2026-10-05T08:00:00.000Z",
+  "days": [
+    {
+      "date": "2026-10-05",
+      "breakfast": {
+        "id": "2026-10-05-breakfast-tofu-veggie-scramble-with-toast",
+        "title": "Tofu veggie scramble with toast",
+        "description": "American breakfast with tofu and bell pepper.",
+        "mealType": "breakfast",
+        "ingredients": [
+          {
+            "id": "tofu-0",
+            "name": "Tofu, firm",
+            "quantity": 170,
+            "unit": "g",
+            "category": "protein",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "tofu"
+          },
+          {
+            "id": "bell_pepper-1",
+            "name": "Bell pepper",
+            "quantity": 119,
+            "unit": "g",
+            "category": "produce",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "bell_pepper"
+          },
+          {
+            "id": "spinach-2",
+            "name": "Spinach, raw",
+            "quantity": 30,
+            "unit": "g",
+            "category": "produce",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "spinach"
+          },
+          {
+            "id": "ww_bread-3",
+            "name": "Whole wheat bread",
+            "quantity": 32,
+            "unit": "g",
+            "category": "grains",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "ww_bread"
+          }
+        ],
+        "instructions": [
+          "Crumble tofu into a hot pan with peppers",
+          "Add spinach until wilted, season with turmeric and pepper",
+          "Serve with toast"
+        ],
+        "preparationMinutes": 12,
+        "cookingMinutes": 0,
+        "totalMinutes": 12,
+        "servings": 1,
+        "difficulty": "easy",
+        "estimatedCostPerServing": 2.46,
+        "currency": "USD",
+        "nutritionPerServing": {
+          "calories": 369,
+          "proteinGrams": 35.4,
+          "carbohydratesGrams": 26.6,
+          "fatGrams": 16.4
+        },
+        "nutritionSource": "math",
+        "unmatchedIngredients": [],
+        "ruleWarnings": [],
+        "dietaryTags": [],
+        "allergens": [],
+        "imageSearchTerm": "Tofu veggie scramble with toast",
+        "imageUrl": null,
+        "storageNotes": "Keeps 3 days in the fridge in a sealed container."
+      },
+      "lunch": {
+        "id": "2026-10-05-lunch-tofu-edamame-rice-bowl",
+        "title": "Tofu edamame rice bowl",
+        "description": "Asian lunch with tofu and edamame.",
+        "mealType": "lunch",
+        "ingredients": [
+          {
+            "id": "tofu-0",
+            "name": "Tofu, firm",
+            "quantity": 170,
+            "unit": "g",
+            "category": "protein",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "tofu"
+          },
+          {
+            "id": "edamame-1",
+            "name": "Edamame, shelled, cooked",
+            "quantity": 78,
+            "unit": "g",
+            "category": "produce",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "edamame"
+          },
+          {
+            "id": "brown_rice-2",
+            "name": "Brown rice, cooked",
+            "quantity": 98,
+            "unit": "g",
+            "category": "grains",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "brown_rice"
+          },
+          {
+            "id": "carrots-3",
+            "name": "Carrots",
+            "quantity": 61,
+            "unit": "g",
+            "category": "produce",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "carrots"
+          },
+          {
+            "id": "soy_sauce-4",
+            "name": "Soy sauce, low sodium",
+            "quantity": 9,
+            "unit": "g",
+            "category": "produce",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "soy_sauce"
+          }
+        ],
+        "instructions": [
+          "Pan sear tofu cubes",
+          "Warm edamame and rice",
+          "Top with shredded carrot and soy sauce"
+        ],
+        "preparationMinutes": 20,
+        "cookingMinutes": 0,
+        "totalMinutes": 20,
+        "servings": 1,
+        "difficulty": "easy",
+        "estimatedCostPerServing": 2.13,
+        "currency": "USD",
+        "nutritionPerServing": {
+          "calories": 490,
+          "proteinGrams": 42.6,
+          "carbohydratesGrams": 43.1,
+          "fatGrams": 20
+        },
+        "nutritionSource": "math",
+        "unmatchedIngredients": [],
+        "ruleWarnings": [],
+        "dietaryTags": [],
+        "allergens": [],
+        "imageSearchTerm": "Tofu edamame rice bowl",
+        "imageUrl": null,
+        "storageNotes": "Keeps 3 days in the fridge in a sealed container."
+      },
+      "dinner": {
+        "id": "2026-10-05-dinner-chipotle-shredded-chicken-tostadas-extra-chicken-b",
+        "title": "Chipotle shredded chicken tostadas, extra chicken breast",
+        "description": "Mexican dinner with chicken breast and corn tortilla.",
+        "mealType": "dinner",
+        "ingredients": [
+          {
+            "id": "chicken_breast-0",
+            "name": "Chicken breast, roasted",
+            "quantity": 300,
+            "unit": "g",
+            "category": "protein",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "chicken_breast"
+          },
+          {
+            "id": "corn_tortilla-1",
+            "name": "Corn tortilla",
+            "quantity": 52,
+            "unit": "g",
+            "category": "grains",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "corn_tortilla"
+          },
+          {
+            "id": "canned_tomatoes-2",
+            "name": "Diced tomatoes, no salt added",
+            "quantity": 121,
+            "unit": "g",
+            "category": "produce",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "canned_tomatoes"
+          },
+          {
+            "id": "onion-3",
+            "name": "Onion",
+            "quantity": 55,
+            "unit": "g",
+            "category": "produce",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "onion"
+          },
+          {
+            "id": "cabbage-4",
+            "name": "Cabbage, shredded",
+            "quantity": 89,
+            "unit": "g",
+            "category": "produce",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "cabbage"
+          }
+        ],
+        "instructions": [
+          "Simmer shredded chicken with tomato, onion and chipotle",
+          "Crisp tortillas in the oven",
+          "Top with tinga, cabbage and farmer cheese"
+        ],
+        "preparationMinutes": 30,
+        "cookingMinutes": 0,
+        "totalMinutes": 30,
+        "servings": 1,
+        "difficulty": "easy",
+        "estimatedCostPerServing": 4.19,
+        "currency": "USD",
+        "nutritionPerServing": {
+          "calories": 691,
+          "proteinGrams": 99.7,
+          "carbohydratesGrams": 42.3,
+          "fatGrams": 12.8
+        },
+        "nutritionSource": "math",
+        "unmatchedIngredients": [],
+        "ruleWarnings": [],
+        "dietaryTags": [],
+        "allergens": [],
+        "imageSearchTerm": "Chipotle shredded chicken tostadas, extra chicken breast",
+        "imageUrl": null,
+        "storageNotes": "Keeps 3 days in the fridge in a sealed container."
+      }
+    },
+    {
+      "date": "2026-10-06",
+      "breakfast": {
+        "id": "2026-10-06-breakfast-corn-arepa-with-egg-and-avocado",
+        "title": "Corn arepa with egg and avocado",
+        "description": "Venezuelan breakfast with corn arepa and eggs.",
+        "mealType": "breakfast",
+        "ingredients": [
+          {
+            "id": "arepa-0",
+            "name": "Corn arepa, cooked",
+            "quantity": 75,
+            "unit": "g",
+            "category": "produce",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "arepa"
+          },
+          {
+            "id": "eggs-1",
+            "name": "Eggs, whole",
+            "quantity": 50,
+            "unit": "g",
+            "category": "protein",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "eggs"
+          },
+          {
+            "id": "avocado-2",
+            "name": "Avocado",
+            "quantity": 50,
+            "unit": "g",
+            "category": "produce",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "avocado"
+          }
+        ],
+        "instructions": [
+          "Toast arepas on a dry griddle until crisp",
+          "Scramble eggs",
+          "Split arepas and fill with eggs, avocado and farmer cheese"
+        ],
+        "preparationMinutes": 15,
+        "cookingMinutes": 0,
+        "totalMinutes": 15,
+        "servings": 1,
+        "difficulty": "easy",
+        "estimatedCostPerServing": 1.03,
+        "currency": "USD",
+        "nutritionPerServing": {
+          "calories": 302,
+          "proteinGrams": 10.8,
+          "carbohydratesGrams": 36.1,
+          "fatGrams": 13.6
+        },
+        "nutritionSource": "math",
+        "unmatchedIngredients": [],
+        "ruleWarnings": [],
+        "dietaryTags": [],
+        "allergens": [],
+        "imageSearchTerm": "Corn arepa with egg and avocado",
+        "imageUrl": null,
+        "storageNotes": "Keeps 3 days in the fridge in a sealed container."
+      },
+      "lunch": {
+        "id": "2026-10-06-lunch-turkey-and-pinto-bean-chili",
+        "title": "Turkey and pinto bean chili",
+        "description": "American lunch with ground turkey 93% lean and pinto beans.",
+        "mealType": "lunch",
+        "ingredients": [
+          {
+            "id": "ground_turkey-0",
+            "name": "Ground turkey 93% lean, cooked",
+            "quantity": 170,
+            "unit": "g",
+            "category": "protein",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "ground_turkey"
+          },
+          {
+            "id": "pinto_beans-1",
+            "name": "Pinto beans, cooked",
+            "quantity": 86,
+            "unit": "g",
+            "category": "pantry",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "pinto_beans"
+          },
+          {
+            "id": "canned_tomatoes-2",
+            "name": "Diced tomatoes, no salt added",
+            "quantity": 121,
+            "unit": "g",
+            "category": "produce",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "canned_tomatoes"
+          },
+          {
+            "id": "onion-3",
+            "name": "Onion",
+            "quantity": 55,
+            "unit": "g",
+            "category": "produce",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "onion"
+          },
+          {
+            "id": "bell_pepper-4",
+            "name": "Bell pepper",
+            "quantity": 119,
+            "unit": "g",
+            "category": "produce",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "bell_pepper"
+          }
+        ],
+        "instructions": [
+          "Brown turkey with onion and pepper",
+          "Add beans, tomatoes, chili powder and cumin",
+          "Simmer 20 minutes"
+        ],
+        "preparationMinutes": 30,
+        "cookingMinutes": 0,
+        "totalMinutes": 30,
+        "servings": 1,
+        "difficulty": "easy",
+        "estimatedCostPerServing": 3.47,
+        "currency": "USD",
+        "nutritionPerServing": {
+          "calories": 566,
+          "proteinGrams": 57.4,
+          "carbohydratesGrams": 43.6,
+          "fatGrams": 18.4
+        },
+        "nutritionSource": "math",
+        "unmatchedIngredients": [],
+        "ruleWarnings": [],
+        "dietaryTags": [],
+        "allergens": [],
+        "imageSearchTerm": "Turkey and pinto bean chili",
+        "imageUrl": null,
+        "storageNotes": "Keeps 3 days in the fridge in a sealed container."
+      },
+      "dinner": {
+        "id": "2026-10-06-dinner-chipotle-shredded-chicken-tostadas-extra-chicken-b",
+        "title": "Chipotle shredded chicken tostadas, extra chicken breast",
+        "description": "Mexican dinner with chicken breast and corn tortilla.",
+        "mealType": "dinner",
+        "ingredients": [
+          {
+            "id": "chicken_breast-0",
+            "name": "Chicken breast, roasted",
+            "quantity": 300,
+            "unit": "g",
+            "category": "protein",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "chicken_breast"
+          },
+          {
+            "id": "corn_tortilla-1",
+            "name": "Corn tortilla",
+            "quantity": 52,
+            "unit": "g",
+            "category": "grains",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "corn_tortilla"
+          },
+          {
+            "id": "canned_tomatoes-2",
+            "name": "Diced tomatoes, no salt added",
+            "quantity": 121,
+            "unit": "g",
+            "category": "produce",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "canned_tomatoes"
+          },
+          {
+            "id": "onion-3",
+            "name": "Onion",
+            "quantity": 55,
+            "unit": "g",
+            "category": "produce",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "onion"
+          },
+          {
+            "id": "cabbage-4",
+            "name": "Cabbage, shredded",
+            "quantity": 89,
+            "unit": "g",
+            "category": "produce",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "cabbage"
+          }
+        ],
+        "instructions": [
+          "Simmer shredded chicken with tomato, onion and chipotle",
+          "Crisp tortillas in the oven",
+          "Top with tinga, cabbage and farmer cheese"
+        ],
+        "preparationMinutes": 30,
+        "cookingMinutes": 0,
+        "totalMinutes": 30,
+        "servings": 1,
+        "difficulty": "easy",
+        "estimatedCostPerServing": 4.19,
+        "currency": "USD",
+        "nutritionPerServing": {
+          "calories": 691,
+          "proteinGrams": 99.7,
+          "carbohydratesGrams": 42.3,
+          "fatGrams": 12.8
+        },
+        "nutritionSource": "math",
+        "unmatchedIngredients": [],
+        "ruleWarnings": [],
+        "dietaryTags": [],
+        "allergens": [],
+        "imageSearchTerm": "Chipotle shredded chicken tostadas, extra chicken breast",
+        "imageUrl": null,
+        "storageNotes": "Keeps 3 days in the fridge in a sealed container."
+      }
+    },
+    {
+      "date": "2026-10-07",
+      "breakfast": {
+        "id": "2026-10-07-breakfast-tofu-veggie-scramble-with-toast",
+        "title": "Tofu veggie scramble with toast",
+        "description": "American breakfast with tofu and bell pepper.",
+        "mealType": "breakfast",
+        "ingredients": [
+          {
+            "id": "tofu-0",
+            "name": "Tofu, firm",
+            "quantity": 170,
+            "unit": "g",
+            "category": "protein",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "tofu"
+          },
+          {
+            "id": "bell_pepper-1",
+            "name": "Bell pepper",
+            "quantity": 119,
+            "unit": "g",
+            "category": "produce",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "bell_pepper"
+          },
+          {
+            "id": "spinach-2",
+            "name": "Spinach, raw",
+            "quantity": 30,
+            "unit": "g",
+            "category": "produce",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "spinach"
+          },
+          {
+            "id": "ww_bread-3",
+            "name": "Whole wheat bread",
+            "quantity": 32,
+            "unit": "g",
+            "category": "grains",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "ww_bread"
+          }
+        ],
+        "instructions": [
+          "Crumble tofu into a hot pan with peppers",
+          "Add spinach until wilted, season with turmeric and pepper",
+          "Serve with toast"
+        ],
+        "preparationMinutes": 12,
+        "cookingMinutes": 0,
+        "totalMinutes": 12,
+        "servings": 1,
+        "difficulty": "easy",
+        "estimatedCostPerServing": 2.46,
+        "currency": "USD",
+        "nutritionPerServing": {
+          "calories": 369,
+          "proteinGrams": 35.4,
+          "carbohydratesGrams": 26.6,
+          "fatGrams": 16.4
+        },
+        "nutritionSource": "math",
+        "unmatchedIngredients": [],
+        "ruleWarnings": [],
+        "dietaryTags": [],
+        "allergens": [],
+        "imageSearchTerm": "Tofu veggie scramble with toast",
+        "imageUrl": null,
+        "storageNotes": "Keeps 3 days in the fridge in a sealed container."
+      },
+      "lunch": {
+        "id": "2026-10-07-lunch-chicken-and-cactus-tacos-extra-chicken-breast",
+        "title": "Chicken and cactus tacos, extra chicken breast",
+        "description": "Mexican lunch with corn tortilla and chicken breast.",
+        "mealType": "lunch",
+        "ingredients": [
+          {
+            "id": "corn_tortilla-0",
+            "name": "Corn tortilla",
+            "quantity": 78,
+            "unit": "g",
+            "category": "grains",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "corn_tortilla"
+          },
+          {
+            "id": "chicken_breast-1",
+            "name": "Chicken breast, roasted",
+            "quantity": 200,
+            "unit": "g",
+            "category": "protein",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "chicken_breast"
+          },
+          {
+            "id": "cactus-2",
+            "name": "Cactus paddles, cooked",
+            "quantity": 75,
+            "unit": "g",
+            "category": "produce",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "cactus"
+          },
+          {
+            "id": "fresh_salsa-3",
+            "name": "Fresh tomato salsa",
+            "quantity": 60,
+            "unit": "g",
+            "category": "pantry",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "fresh_salsa"
+          },
+          {
+            "id": "avocado-4",
+            "name": "Avocado",
+            "quantity": 50,
+            "unit": "g",
+            "category": "produce",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "avocado"
+          }
+        ],
+        "instructions": [
+          "Grill chicken and cactus",
+          "Slice both into strips",
+          "Serve in tortillas with salsa and avocado"
+        ],
+        "preparationMinutes": 20,
+        "cookingMinutes": 0,
+        "totalMinutes": 20,
+        "servings": 1,
+        "difficulty": "easy",
+        "estimatedCostPerServing": 3.77,
+        "currency": "USD",
+        "nutritionPerServing": {
+          "calories": 603,
+          "proteinGrams": 69,
+          "carbohydratesGrams": 44.1,
+          "fatGrams": 17
+        },
+        "nutritionSource": "math",
+        "unmatchedIngredients": [],
+        "ruleWarnings": [],
+        "dietaryTags": [],
+        "allergens": [],
+        "imageSearchTerm": "Chicken and cactus tacos, extra chicken breast",
+        "imageUrl": null,
+        "storageNotes": "Keeps 3 days in the fridge in a sealed container."
+      },
+      "dinner": {
+        "id": "2026-10-07-dinner-chipotle-shredded-chicken-tostadas",
+        "title": "Chipotle shredded chicken tostadas",
+        "description": "Mexican dinner with chicken breast and corn tortilla.",
+        "mealType": "dinner",
+        "ingredients": [
+          {
+            "id": "chicken_breast-0",
+            "name": "Chicken breast, roasted",
+            "quantity": 200,
+            "unit": "g",
+            "category": "protein",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "chicken_breast"
+          },
+          {
+            "id": "corn_tortilla-1",
+            "name": "Corn tortilla",
+            "quantity": 52,
+            "unit": "g",
+            "category": "grains",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "corn_tortilla"
+          },
+          {
+            "id": "canned_tomatoes-2",
+            "name": "Diced tomatoes, no salt added",
+            "quantity": 121,
+            "unit": "g",
+            "category": "produce",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "canned_tomatoes"
+          },
+          {
+            "id": "onion-3",
+            "name": "Onion",
+            "quantity": 55,
+            "unit": "g",
+            "category": "produce",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "onion"
+          },
+          {
+            "id": "cabbage-4",
+            "name": "Cabbage, shredded",
+            "quantity": 89,
+            "unit": "g",
+            "category": "produce",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "cabbage"
+          }
+        ],
+        "instructions": [
+          "Simmer shredded chicken with tomato, onion and chipotle",
+          "Crisp tortillas in the oven",
+          "Top with tinga, cabbage and farmer cheese"
+        ],
+        "preparationMinutes": 30,
+        "cookingMinutes": 0,
+        "totalMinutes": 30,
+        "servings": 1,
+        "difficulty": "easy",
+        "estimatedCostPerServing": 3.09,
+        "currency": "USD",
+        "nutritionPerServing": {
+          "calories": 526,
+          "proteinGrams": 68.7,
+          "carbohydratesGrams": 42.3,
+          "fatGrams": 9.2
+        },
+        "nutritionSource": "math",
+        "unmatchedIngredients": [],
+        "ruleWarnings": [],
+        "dietaryTags": [],
+        "allergens": [],
+        "imageSearchTerm": "Chipotle shredded chicken tostadas",
+        "imageUrl": null,
+        "storageNotes": "Keeps 3 days in the fridge in a sealed container."
+      }
+    },
+    {
+      "date": "2026-10-08",
+      "breakfast": {
+        "id": "2026-10-08-breakfast-greek-yogurt-parfait-with-walnuts",
+        "title": "Greek yogurt parfait with walnuts",
+        "description": "American breakfast with greek yogurt and strawberries.",
+        "mealType": "breakfast",
+        "ingredients": [
+          {
+            "id": "greek_yogurt-0",
+            "name": "Greek yogurt, plain, nonfat",
+            "quantity": 170,
+            "unit": "g",
+            "category": "dairy",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "greek_yogurt"
+          },
+          {
+            "id": "strawberries-1",
+            "name": "Strawberries",
+            "quantity": 144,
+            "unit": "g",
+            "category": "produce",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "strawberries"
+          },
+          {
+            "id": "oats-2",
+            "name": "Rolled oats, dry",
+            "quantity": 40,
+            "unit": "g",
+            "category": "grains",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "oats"
+          }
+        ],
+        "instructions": [
+          "Layer yogurt and sliced strawberries",
+          "Top with oats and chopped walnuts"
+        ],
+        "preparationMinutes": 5,
+        "cookingMinutes": 0,
+        "totalMinutes": 5,
+        "servings": 1,
+        "difficulty": "easy",
+        "estimatedCostPerServing": 2.71,
+        "currency": "USD",
+        "nutritionPerServing": {
+          "calories": 298,
+          "proteinGrams": 23.6,
+          "carbohydratesGrams": 44.3,
+          "fatGrams": 3.7
+        },
+        "nutritionSource": "math",
+        "unmatchedIngredients": [],
+        "ruleWarnings": [],
+        "dietaryTags": [],
+        "allergens": [],
+        "imageSearchTerm": "Greek yogurt parfait with walnuts",
+        "imageUrl": null,
+        "storageNotes": "Keeps 3 days in the fridge in a sealed container."
+      },
+      "lunch": {
+        "id": "2026-10-08-lunch-turkey-and-pinto-bean-chili",
+        "title": "Turkey and pinto bean chili",
+        "description": "American lunch with ground turkey 93% lean and pinto beans.",
+        "mealType": "lunch",
+        "ingredients": [
+          {
+            "id": "ground_turkey-0",
+            "name": "Ground turkey 93% lean, cooked",
+            "quantity": 170,
+            "unit": "g",
+            "category": "protein",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "ground_turkey"
+          },
+          {
+            "id": "pinto_beans-1",
+            "name": "Pinto beans, cooked",
+            "quantity": 86,
+            "unit": "g",
+            "category": "pantry",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "pinto_beans"
+          },
+          {
+            "id": "canned_tomatoes-2",
+            "name": "Diced tomatoes, no salt added",
+            "quantity": 121,
+            "unit": "g",
+            "category": "produce",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "canned_tomatoes"
+          },
+          {
+            "id": "onion-3",
+            "name": "Onion",
+            "quantity": 55,
+            "unit": "g",
+            "category": "produce",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "onion"
+          },
+          {
+            "id": "bell_pepper-4",
+            "name": "Bell pepper",
+            "quantity": 119,
+            "unit": "g",
+            "category": "produce",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "bell_pepper"
+          }
+        ],
+        "instructions": [
+          "Brown turkey with onion and pepper",
+          "Add beans, tomatoes, chili powder and cumin",
+          "Simmer 20 minutes"
+        ],
+        "preparationMinutes": 30,
+        "cookingMinutes": 0,
+        "totalMinutes": 30,
+        "servings": 1,
+        "difficulty": "easy",
+        "estimatedCostPerServing": 3.47,
+        "currency": "USD",
+        "nutritionPerServing": {
+          "calories": 566,
+          "proteinGrams": 57.4,
+          "carbohydratesGrams": 43.6,
+          "fatGrams": 18.4
+        },
+        "nutritionSource": "math",
+        "unmatchedIngredients": [],
+        "ruleWarnings": [],
+        "dietaryTags": [],
+        "allergens": [],
+        "imageSearchTerm": "Turkey and pinto bean chili",
+        "imageUrl": null,
+        "storageNotes": "Keeps 3 days in the fridge in a sealed container."
+      },
+      "dinner": {
+        "id": "2026-10-08-dinner-turkey-taco-skillet",
+        "title": "Turkey taco skillet",
+        "description": "Mexican dinner with ground turkey 93% lean and black beans.",
+        "mealType": "dinner",
+        "ingredients": [
+          {
+            "id": "ground_turkey-0",
+            "name": "Ground turkey 93% lean, cooked",
+            "quantity": 170,
+            "unit": "g",
+            "category": "protein",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "ground_turkey"
+          },
+          {
+            "id": "black_beans-1",
+            "name": "Black beans, cooked",
+            "quantity": 86,
+            "unit": "g",
+            "category": "pantry",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "black_beans"
+          },
+          {
+            "id": "corn-2",
+            "name": "Sweet corn kernels, cooked",
+            "quantity": 82,
+            "unit": "g",
+            "category": "produce",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "corn"
+          },
+          {
+            "id": "bell_pepper-3",
+            "name": "Bell pepper",
+            "quantity": 119,
+            "unit": "g",
+            "category": "produce",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "bell_pepper"
+          }
+        ],
+        "instructions": [
+          "Brown turkey with taco spices",
+          "Add beans, corn and peppers",
+          "Serve over rice"
+        ],
+        "preparationMinutes": 25,
+        "cookingMinutes": 0,
+        "totalMinutes": 25,
+        "servings": 1,
+        "difficulty": "easy",
+        "estimatedCostPerServing": 3.23,
+        "currency": "USD",
+        "nutritionPerServing": {
+          "calories": 574,
+          "proteinGrams": 57.5,
+          "carbohydratesGrams": 44.7,
+          "fatGrams": 19
+        },
+        "nutritionSource": "math",
+        "unmatchedIngredients": [],
+        "ruleWarnings": [],
+        "dietaryTags": [],
+        "allergens": [],
+        "imageSearchTerm": "Turkey taco skillet",
+        "imageUrl": null,
+        "storageNotes": "Keeps 3 days in the fridge in a sealed container."
+      }
+    },
+    {
+      "date": "2026-10-09",
+      "breakfast": {
+        "id": "2026-10-09-breakfast-greek-yogurt-parfait-with-walnuts",
+        "title": "Greek yogurt parfait with walnuts",
+        "description": "American breakfast with greek yogurt and strawberries.",
+        "mealType": "breakfast",
+        "ingredients": [
+          {
+            "id": "greek_yogurt-0",
+            "name": "Greek yogurt, plain, nonfat",
+            "quantity": 170,
+            "unit": "g",
+            "category": "dairy",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "greek_yogurt"
+          },
+          {
+            "id": "strawberries-1",
+            "name": "Strawberries",
+            "quantity": 144,
+            "unit": "g",
+            "category": "produce",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "strawberries"
+          },
+          {
+            "id": "oats-2",
+            "name": "Rolled oats, dry",
+            "quantity": 40,
+            "unit": "g",
+            "category": "grains",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "oats"
+          }
+        ],
+        "instructions": [
+          "Layer yogurt and sliced strawberries",
+          "Top with oats and chopped walnuts"
+        ],
+        "preparationMinutes": 5,
+        "cookingMinutes": 0,
+        "totalMinutes": 5,
+        "servings": 1,
+        "difficulty": "easy",
+        "estimatedCostPerServing": 2.71,
+        "currency": "USD",
+        "nutritionPerServing": {
+          "calories": 298,
+          "proteinGrams": 23.6,
+          "carbohydratesGrams": 44.3,
+          "fatGrams": 3.7
+        },
+        "nutritionSource": "math",
+        "unmatchedIngredients": [],
+        "ruleWarnings": [],
+        "dietaryTags": [],
+        "allergens": [],
+        "imageSearchTerm": "Greek yogurt parfait with walnuts",
+        "imageUrl": null,
+        "storageNotes": "Keeps 3 days in the fridge in a sealed container."
+      },
+      "lunch": {
+        "id": "2026-10-09-lunch-chicken-and-cactus-tacos-extra-chicken-breast",
+        "title": "Chicken and cactus tacos, extra chicken breast",
+        "description": "Mexican lunch with corn tortilla and chicken breast.",
+        "mealType": "lunch",
+        "ingredients": [
+          {
+            "id": "corn_tortilla-0",
+            "name": "Corn tortilla",
+            "quantity": 78,
+            "unit": "g",
+            "category": "grains",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "corn_tortilla"
+          },
+          {
+            "id": "chicken_breast-1",
+            "name": "Chicken breast, roasted",
+            "quantity": 200,
+            "unit": "g",
+            "category": "protein",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "chicken_breast"
+          },
+          {
+            "id": "cactus-2",
+            "name": "Cactus paddles, cooked",
+            "quantity": 75,
+            "unit": "g",
+            "category": "produce",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "cactus"
+          },
+          {
+            "id": "fresh_salsa-3",
+            "name": "Fresh tomato salsa",
+            "quantity": 60,
+            "unit": "g",
+            "category": "pantry",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "fresh_salsa"
+          },
+          {
+            "id": "avocado-4",
+            "name": "Avocado",
+            "quantity": 50,
+            "unit": "g",
+            "category": "produce",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "avocado"
+          }
+        ],
+        "instructions": [
+          "Grill chicken and cactus",
+          "Slice both into strips",
+          "Serve in tortillas with salsa and avocado"
+        ],
+        "preparationMinutes": 20,
+        "cookingMinutes": 0,
+        "totalMinutes": 20,
+        "servings": 1,
+        "difficulty": "easy",
+        "estimatedCostPerServing": 3.77,
+        "currency": "USD",
+        "nutritionPerServing": {
+          "calories": 603,
+          "proteinGrams": 69,
+          "carbohydratesGrams": 44.1,
+          "fatGrams": 17
+        },
+        "nutritionSource": "math",
+        "unmatchedIngredients": [],
+        "ruleWarnings": [],
+        "dietaryTags": [],
+        "allergens": [],
+        "imageSearchTerm": "Chicken and cactus tacos, extra chicken breast",
+        "imageUrl": null,
+        "storageNotes": "Keeps 3 days in the fridge in a sealed container."
+      },
+      "dinner": {
+        "id": "2026-10-09-dinner-chipotle-shredded-chicken-tostadas",
+        "title": "Chipotle shredded chicken tostadas",
+        "description": "Mexican dinner with chicken breast and corn tortilla.",
+        "mealType": "dinner",
+        "ingredients": [
+          {
+            "id": "chicken_breast-0",
+            "name": "Chicken breast, roasted",
+            "quantity": 200,
+            "unit": "g",
+            "category": "protein",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "chicken_breast"
+          },
+          {
+            "id": "corn_tortilla-1",
+            "name": "Corn tortilla",
+            "quantity": 52,
+            "unit": "g",
+            "category": "grains",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "corn_tortilla"
+          },
+          {
+            "id": "canned_tomatoes-2",
+            "name": "Diced tomatoes, no salt added",
+            "quantity": 121,
+            "unit": "g",
+            "category": "produce",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "canned_tomatoes"
+          },
+          {
+            "id": "onion-3",
+            "name": "Onion",
+            "quantity": 55,
+            "unit": "g",
+            "category": "produce",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "onion"
+          },
+          {
+            "id": "cabbage-4",
+            "name": "Cabbage, shredded",
+            "quantity": 89,
+            "unit": "g",
+            "category": "produce",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "cabbage"
+          }
+        ],
+        "instructions": [
+          "Simmer shredded chicken with tomato, onion and chipotle",
+          "Crisp tortillas in the oven",
+          "Top with tinga, cabbage and farmer cheese"
+        ],
+        "preparationMinutes": 30,
+        "cookingMinutes": 0,
+        "totalMinutes": 30,
+        "servings": 1,
+        "difficulty": "easy",
+        "estimatedCostPerServing": 3.09,
+        "currency": "USD",
+        "nutritionPerServing": {
+          "calories": 526,
+          "proteinGrams": 68.7,
+          "carbohydratesGrams": 42.3,
+          "fatGrams": 9.2
+        },
+        "nutritionSource": "math",
+        "unmatchedIngredients": [],
+        "ruleWarnings": [],
+        "dietaryTags": [],
+        "allergens": [],
+        "imageSearchTerm": "Chipotle shredded chicken tostadas",
+        "imageUrl": null,
+        "storageNotes": "Keeps 3 days in the fridge in a sealed container."
+      }
+    },
+    {
+      "date": "2026-10-10",
+      "breakfast": {
+        "id": "2026-10-10-breakfast-papaya-yogurt-bowl-with-pumpkin-seeds",
+        "title": "Papaya yogurt bowl with pumpkin seeds",
+        "description": "Latin breakfast with greek yogurt and papaya.",
+        "mealType": "breakfast",
+        "ingredients": [
+          {
+            "id": "greek_yogurt-0",
+            "name": "Greek yogurt, plain, nonfat",
+            "quantity": 170,
+            "unit": "g",
+            "category": "dairy",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "greek_yogurt"
+          },
+          {
+            "id": "papaya-1",
+            "name": "Papaya",
+            "quantity": 140,
+            "unit": "g",
+            "category": "produce",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "papaya"
+          },
+          {
+            "id": "pumpkin_seeds-2",
+            "name": "Pumpkin seeds",
+            "quantity": 28,
+            "unit": "g",
+            "category": "produce",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "pumpkin_seeds"
+          }
+        ],
+        "instructions": [
+          "Cube papaya",
+          "Layer over yogurt",
+          "Sprinkle with pumpkin seeds and oats"
+        ],
+        "preparationMinutes": 5,
+        "cookingMinutes": 0,
+        "totalMinutes": 5,
+        "servings": 1,
+        "difficulty": "easy",
+        "estimatedCostPerServing": 2.23,
+        "currency": "USD",
+        "nutritionPerServing": {
+          "calories": 317,
+          "proteinGrams": 26.4,
+          "carbohydratesGrams": 24.2,
+          "fatGrams": 14.8
+        },
+        "nutritionSource": "math",
+        "unmatchedIngredients": [],
+        "ruleWarnings": [],
+        "dietaryTags": [],
+        "allergens": [],
+        "imageSearchTerm": "Papaya yogurt bowl with pumpkin seeds",
+        "imageUrl": null,
+        "storageNotes": "Keeps 3 days in the fridge in a sealed container."
+      },
+      "lunch": {
+        "id": "2026-10-10-lunch-chicken-avocado-sandwich",
+        "title": "Chicken avocado sandwich",
+        "description": "American lunch with whole wheat bread and chicken breast.",
+        "mealType": "lunch",
+        "ingredients": [
+          {
+            "id": "ww_bread-0",
+            "name": "Whole wheat bread",
+            "quantity": 64,
+            "unit": "g",
+            "category": "grains",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "ww_bread"
+          },
+          {
+            "id": "chicken_breast-1",
+            "name": "Chicken breast, roasted",
+            "quantity": 100,
+            "unit": "g",
+            "category": "protein",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "chicken_breast"
+          },
+          {
+            "id": "avocado-2",
+            "name": "Avocado",
+            "quantity": 50,
+            "unit": "g",
+            "category": "produce",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "avocado"
+          },
+          {
+            "id": "tomato-3",
+            "name": "Tomato",
+            "quantity": 123,
+            "unit": "g",
+            "category": "produce",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "tomato"
+          },
+          {
+            "id": "mixed_greens-4",
+            "name": "Mixed salad greens",
+            "quantity": 40,
+            "unit": "g",
+            "category": "produce",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "mixed_greens"
+          }
+        ],
+        "instructions": [
+          "Toast bread",
+          "Layer sliced chicken, avocado, tomato and greens"
+        ],
+        "preparationMinutes": 10,
+        "cookingMinutes": 0,
+        "totalMinutes": 10,
+        "servings": 1,
+        "difficulty": "easy",
+        "estimatedCostPerServing": 2.82,
+        "currency": "USD",
+        "nutritionPerServing": {
+          "calories": 435,
+          "proteinGrams": 41.6,
+          "carbohydratesGrams": 37.7,
+          "fatGrams": 13.5
+        },
+        "nutritionSource": "math",
+        "unmatchedIngredients": [],
+        "ruleWarnings": [],
+        "dietaryTags": [],
+        "allergens": [],
+        "imageSearchTerm": "Chicken avocado sandwich",
+        "imageUrl": null,
+        "storageNotes": "Keeps 3 days in the fridge in a sealed container."
+      },
+      "dinner": {
+        "id": "2026-10-10-dinner-chipotle-shredded-chicken-tostadas-extra-chicken-b",
+        "title": "Chipotle shredded chicken tostadas, extra chicken breast",
+        "description": "Mexican dinner with chicken breast and corn tortilla.",
+        "mealType": "dinner",
+        "ingredients": [
+          {
+            "id": "chicken_breast-0",
+            "name": "Chicken breast, roasted",
+            "quantity": 300,
+            "unit": "g",
+            "category": "protein",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "chicken_breast"
+          },
+          {
+            "id": "corn_tortilla-1",
+            "name": "Corn tortilla",
+            "quantity": 52,
+            "unit": "g",
+            "category": "grains",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "corn_tortilla"
+          },
+          {
+            "id": "canned_tomatoes-2",
+            "name": "Diced tomatoes, no salt added",
+            "quantity": 121,
+            "unit": "g",
+            "category": "produce",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "canned_tomatoes"
+          },
+          {
+            "id": "onion-3",
+            "name": "Onion",
+            "quantity": 55,
+            "unit": "g",
+            "category": "produce",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "onion"
+          },
+          {
+            "id": "cabbage-4",
+            "name": "Cabbage, shredded",
+            "quantity": 89,
+            "unit": "g",
+            "category": "produce",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "cabbage"
+          }
+        ],
+        "instructions": [
+          "Simmer shredded chicken with tomato, onion and chipotle",
+          "Crisp tortillas in the oven",
+          "Top with tinga, cabbage and farmer cheese"
+        ],
+        "preparationMinutes": 30,
+        "cookingMinutes": 0,
+        "totalMinutes": 30,
+        "servings": 1,
+        "difficulty": "easy",
+        "estimatedCostPerServing": 4.19,
+        "currency": "USD",
+        "nutritionPerServing": {
+          "calories": 691,
+          "proteinGrams": 99.7,
+          "carbohydratesGrams": 42.3,
+          "fatGrams": 12.8
+        },
+        "nutritionSource": "math",
+        "unmatchedIngredients": [],
+        "ruleWarnings": [],
+        "dietaryTags": [],
+        "allergens": [],
+        "imageSearchTerm": "Chipotle shredded chicken tostadas, extra chicken breast",
+        "imageUrl": null,
+        "storageNotes": "Keeps 3 days in the fridge in a sealed container."
+      }
+    },
+    {
+      "date": "2026-10-11",
+      "breakfast": {
+        "id": "2026-10-11-breakfast-papaya-yogurt-bowl-with-pumpkin-seeds",
+        "title": "Papaya yogurt bowl with pumpkin seeds",
+        "description": "Latin breakfast with greek yogurt and papaya.",
+        "mealType": "breakfast",
+        "ingredients": [
+          {
+            "id": "greek_yogurt-0",
+            "name": "Greek yogurt, plain, nonfat",
+            "quantity": 170,
+            "unit": "g",
+            "category": "dairy",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "greek_yogurt"
+          },
+          {
+            "id": "papaya-1",
+            "name": "Papaya",
+            "quantity": 140,
+            "unit": "g",
+            "category": "produce",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "papaya"
+          },
+          {
+            "id": "pumpkin_seeds-2",
+            "name": "Pumpkin seeds",
+            "quantity": 28,
+            "unit": "g",
+            "category": "produce",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "pumpkin_seeds"
+          }
+        ],
+        "instructions": [
+          "Cube papaya",
+          "Layer over yogurt",
+          "Sprinkle with pumpkin seeds and oats"
+        ],
+        "preparationMinutes": 5,
+        "cookingMinutes": 0,
+        "totalMinutes": 5,
+        "servings": 1,
+        "difficulty": "easy",
+        "estimatedCostPerServing": 2.23,
+        "currency": "USD",
+        "nutritionPerServing": {
+          "calories": 317,
+          "proteinGrams": 26.4,
+          "carbohydratesGrams": 24.2,
+          "fatGrams": 14.8
+        },
+        "nutritionSource": "math",
+        "unmatchedIngredients": [],
+        "ruleWarnings": [],
+        "dietaryTags": [],
+        "allergens": [],
+        "imageSearchTerm": "Papaya yogurt bowl with pumpkin seeds",
+        "imageUrl": null,
+        "storageNotes": "Keeps 3 days in the fridge in a sealed container."
+      },
+      "lunch": {
+        "id": "2026-10-11-lunch-tofu-edamame-rice-bowl",
+        "title": "Tofu edamame rice bowl",
+        "description": "Asian lunch with tofu and edamame.",
+        "mealType": "lunch",
+        "ingredients": [
+          {
+            "id": "tofu-0",
+            "name": "Tofu, firm",
+            "quantity": 170,
+            "unit": "g",
+            "category": "protein",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "tofu"
+          },
+          {
+            "id": "edamame-1",
+            "name": "Edamame, shelled, cooked",
+            "quantity": 78,
+            "unit": "g",
+            "category": "produce",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "edamame"
+          },
+          {
+            "id": "brown_rice-2",
+            "name": "Brown rice, cooked",
+            "quantity": 98,
+            "unit": "g",
+            "category": "grains",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "brown_rice"
+          },
+          {
+            "id": "carrots-3",
+            "name": "Carrots",
+            "quantity": 61,
+            "unit": "g",
+            "category": "produce",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "carrots"
+          },
+          {
+            "id": "soy_sauce-4",
+            "name": "Soy sauce, low sodium",
+            "quantity": 9,
+            "unit": "g",
+            "category": "produce",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "soy_sauce"
+          }
+        ],
+        "instructions": [
+          "Pan sear tofu cubes",
+          "Warm edamame and rice",
+          "Top with shredded carrot and soy sauce"
+        ],
+        "preparationMinutes": 20,
+        "cookingMinutes": 0,
+        "totalMinutes": 20,
+        "servings": 1,
+        "difficulty": "easy",
+        "estimatedCostPerServing": 2.13,
+        "currency": "USD",
+        "nutritionPerServing": {
+          "calories": 490,
+          "proteinGrams": 42.6,
+          "carbohydratesGrams": 43.1,
+          "fatGrams": 20
+        },
+        "nutritionSource": "math",
+        "unmatchedIngredients": [],
+        "ruleWarnings": [],
+        "dietaryTags": [],
+        "allergens": [],
+        "imageSearchTerm": "Tofu edamame rice bowl",
+        "imageUrl": null,
+        "storageNotes": "Keeps 3 days in the fridge in a sealed container."
+      },
+      "dinner": {
+        "id": "2026-10-11-dinner-chipotle-shredded-chicken-tostadas-extra-chicken-b",
+        "title": "Chipotle shredded chicken tostadas, extra chicken breast",
+        "description": "Mexican dinner with chicken breast and corn tortilla.",
+        "mealType": "dinner",
+        "ingredients": [
+          {
+            "id": "chicken_breast-0",
+            "name": "Chicken breast, roasted",
+            "quantity": 300,
+            "unit": "g",
+            "category": "protein",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "chicken_breast"
+          },
+          {
+            "id": "corn_tortilla-1",
+            "name": "Corn tortilla",
+            "quantity": 52,
+            "unit": "g",
+            "category": "grains",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "corn_tortilla"
+          },
+          {
+            "id": "canned_tomatoes-2",
+            "name": "Diced tomatoes, no salt added",
+            "quantity": 121,
+            "unit": "g",
+            "category": "produce",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "canned_tomatoes"
+          },
+          {
+            "id": "onion-3",
+            "name": "Onion",
+            "quantity": 55,
+            "unit": "g",
+            "category": "produce",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "onion"
+          },
+          {
+            "id": "cabbage-4",
+            "name": "Cabbage, shredded",
+            "quantity": 89,
+            "unit": "g",
+            "category": "produce",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "cabbage"
+          }
+        ],
+        "instructions": [
+          "Simmer shredded chicken with tomato, onion and chipotle",
+          "Crisp tortillas in the oven",
+          "Top with tinga, cabbage and farmer cheese"
+        ],
+        "preparationMinutes": 30,
+        "cookingMinutes": 0,
+        "totalMinutes": 30,
+        "servings": 1,
+        "difficulty": "easy",
+        "estimatedCostPerServing": 4.19,
+        "currency": "USD",
+        "nutritionPerServing": {
+          "calories": 691,
+          "proteinGrams": 99.7,
+          "carbohydratesGrams": 42.3,
+          "fatGrams": 12.8
+        },
+        "nutritionSource": "math",
+        "unmatchedIngredients": [],
+        "ruleWarnings": [],
+        "dietaryTags": [],
+        "allergens": [],
+        "imageSearchTerm": "Chipotle shredded chicken tostadas, extra chicken breast",
+        "imageUrl": null,
+        "storageNotes": "Keeps 3 days in the fridge in a sealed container."
+      }
+    }
+  ]
+}

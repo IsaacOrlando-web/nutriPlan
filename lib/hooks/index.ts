@@ -2,6 +2,15 @@ export { keys } from "./keys";
 export { useSession, useLogin, useLogout } from "./useSession";
 export { useProfile, useSaveProfile } from "./useProfile";
 export { usePlan, useGeneratePlan, useRateMeal } from "./usePlan";
+export {
+  useWeekPlan,
+  useGenerateWeek,
+  useReplaceRecipe,
+  useRegenerateAgentPlan,
+  useUpdateWeekState,
+  mondayOf,
+} from "./usePlanner";
+export { useNearbyStores } from "./useNearbyStores";
 export { useBudgetCurve, useCurvePlanAt, usePrefetchBudgetCurve, CURVE_STALE_MS } from "./useBudgetCurve";
 export { useAgentRun } from "./useAgentRun";
 export { useFoodSearch } from "./useFoods";

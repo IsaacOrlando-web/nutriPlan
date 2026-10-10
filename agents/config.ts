@@ -28,7 +28,8 @@ export const LLM_RETRIES = 0;
 /** Per agent timeout (ms). Chef writes recipes, vision reads images, coach writes a paragraph: a little longer. */
 export const AGENT_TIMEOUT_MS: Partial<Record<AgentKey, number>> = {
   chef: 10_000,
-  coach: 10_000,
+  // Coach gets the full profile, both plans and the logs as context: a larger prompt needs more time.
+  coach: 25_000,
   recipes: 10_000,
   // Weekly planner: one recipe day (3 full recipes) is about 2.5k output tokens.
   planner: 45_000,
@@ -80,7 +81,8 @@ export const MODEL_TABLE: Record<AgentKey, AgentModelConfig> = {
   budget: { primary: HAIKU, backup: GEMINI_FLASH },
   monitor: { primary: HAIKU, backup: GEMINI_FLASH },
   orchestrator: { primary: SONNET, backup: GEMINI_FLASH },
-  coach: { primary: SONNET, backup: GEMINI_FLASH },
+  // Coach on /coach runs on OpenAI only (OPENAI_API_KEY). MODEL_COACH overrides, e.g. "openai:gpt-4o-mini".
+  coach: { primary: GPT_MINI, backup: null },
   // Recipe ideas on /plan run on OpenAI (OPENAI_API_KEY); without it the route answers from templates.
   recipes: { primary: GPT_MINI, backup: null },
   // Weekly meal planner on /plan: OpenAI only (OPENAI_API_KEY). MODEL_PLANNER overrides, e.g. "openai:gpt-4o-mini".

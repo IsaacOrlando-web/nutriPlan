@@ -1,5 +1,5 @@
 // Session resolution for API routes and server components. Owner: Backend.
-// Local auth uses a signed JWT in an HttpOnly cookie. Supabase remains available as an optional backend mode.
+// Local auth uses a signed JWT in an HttpOnly cookie.
 import { cookies } from "next/headers";
 import type { NextRequest } from "next/server";
 import { DEMO_EMAILS, DEMO_USER_IDS, type DemoUserKey } from "@/lib/db/seed/demo-users";
@@ -13,8 +13,8 @@ export interface Session {
   email: string | null;
 }
 
-export function authMode(): "local" | "supabase" {
-  return process.env.AUTH_MODE === "supabase" ? "supabase" : "local";
+export function authMode(): "local" {
+  return "local";
 }
 
 /** Maps "alex" / "maria" / their demo emails to the seeded user ids; anything else becomes a stable uuid. */
@@ -39,12 +39,6 @@ function uuidFromString(s: string): string {
 }
 
 export async function getSession(req?: NextRequest): Promise<Session | null> {
-  if (authMode() === "supabase") {
-    const { createServerSupabase } = await import("@/lib/supabase/server");
-    const supabase = await createServerSupabase();
-    const { data } = await supabase.auth.getUser();
-    return data.user ? { userId: data.user.id, email: data.user.email ?? null } : null;
-  }
   const value = req ? req.cookies.get(SESSION_COOKIE)?.value : (await cookies()).get(SESSION_COOKIE)?.value;
   if (value) {
     const claims = verifyAccessToken(value);

@@ -1,0 +1,109 @@
+{
+  "logged": false,
+  "entry": {
+    "logId": "analysis_demo_pollo_con_papas",
+    "userId": "00000000-0000-4000-8000-00000000a1e1",
+    "eatenAt": "2026-10-10T18:30:00.000Z",
+    "photoUrl": "/demo/lunch-bowl.jpg",
+    "source": "photo",
+    "visionAgreement": 0.78,
+    "question": {
+      "text": "Was there dressing on the salad?",
+      "options": [
+        "Yes, there was dressing",
+        "No dressing",
+        "Not sure"
+      ]
+    },
+    "items": [
+      {
+        "foodId": "chicken_breast_roasted",
+        "name": "Chicken breast, roasted",
+        "grams": 170,
+        "confidence": 0.91
+      },
+      {
+        "foodId": "potato_roasted",
+        "name": "Potatoes, roasted",
+        "grams": 180,
+        "confidence": 0.87
+      },
+      {
+        "foodId": "romaine_raw",
+        "name": "Romaine lettuce, raw",
+        "grams": 50,
+        "confidence": 0.78
+      }
+    ],
+    "totals": {
+      "calories": 542,
+      "proteinG": 58,
+      "carbsG": 39.5,
+      "fatG": 15.7,
+      "sodiumMg": 454,
+      "fiberG": 0,
+      "sugarG": 0,
+      "addedSugarG": 0,
+      "satFatG": 0,
+      "potassiumMg": 0,
+      "glycemicLoad": 0,
+      "costUsd": 0
+    },
+    "flags": []
+  },
+  "votes": {
+    "a": {
+      "model": "scripted-a-fallback",
+      "items": [
+        {
+          "foodId": "chicken_breast_roasted",
+          "name": "Chicken breast, roasted",
+          "grams": 160,
+          "confidence": 0.92
+        },
+        {
+          "foodId": "potato_roasted",
+          "name": "Potatoes, roasted",
+          "grams": 170,
+          "confidence": 0.88
+        },
+        {
+          "foodId": "romaine_raw",
+          "name": "Romaine lettuce, raw",
+          "grams": 40,
+          "confidence": 0.75
+        }
+      ]
+    },
+    "b": {
+      "model": "openai:gpt-4.1-mini",
+      "items": [
+        {
+          "foodId": "chicken_breast_roasted",
+          "name": "Chicken breast, roasted",
+          "grams": 180,
+          "confidence": 0.9
+        },
+        {
+          "foodId": "potato_roasted",
+          "name": "Potatoes, roasted",
+          "grams": 190,
+          "confidence": 0.85
+        },
+        {
+          "foodId": "romaine_raw",
+          "name": "Romaine lettuce, raw",
+          "grams": 60,
+          "confidence": 0.8
+        },
+        {
+          "foodId": "vinaigrette",
+          "name": "Salad dressing (vinaigrette)",
+          "grams": 15,
+          "confidence": 0.45
+        }
+      ]
+    },
+    "agreement": 0.78
+  }
+}

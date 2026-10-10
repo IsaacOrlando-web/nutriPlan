@@ -1,0 +1,1574 @@
+{
+  "id": "alex-week-2026-10-05",
+  "userId": "00000000-0000-4000-8000-00000000a1e1",
+  "weekStartDate": "2026-10-05",
+  "language": "en",
+  "createdAt": "2026-10-05T08:00:00.000Z",
+  "days": [
+    {
+      "date": "2026-10-05",
+      "breakfast": {
+        "id": "2026-10-05-breakfast-ranchero-eggs-with-black-beans",
+        "title": "Ranchero eggs with black beans",
+        "description": "Mexican breakfast with eggs and corn tortilla.",
+        "mealType": "breakfast",
+        "ingredients": [
+          {
+            "id": "eggs-0",
+            "name": "Eggs, whole",
+            "quantity": 100,
+            "unit": "g",
+            "category": "protein",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "eggs"
+          },
+          {
+            "id": "corn_tortilla-1",
+            "name": "Corn tortilla",
+            "quantity": 52,
+            "unit": "g",
+            "category": "grains",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "corn_tortilla"
+          },
+          {
+            "id": "black_beans-2",
+            "name": "Black beans, cooked",
+            "quantity": 172,
+            "unit": "g",
+            "category": "pantry",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "black_beans"
+          },
+          {
+            "id": "fresh_salsa-3",
+            "name": "Fresh tomato salsa",
+            "quantity": 60,
+            "unit": "g",
+            "category": "pantry",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "fresh_salsa"
+          }
+        ],
+        "instructions": [
+          "Warm tortillas and beans",
+          "Fry eggs in a light film of oil",
+          "Top tortillas with beans, eggs, salsa and crumbled cheese"
+        ],
+        "preparationMinutes": 15,
+        "cookingMinutes": 0,
+        "totalMinutes": 15,
+        "servings": 1,
+        "difficulty": "easy",
+        "estimatedCostPerServing": 1.66,
+        "currency": "USD",
+        "nutritionPerServing": {
+          "calories": 495,
+          "proteinGrams": 31.4,
+          "carbohydratesGrams": 67.2,
+          "fatGrams": 12
+        },
+        "nutritionSource": "math",
+        "unmatchedIngredients": [],
+        "ruleWarnings": [],
+        "dietaryTags": [],
+        "allergens": [],
+        "imageSearchTerm": "Ranchero eggs with black beans",
+        "imageUrl": null,
+        "storageNotes": "Keeps 3 days in the fridge in a sealed container."
+      },
+      "lunch": {
+        "id": "2026-10-05-lunch-chicken-with-pinto-beans-and-rice",
+        "title": "Chicken with pinto beans and rice",
+        "description": "Latin lunch with chicken thigh and pinto beans.",
+        "mealType": "lunch",
+        "ingredients": [
+          {
+            "id": "chicken_thigh-0",
+            "name": "Chicken thigh, skinless, roasted",
+            "quantity": 200,
+            "unit": "g",
+            "category": "protein",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "chicken_thigh"
+          },
+          {
+            "id": "pinto_beans-1",
+            "name": "Pinto beans, cooked",
+            "quantity": 86,
+            "unit": "g",
+            "category": "pantry",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "pinto_beans"
+          },
+          {
+            "id": "white_rice-2",
+            "name": "White rice, cooked",
+            "quantity": 186,
+            "unit": "g",
+            "category": "grains",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "white_rice"
+          },
+          {
+            "id": "cabbage-3",
+            "name": "Cabbage, shredded",
+            "quantity": 89,
+            "unit": "g",
+            "category": "produce",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "cabbage"
+          }
+        ],
+        "instructions": [
+          "Season chicken with garlic and cumin, then bake",
+          "Warm beans and rice",
+          "Serve with a cabbage lime slaw"
+        ],
+        "preparationMinutes": 25,
+        "cookingMinutes": 0,
+        "totalMinutes": 25,
+        "servings": 1,
+        "difficulty": "easy",
+        "estimatedCostPerServing": 2.15,
+        "currency": "USD",
+        "nutritionPerServing": {
+          "calories": 805,
+          "proteinGrams": 65.9,
+          "carbohydratesGrams": 80.1,
+          "fatGrams": 23
+        },
+        "nutritionSource": "math",
+        "unmatchedIngredients": [],
+        "ruleWarnings": [],
+        "dietaryTags": [],
+        "allergens": [],
+        "imageSearchTerm": "Chicken with pinto beans and rice",
+        "imageUrl": null,
+        "storageNotes": "Keeps 3 days in the fridge in a sealed container."
+      },
+      "dinner": {
+        "id": "2026-10-05-dinner-chicken-thigh-with-rice-and-green-beans-extra-chic",
+        "title": "Chicken thigh with rice and green beans, extra chicken thigh",
+        "description": "American dinner with chicken thigh and brown rice.",
+        "mealType": "dinner",
+        "ingredients": [
+          {
+            "id": "chicken_thigh-0",
+            "name": "Chicken thigh, skinless, roasted",
+            "quantity": 300,
+            "unit": "g",
+            "category": "protein",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "chicken_thigh"
+          },
+          {
+            "id": "brown_rice-1",
+            "name": "Brown rice, cooked",
+            "quantity": 98,
+            "unit": "g",
+            "category": "grains",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "brown_rice"
+          },
+          {
+            "id": "green_beans-2",
+            "name": "Green beans, cooked",
+            "quantity": 125,
+            "unit": "g",
+            "category": "pantry",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "green_beans"
+          }
+        ],
+        "instructions": [
+          "Roast chicken thighs",
+          "Steam green beans",
+          "Serve with rice"
+        ],
+        "preparationMinutes": 30,
+        "cookingMinutes": 0,
+        "totalMinutes": 30,
+        "servings": 1,
+        "difficulty": "easy",
+        "estimatedCostPerServing": 3.08,
+        "currency": "USD",
+        "nutritionPerServing": {
+          "calories": 791,
+          "proteinGrams": 83,
+          "carbohydratesGrams": 35,
+          "fatGrams": 34.1
+        },
+        "nutritionSource": "math",
+        "unmatchedIngredients": [],
+        "ruleWarnings": [],
+        "dietaryTags": [],
+        "allergens": [],
+        "imageSearchTerm": "Chicken thigh with rice and green beans, extra chicken thigh",
+        "imageUrl": null,
+        "storageNotes": "Keeps 3 days in the fridge in a sealed container."
+      }
+    },
+    {
+      "date": "2026-10-06",
+      "breakfast": {
+        "id": "2026-10-06-breakfast-egg-and-black-bean-breakfast-burrito",
+        "title": "Egg and black bean breakfast burrito",
+        "description": "Mexican breakfast with whole wheat flour tortilla and eggs.",
+        "mealType": "breakfast",
+        "ingredients": [
+          {
+            "id": "flour_tortilla-0",
+            "name": "Whole wheat flour tortilla",
+            "quantity": 45,
+            "unit": "g",
+            "category": "grains",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "flour_tortilla"
+          },
+          {
+            "id": "eggs-1",
+            "name": "Eggs, whole",
+            "quantity": 100,
+            "unit": "g",
+            "category": "protein",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "eggs"
+          },
+          {
+            "id": "black_beans-2",
+            "name": "Black beans, cooked",
+            "quantity": 86,
+            "unit": "g",
+            "category": "pantry",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "black_beans"
+          },
+          {
+            "id": "fresh_salsa-3",
+            "name": "Fresh tomato salsa",
+            "quantity": 60,
+            "unit": "g",
+            "category": "pantry",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "fresh_salsa"
+          },
+          {
+            "id": "cheddar-4",
+            "name": "Cheddar cheese",
+            "quantity": 28,
+            "unit": "g",
+            "category": "produce",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "cheddar"
+          }
+        ],
+        "instructions": [
+          "Scramble eggs",
+          "Warm beans and tortilla",
+          "Fill tortilla with eggs, beans, salsa and cheese, then roll"
+        ],
+        "preparationMinutes": 12,
+        "cookingMinutes": 0,
+        "totalMinutes": 12,
+        "servings": 1,
+        "difficulty": "easy",
+        "estimatedCostPerServing": 1.77,
+        "currency": "USD",
+        "nutritionPerServing": {
+          "calories": 515,
+          "proteinGrams": 31.3,
+          "carbohydratesGrams": 46.1,
+          "fatGrams": 22.7
+        },
+        "nutritionSource": "math",
+        "unmatchedIngredients": [],
+        "ruleWarnings": [],
+        "dietaryTags": [],
+        "allergens": [],
+        "imageSearchTerm": "Egg and black bean breakfast burrito",
+        "imageUrl": null,
+        "storageNotes": "Keeps 3 days in the fridge in a sealed container."
+      },
+      "lunch": {
+        "id": "2026-10-06-lunch-chicken-with-pinto-beans-and-rice-extra-chicken-th",
+        "title": "Chicken with pinto beans and rice, extra chicken thigh",
+        "description": "Latin lunch with chicken thigh and pinto beans.",
+        "mealType": "lunch",
+        "ingredients": [
+          {
+            "id": "chicken_thigh-0",
+            "name": "Chicken thigh, skinless, roasted",
+            "quantity": 300,
+            "unit": "g",
+            "category": "protein",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "chicken_thigh"
+          },
+          {
+            "id": "pinto_beans-1",
+            "name": "Pinto beans, cooked",
+            "quantity": 172,
+            "unit": "g",
+            "category": "pantry",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "pinto_beans"
+          },
+          {
+            "id": "white_rice-2",
+            "name": "White rice, cooked",
+            "quantity": 186,
+            "unit": "g",
+            "category": "grains",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "white_rice"
+          },
+          {
+            "id": "cabbage-3",
+            "name": "Cabbage, shredded",
+            "quantity": 89,
+            "unit": "g",
+            "category": "produce",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "cabbage"
+          }
+        ],
+        "instructions": [
+          "Season chicken with garlic and cumin, then bake",
+          "Warm beans and rice",
+          "Serve with a cabbage lime slaw"
+        ],
+        "preparationMinutes": 25,
+        "cookingMinutes": 0,
+        "totalMinutes": 25,
+        "servings": 1,
+        "difficulty": "easy",
+        "estimatedCostPerServing": 3.19,
+        "currency": "USD",
+        "nutritionPerServing": {
+          "calories": 1137,
+          "proteinGrams": 99.7,
+          "carbohydratesGrams": 102.7,
+          "fatGrams": 34.6
+        },
+        "nutritionSource": "math",
+        "unmatchedIngredients": [],
+        "ruleWarnings": [],
+        "dietaryTags": [],
+        "allergens": [],
+        "imageSearchTerm": "Chicken with pinto beans and rice, extra chicken thigh",
+        "imageUrl": null,
+        "storageNotes": "Keeps 3 days in the fridge in a sealed container."
+      },
+      "dinner": {
+        "id": "2026-10-06-dinner-chipotle-shredded-chicken-tostadas",
+        "title": "Chipotle shredded chicken tostadas",
+        "description": "Mexican dinner with chicken breast and corn tortilla.",
+        "mealType": "dinner",
+        "ingredients": [
+          {
+            "id": "chicken_breast-0",
+            "name": "Chicken breast, roasted",
+            "quantity": 100,
+            "unit": "g",
+            "category": "protein",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "chicken_breast"
+          },
+          {
+            "id": "corn_tortilla-1",
+            "name": "Corn tortilla",
+            "quantity": 78,
+            "unit": "g",
+            "category": "grains",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "corn_tortilla"
+          },
+          {
+            "id": "canned_tomatoes-2",
+            "name": "Diced tomatoes, no salt added",
+            "quantity": 121,
+            "unit": "g",
+            "category": "produce",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "canned_tomatoes"
+          },
+          {
+            "id": "onion-3",
+            "name": "Onion",
+            "quantity": 55,
+            "unit": "g",
+            "category": "produce",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "onion"
+          },
+          {
+            "id": "cabbage-4",
+            "name": "Cabbage, shredded",
+            "quantity": 89,
+            "unit": "g",
+            "category": "produce",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "cabbage"
+          }
+        ],
+        "instructions": [
+          "Simmer shredded chicken with tomato, onion and chipotle",
+          "Crisp tortillas in the oven",
+          "Top with tinga, cabbage and farmer cheese"
+        ],
+        "preparationMinutes": 30,
+        "cookingMinutes": 0,
+        "totalMinutes": 30,
+        "servings": 1,
+        "difficulty": "easy",
+        "estimatedCostPerServing": 2.11,
+        "currency": "USD",
+        "nutritionPerServing": {
+          "calories": 418,
+          "proteinGrams": 39.1,
+          "carbohydratesGrams": 53.9,
+          "fatGrams": 6.4
+        },
+        "nutritionSource": "math",
+        "unmatchedIngredients": [],
+        "ruleWarnings": [],
+        "dietaryTags": [],
+        "allergens": [],
+        "imageSearchTerm": "Chipotle shredded chicken tostadas",
+        "imageUrl": null,
+        "storageNotes": "Keeps 3 days in the fridge in a sealed container."
+      }
+    },
+    {
+      "date": "2026-10-07",
+      "breakfast": {
+        "id": "2026-10-07-breakfast-veggie-scrambled-eggs-with-toast",
+        "title": "Veggie scrambled eggs with toast",
+        "description": "American breakfast with eggs and spinach.",
+        "mealType": "breakfast",
+        "ingredients": [
+          {
+            "id": "eggs-0",
+            "name": "Eggs, whole",
+            "quantity": 150,
+            "unit": "g",
+            "category": "protein",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "eggs"
+          },
+          {
+            "id": "spinach-1",
+            "name": "Spinach, raw",
+            "quantity": 30,
+            "unit": "g",
+            "category": "produce",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "spinach"
+          },
+          {
+            "id": "ww_bread-2",
+            "name": "Whole wheat bread",
+            "quantity": 32,
+            "unit": "g",
+            "category": "grains",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "ww_bread"
+          }
+        ],
+        "instructions": [
+          "Whisk eggs with a pinch of pepper",
+          "Wilt spinach in a nonstick pan, add eggs and scramble softly",
+          "Serve with toast and sliced tomato"
+        ],
+        "preparationMinutes": 10,
+        "cookingMinutes": 0,
+        "totalMinutes": 10,
+        "servings": 1,
+        "difficulty": "easy",
+        "estimatedCostPerServing": 1.24,
+        "currency": "USD",
+        "nutritionPerServing": {
+          "calories": 302,
+          "proteinGrams": 23.7,
+          "carbohydratesGrams": 15.8,
+          "fatGrams": 15.5
+        },
+        "nutritionSource": "math",
+        "unmatchedIngredients": [],
+        "ruleWarnings": [],
+        "dietaryTags": [],
+        "allergens": [],
+        "imageSearchTerm": "Veggie scrambled eggs with toast",
+        "imageUrl": null,
+        "storageNotes": "Keeps 3 days in the fridge in a sealed container."
+      },
+      "lunch": {
+        "id": "2026-10-07-lunch-chicken-burrito-bowl",
+        "title": "Chicken burrito bowl",
+        "description": "Mexican lunch with chicken breast and brown rice.",
+        "mealType": "lunch",
+        "ingredients": [
+          {
+            "id": "chicken_breast-0",
+            "name": "Chicken breast, roasted",
+            "quantity": 200,
+            "unit": "g",
+            "category": "protein",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "chicken_breast"
+          },
+          {
+            "id": "brown_rice-1",
+            "name": "Brown rice, cooked",
+            "quantity": 294,
+            "unit": "g",
+            "category": "grains",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "brown_rice"
+          },
+          {
+            "id": "black_beans-2",
+            "name": "Black beans, cooked",
+            "quantity": 172,
+            "unit": "g",
+            "category": "pantry",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "black_beans"
+          },
+          {
+            "id": "fresh_salsa-3",
+            "name": "Fresh tomato salsa",
+            "quantity": 60,
+            "unit": "g",
+            "category": "pantry",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "fresh_salsa"
+          }
+        ],
+        "instructions": [
+          "Season and grill chicken, then slice",
+          "Warm rice and beans",
+          "Build bowl with corn, salsa and avocado"
+        ],
+        "preparationMinutes": 20,
+        "cookingMinutes": 0,
+        "totalMinutes": 20,
+        "servings": 1,
+        "difficulty": "easy",
+        "estimatedCostPerServing": 3.43,
+        "currency": "USD",
+        "nutritionPerServing": {
+          "calories": 931,
+          "proteinGrams": 85.8,
+          "carbohydratesGrams": 118.6,
+          "fatGrams": 11.1
+        },
+        "nutritionSource": "math",
+        "unmatchedIngredients": [],
+        "ruleWarnings": [],
+        "dietaryTags": [],
+        "allergens": [],
+        "imageSearchTerm": "Chicken burrito bowl",
+        "imageUrl": null,
+        "storageNotes": "Keeps 3 days in the fridge in a sealed container."
+      },
+      "dinner": {
+        "id": "2026-10-07-dinner-chicken-thigh-with-rice-and-green-beans",
+        "title": "Chicken thigh with rice and green beans",
+        "description": "American dinner with chicken thigh and brown rice.",
+        "mealType": "dinner",
+        "ingredients": [
+          {
+            "id": "chicken_thigh-0",
+            "name": "Chicken thigh, skinless, roasted",
+            "quantity": 200,
+            "unit": "g",
+            "category": "protein",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "chicken_thigh"
+          },
+          {
+            "id": "brown_rice-1",
+            "name": "Brown rice, cooked",
+            "quantity": 196,
+            "unit": "g",
+            "category": "grains",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "brown_rice"
+          },
+          {
+            "id": "green_beans-2",
+            "name": "Green beans, cooked",
+            "quantity": 125,
+            "unit": "g",
+            "category": "pantry",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "green_beans"
+          },
+          {
+            "id": "olive_oil-3",
+            "name": "Olive oil",
+            "quantity": 14,
+            "unit": "g",
+            "category": "pantry",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "olive_oil"
+          }
+        ],
+        "instructions": [
+          "Roast chicken thighs",
+          "Steam green beans",
+          "Serve with rice"
+        ],
+        "preparationMinutes": 30,
+        "cookingMinutes": 0,
+        "totalMinutes": 30,
+        "servings": 1,
+        "difficulty": "easy",
+        "estimatedCostPerServing": 2.52,
+        "currency": "USD",
+        "nutritionPerServing": {
+          "calories": 827,
+          "proteinGrams": 59.7,
+          "carbohydratesGrams": 60.1,
+          "fatGrams": 38.1
+        },
+        "nutritionSource": "math",
+        "unmatchedIngredients": [],
+        "ruleWarnings": [],
+        "dietaryTags": [],
+        "allergens": [],
+        "imageSearchTerm": "Chicken thigh with rice and green beans",
+        "imageUrl": null,
+        "storageNotes": "Keeps 3 days in the fridge in a sealed container."
+      }
+    },
+    {
+      "date": "2026-10-08",
+      "breakfast": {
+        "id": "2026-10-08-breakfast-ranchero-eggs-with-black-beans",
+        "title": "Ranchero eggs with black beans",
+        "description": "Mexican breakfast with eggs and corn tortilla.",
+        "mealType": "breakfast",
+        "ingredients": [
+          {
+            "id": "eggs-0",
+            "name": "Eggs, whole",
+            "quantity": 100,
+            "unit": "g",
+            "category": "protein",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "eggs"
+          },
+          {
+            "id": "corn_tortilla-1",
+            "name": "Corn tortilla",
+            "quantity": 52,
+            "unit": "g",
+            "category": "grains",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "corn_tortilla"
+          },
+          {
+            "id": "black_beans-2",
+            "name": "Black beans, cooked",
+            "quantity": 172,
+            "unit": "g",
+            "category": "pantry",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "black_beans"
+          },
+          {
+            "id": "fresh_salsa-3",
+            "name": "Fresh tomato salsa",
+            "quantity": 60,
+            "unit": "g",
+            "category": "pantry",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "fresh_salsa"
+          }
+        ],
+        "instructions": [
+          "Warm tortillas and beans",
+          "Fry eggs in a light film of oil",
+          "Top tortillas with beans, eggs, salsa and crumbled cheese"
+        ],
+        "preparationMinutes": 15,
+        "cookingMinutes": 0,
+        "totalMinutes": 15,
+        "servings": 1,
+        "difficulty": "easy",
+        "estimatedCostPerServing": 1.66,
+        "currency": "USD",
+        "nutritionPerServing": {
+          "calories": 495,
+          "proteinGrams": 31.4,
+          "carbohydratesGrams": 67.2,
+          "fatGrams": 12
+        },
+        "nutritionSource": "math",
+        "unmatchedIngredients": [],
+        "ruleWarnings": [],
+        "dietaryTags": [],
+        "allergens": [],
+        "imageSearchTerm": "Ranchero eggs with black beans",
+        "imageUrl": null,
+        "storageNotes": "Keeps 3 days in the fridge in a sealed container."
+      },
+      "lunch": {
+        "id": "2026-10-08-lunch-ginger-soy-chicken-rice-bowl-extra-chicken-thigh",
+        "title": "Ginger soy chicken rice bowl, extra chicken thigh",
+        "description": "Asian lunch with chicken thigh and white rice.",
+        "mealType": "lunch",
+        "ingredients": [
+          {
+            "id": "chicken_thigh-0",
+            "name": "Chicken thigh, skinless, roasted",
+            "quantity": 300,
+            "unit": "g",
+            "category": "protein",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "chicken_thigh"
+          },
+          {
+            "id": "white_rice-1",
+            "name": "White rice, cooked",
+            "quantity": 186,
+            "unit": "g",
+            "category": "grains",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "white_rice"
+          },
+          {
+            "id": "broccoli-2",
+            "name": "Broccoli, cooked",
+            "quantity": 91,
+            "unit": "g",
+            "category": "produce",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "broccoli"
+          },
+          {
+            "id": "soy_sauce-3",
+            "name": "Soy sauce, low sodium",
+            "quantity": 9,
+            "unit": "g",
+            "category": "produce",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "soy_sauce"
+          }
+        ],
+        "instructions": [
+          "Sear chicken thigh pieces",
+          "Steam broccoli",
+          "Toss chicken with soy sauce and ginger, serve over rice"
+        ],
+        "preparationMinutes": 20,
+        "cookingMinutes": 0,
+        "totalMinutes": 20,
+        "servings": 1,
+        "difficulty": "easy",
+        "estimatedCostPerServing": 3.01,
+        "currency": "USD",
+        "nutritionPerServing": {
+          "calories": 905,
+          "proteinGrams": 85.9,
+          "carbohydratesGrams": 59.5,
+          "fatGrams": 33.6
+        },
+        "nutritionSource": "math",
+        "unmatchedIngredients": [],
+        "ruleWarnings": [],
+        "dietaryTags": [],
+        "allergens": [],
+        "imageSearchTerm": "Ginger soy chicken rice bowl, extra chicken thigh",
+        "imageUrl": null,
+        "storageNotes": "Keeps 3 days in the fridge in a sealed container."
+      },
+      "dinner": {
+        "id": "2026-10-08-dinner-chicken-thigh-with-rice-and-green-beans-extra-chic",
+        "title": "Chicken thigh with rice and green beans, extra chicken thigh",
+        "description": "American dinner with chicken thigh and brown rice.",
+        "mealType": "dinner",
+        "ingredients": [
+          {
+            "id": "chicken_thigh-0",
+            "name": "Chicken thigh, skinless, roasted",
+            "quantity": 200,
+            "unit": "g",
+            "category": "protein",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "chicken_thigh"
+          },
+          {
+            "id": "brown_rice-1",
+            "name": "Brown rice, cooked",
+            "quantity": 196,
+            "unit": "g",
+            "category": "grains",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "brown_rice"
+          },
+          {
+            "id": "green_beans-2",
+            "name": "Green beans, cooked",
+            "quantity": 125,
+            "unit": "g",
+            "category": "pantry",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "green_beans"
+          }
+        ],
+        "instructions": [
+          "Roast chicken thighs",
+          "Steam green beans",
+          "Serve with rice"
+        ],
+        "preparationMinutes": 30,
+        "cookingMinutes": 0,
+        "totalMinutes": 30,
+        "servings": 1,
+        "difficulty": "easy",
+        "estimatedCostPerServing": 2.4,
+        "currency": "USD",
+        "nutritionPerServing": {
+          "calories": 703,
+          "proteinGrams": 59.7,
+          "carbohydratesGrams": 60.1,
+          "fatGrams": 24.1
+        },
+        "nutritionSource": "math",
+        "unmatchedIngredients": [],
+        "ruleWarnings": [],
+        "dietaryTags": [],
+        "allergens": [],
+        "imageSearchTerm": "Chicken thigh with rice and green beans, extra chicken thigh",
+        "imageUrl": null,
+        "storageNotes": "Keeps 3 days in the fridge in a sealed container."
+      }
+    },
+    {
+      "date": "2026-10-09",
+      "breakfast": {
+        "id": "2026-10-09-breakfast-veggie-scrambled-eggs-with-toast",
+        "title": "Veggie scrambled eggs with toast",
+        "description": "American breakfast with eggs and spinach.",
+        "mealType": "breakfast",
+        "ingredients": [
+          {
+            "id": "eggs-0",
+            "name": "Eggs, whole",
+            "quantity": 100,
+            "unit": "g",
+            "category": "protein",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "eggs"
+          },
+          {
+            "id": "spinach-1",
+            "name": "Spinach, raw",
+            "quantity": 30,
+            "unit": "g",
+            "category": "produce",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "spinach"
+          },
+          {
+            "id": "ww_bread-2",
+            "name": "Whole wheat bread",
+            "quantity": 32,
+            "unit": "g",
+            "category": "grains",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "ww_bread"
+          }
+        ],
+        "instructions": [
+          "Whisk eggs with a pinch of pepper",
+          "Wilt spinach in a nonstick pan, add eggs and scramble softly",
+          "Serve with toast and sliced tomato"
+        ],
+        "preparationMinutes": 10,
+        "cookingMinutes": 0,
+        "totalMinutes": 10,
+        "servings": 1,
+        "difficulty": "easy",
+        "estimatedCostPerServing": 0.97,
+        "currency": "USD",
+        "nutritionPerServing": {
+          "calories": 231,
+          "proteinGrams": 17.4,
+          "carbohydratesGrams": 15.4,
+          "fatGrams": 10.7
+        },
+        "nutritionSource": "math",
+        "unmatchedIngredients": [],
+        "ruleWarnings": [],
+        "dietaryTags": [],
+        "allergens": [],
+        "imageSearchTerm": "Veggie scrambled eggs with toast",
+        "imageUrl": null,
+        "storageNotes": "Keeps 3 days in the fridge in a sealed container."
+      },
+      "lunch": {
+        "id": "2026-10-09-lunch-chicken-with-pinto-beans-and-rice",
+        "title": "Chicken with pinto beans and rice",
+        "description": "Latin lunch with chicken thigh and pinto beans.",
+        "mealType": "lunch",
+        "ingredients": [
+          {
+            "id": "chicken_thigh-0",
+            "name": "Chicken thigh, skinless, roasted",
+            "quantity": 200,
+            "unit": "g",
+            "category": "protein",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "chicken_thigh"
+          },
+          {
+            "id": "pinto_beans-1",
+            "name": "Pinto beans, cooked",
+            "quantity": 172,
+            "unit": "g",
+            "category": "pantry",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "pinto_beans"
+          },
+          {
+            "id": "white_rice-2",
+            "name": "White rice, cooked",
+            "quantity": 186,
+            "unit": "g",
+            "category": "grains",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "white_rice"
+          },
+          {
+            "id": "cabbage-3",
+            "name": "Cabbage, shredded",
+            "quantity": 89,
+            "unit": "g",
+            "category": "produce",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "cabbage"
+          }
+        ],
+        "instructions": [
+          "Season chicken with garlic and cumin, then bake",
+          "Warm beans and rice",
+          "Serve with a cabbage lime slaw"
+        ],
+        "preparationMinutes": 25,
+        "cookingMinutes": 0,
+        "totalMinutes": 25,
+        "servings": 1,
+        "difficulty": "easy",
+        "estimatedCostPerServing": 2.39,
+        "currency": "USD",
+        "nutritionPerServing": {
+          "calories": 928,
+          "proteinGrams": 73.7,
+          "carbohydratesGrams": 102.7,
+          "fatGrams": 23.7
+        },
+        "nutritionSource": "math",
+        "unmatchedIngredients": [],
+        "ruleWarnings": [],
+        "dietaryTags": [],
+        "allergens": [],
+        "imageSearchTerm": "Chicken with pinto beans and rice",
+        "imageUrl": null,
+        "storageNotes": "Keeps 3 days in the fridge in a sealed container."
+      },
+      "dinner": {
+        "id": "2026-10-09-dinner-one-pot-chicken-and-rice-extra-chicken-thigh",
+        "title": "One-pot chicken and rice, extra chicken thigh",
+        "description": "Latin dinner with chicken thigh and white rice.",
+        "mealType": "dinner",
+        "ingredients": [
+          {
+            "id": "chicken_thigh-0",
+            "name": "Chicken thigh, skinless, roasted",
+            "quantity": 300,
+            "unit": "g",
+            "category": "protein",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "chicken_thigh"
+          },
+          {
+            "id": "white_rice-1",
+            "name": "White rice, cooked",
+            "quantity": 186,
+            "unit": "g",
+            "category": "grains",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "white_rice"
+          },
+          {
+            "id": "mixed_veg-2",
+            "name": "Mixed vegetables, frozen, cooked",
+            "quantity": 91,
+            "unit": "g",
+            "category": "produce",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "mixed_veg"
+          },
+          {
+            "id": "bell_pepper-3",
+            "name": "Bell pepper",
+            "quantity": 119,
+            "unit": "g",
+            "category": "produce",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "bell_pepper"
+          },
+          {
+            "id": "onion-4",
+            "name": "Onion",
+            "quantity": 55,
+            "unit": "g",
+            "category": "produce",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "onion"
+          }
+        ],
+        "instructions": [
+          "Brown chicken",
+          "Saute pepper and onion, add rice and broth",
+          "Nestle chicken and vegetables, simmer covered 20 minutes"
+        ],
+        "preparationMinutes": 40,
+        "cookingMinutes": 0,
+        "totalMinutes": 40,
+        "servings": 1,
+        "difficulty": "easy",
+        "estimatedCostPerServing": 3.78,
+        "currency": "USD",
+        "nutritionPerServing": {
+          "calories": 982,
+          "proteinGrams": 87.5,
+          "carbohydratesGrams": 76.5,
+          "fatGrams": 33.9
+        },
+        "nutritionSource": "math",
+        "unmatchedIngredients": [],
+        "ruleWarnings": [],
+        "dietaryTags": [],
+        "allergens": [],
+        "imageSearchTerm": "One-pot chicken and rice, extra chicken thigh",
+        "imageUrl": null,
+        "storageNotes": "Keeps 3 days in the fridge in a sealed container."
+      }
+    },
+    {
+      "date": "2026-10-10",
+      "breakfast": {
+        "id": "2026-10-10-breakfast-cactus-and-egg-scramble",
+        "title": "Cactus and egg scramble",
+        "description": "Mexican breakfast with eggs and cactus paddles.",
+        "mealType": "breakfast",
+        "ingredients": [
+          {
+            "id": "eggs-0",
+            "name": "Eggs, whole",
+            "quantity": 100,
+            "unit": "g",
+            "category": "protein",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "eggs"
+          },
+          {
+            "id": "cactus-1",
+            "name": "Cactus paddles, cooked",
+            "quantity": 75,
+            "unit": "g",
+            "category": "produce",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "cactus"
+          },
+          {
+            "id": "corn_tortilla-2",
+            "name": "Corn tortilla",
+            "quantity": 52,
+            "unit": "g",
+            "category": "grains",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "corn_tortilla"
+          },
+          {
+            "id": "fresh_salsa-3",
+            "name": "Fresh tomato salsa",
+            "quantity": 60,
+            "unit": "g",
+            "category": "pantry",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "fresh_salsa"
+          }
+        ],
+        "instructions": [
+          "Saute cactus until tender",
+          "Add eggs and scramble together",
+          "Serve with warm tortillas and salsa"
+        ],
+        "preparationMinutes": 12,
+        "cookingMinutes": 0,
+        "totalMinutes": 12,
+        "servings": 1,
+        "difficulty": "easy",
+        "estimatedCostPerServing": 1.56,
+        "currency": "USD",
+        "nutritionPerServing": {
+          "calories": 280,
+          "proteinGrams": 17.2,
+          "carbohydratesGrams": 28.9,
+          "fatGrams": 11.2
+        },
+        "nutritionSource": "math",
+        "unmatchedIngredients": [],
+        "ruleWarnings": [],
+        "dietaryTags": [],
+        "allergens": [],
+        "imageSearchTerm": "Cactus and egg scramble",
+        "imageUrl": null,
+        "storageNotes": "Keeps 3 days in the fridge in a sealed container."
+      },
+      "lunch": {
+        "id": "2026-10-10-lunch-chicken-with-pinto-beans-and-rice-extra-chicken-th",
+        "title": "Chicken with pinto beans and rice, extra chicken thigh",
+        "description": "Latin lunch with chicken thigh and pinto beans.",
+        "mealType": "lunch",
+        "ingredients": [
+          {
+            "id": "chicken_thigh-0",
+            "name": "Chicken thigh, skinless, roasted",
+            "quantity": 300,
+            "unit": "g",
+            "category": "protein",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "chicken_thigh"
+          },
+          {
+            "id": "pinto_beans-1",
+            "name": "Pinto beans, cooked",
+            "quantity": 172,
+            "unit": "g",
+            "category": "pantry",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "pinto_beans"
+          },
+          {
+            "id": "white_rice-2",
+            "name": "White rice, cooked",
+            "quantity": 186,
+            "unit": "g",
+            "category": "grains",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "white_rice"
+          },
+          {
+            "id": "cabbage-3",
+            "name": "Cabbage, shredded",
+            "quantity": 89,
+            "unit": "g",
+            "category": "produce",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "cabbage"
+          }
+        ],
+        "instructions": [
+          "Season chicken with garlic and cumin, then bake",
+          "Warm beans and rice",
+          "Serve with a cabbage lime slaw"
+        ],
+        "preparationMinutes": 25,
+        "cookingMinutes": 0,
+        "totalMinutes": 25,
+        "servings": 1,
+        "difficulty": "easy",
+        "estimatedCostPerServing": 3.19,
+        "currency": "USD",
+        "nutritionPerServing": {
+          "calories": 1137,
+          "proteinGrams": 99.7,
+          "carbohydratesGrams": 102.7,
+          "fatGrams": 34.6
+        },
+        "nutritionSource": "math",
+        "unmatchedIngredients": [],
+        "ruleWarnings": [],
+        "dietaryTags": [],
+        "allergens": [],
+        "imageSearchTerm": "Chicken with pinto beans and rice, extra chicken thigh",
+        "imageUrl": null,
+        "storageNotes": "Keeps 3 days in the fridge in a sealed container."
+      },
+      "dinner": {
+        "id": "2026-10-10-dinner-chicken-thigh-with-rice-and-green-beans",
+        "title": "Chicken thigh with rice and green beans",
+        "description": "American dinner with chicken thigh and brown rice.",
+        "mealType": "dinner",
+        "ingredients": [
+          {
+            "id": "chicken_thigh-0",
+            "name": "Chicken thigh, skinless, roasted",
+            "quantity": 200,
+            "unit": "g",
+            "category": "protein",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "chicken_thigh"
+          },
+          {
+            "id": "brown_rice-1",
+            "name": "Brown rice, cooked",
+            "quantity": 196,
+            "unit": "g",
+            "category": "grains",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "brown_rice"
+          },
+          {
+            "id": "green_beans-2",
+            "name": "Green beans, cooked",
+            "quantity": 125,
+            "unit": "g",
+            "category": "pantry",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "green_beans"
+          }
+        ],
+        "instructions": [
+          "Roast chicken thighs",
+          "Steam green beans",
+          "Serve with rice"
+        ],
+        "preparationMinutes": 30,
+        "cookingMinutes": 0,
+        "totalMinutes": 30,
+        "servings": 1,
+        "difficulty": "easy",
+        "estimatedCostPerServing": 2.4,
+        "currency": "USD",
+        "nutritionPerServing": {
+          "calories": 703,
+          "proteinGrams": 59.7,
+          "carbohydratesGrams": 60.1,
+          "fatGrams": 24.1
+        },
+        "nutritionSource": "math",
+        "unmatchedIngredients": [],
+        "ruleWarnings": [],
+        "dietaryTags": [],
+        "allergens": [],
+        "imageSearchTerm": "Chicken thigh with rice and green beans",
+        "imageUrl": null,
+        "storageNotes": "Keeps 3 days in the fridge in a sealed container."
+      }
+    },
+    {
+      "date": "2026-10-11",
+      "breakfast": {
+        "id": "2026-10-11-breakfast-egg-and-black-bean-breakfast-burrito",
+        "title": "Egg and black bean breakfast burrito",
+        "description": "Mexican breakfast with whole wheat flour tortilla and eggs.",
+        "mealType": "breakfast",
+        "ingredients": [
+          {
+            "id": "flour_tortilla-0",
+            "name": "Whole wheat flour tortilla",
+            "quantity": 45,
+            "unit": "g",
+            "category": "grains",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "flour_tortilla"
+          },
+          {
+            "id": "eggs-1",
+            "name": "Eggs, whole",
+            "quantity": 100,
+            "unit": "g",
+            "category": "protein",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "eggs"
+          },
+          {
+            "id": "black_beans-2",
+            "name": "Black beans, cooked",
+            "quantity": 86,
+            "unit": "g",
+            "category": "pantry",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "black_beans"
+          },
+          {
+            "id": "fresh_salsa-3",
+            "name": "Fresh tomato salsa",
+            "quantity": 60,
+            "unit": "g",
+            "category": "pantry",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "fresh_salsa"
+          },
+          {
+            "id": "cheddar-4",
+            "name": "Cheddar cheese",
+            "quantity": 28,
+            "unit": "g",
+            "category": "produce",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "cheddar"
+          }
+        ],
+        "instructions": [
+          "Scramble eggs",
+          "Warm beans and tortilla",
+          "Fill tortilla with eggs, beans, salsa and cheese, then roll"
+        ],
+        "preparationMinutes": 12,
+        "cookingMinutes": 0,
+        "totalMinutes": 12,
+        "servings": 1,
+        "difficulty": "easy",
+        "estimatedCostPerServing": 1.77,
+        "currency": "USD",
+        "nutritionPerServing": {
+          "calories": 515,
+          "proteinGrams": 31.3,
+          "carbohydratesGrams": 46.1,
+          "fatGrams": 22.7
+        },
+        "nutritionSource": "math",
+        "unmatchedIngredients": [],
+        "ruleWarnings": [],
+        "dietaryTags": [],
+        "allergens": [],
+        "imageSearchTerm": "Egg and black bean breakfast burrito",
+        "imageUrl": null,
+        "storageNotes": "Keeps 3 days in the fridge in a sealed container."
+      },
+      "lunch": {
+        "id": "2026-10-11-lunch-ginger-soy-chicken-rice-bowl-extra-chicken-thigh",
+        "title": "Ginger soy chicken rice bowl, extra chicken thigh",
+        "description": "Asian lunch with chicken thigh and white rice.",
+        "mealType": "lunch",
+        "ingredients": [
+          {
+            "id": "chicken_thigh-0",
+            "name": "Chicken thigh, skinless, roasted",
+            "quantity": 300,
+            "unit": "g",
+            "category": "protein",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "chicken_thigh"
+          },
+          {
+            "id": "white_rice-1",
+            "name": "White rice, cooked",
+            "quantity": 186,
+            "unit": "g",
+            "category": "grains",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "white_rice"
+          },
+          {
+            "id": "broccoli-2",
+            "name": "Broccoli, cooked",
+            "quantity": 91,
+            "unit": "g",
+            "category": "produce",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "broccoli"
+          },
+          {
+            "id": "soy_sauce-3",
+            "name": "Soy sauce, low sodium",
+            "quantity": 9,
+            "unit": "g",
+            "category": "produce",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "soy_sauce"
+          }
+        ],
+        "instructions": [
+          "Sear chicken thigh pieces",
+          "Steam broccoli",
+          "Toss chicken with soy sauce and ginger, serve over rice"
+        ],
+        "preparationMinutes": 20,
+        "cookingMinutes": 0,
+        "totalMinutes": 20,
+        "servings": 1,
+        "difficulty": "easy",
+        "estimatedCostPerServing": 3.01,
+        "currency": "USD",
+        "nutritionPerServing": {
+          "calories": 905,
+          "proteinGrams": 85.9,
+          "carbohydratesGrams": 59.5,
+          "fatGrams": 33.6
+        },
+        "nutritionSource": "math",
+        "unmatchedIngredients": [],
+        "ruleWarnings": [],
+        "dietaryTags": [],
+        "allergens": [],
+        "imageSearchTerm": "Ginger soy chicken rice bowl, extra chicken thigh",
+        "imageUrl": null,
+        "storageNotes": "Keeps 3 days in the fridge in a sealed container."
+      },
+      "dinner": {
+        "id": "2026-10-11-dinner-grilled-steak-with-rice-and-beans",
+        "title": "Grilled steak with rice and beans",
+        "description": "Mexican dinner with flank steak and white rice.",
+        "mealType": "dinner",
+        "ingredients": [
+          {
+            "id": "flank_steak-0",
+            "name": "Flank steak, grilled",
+            "quantity": 85,
+            "unit": "g",
+            "category": "protein",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "flank_steak"
+          },
+          {
+            "id": "white_rice-1",
+            "name": "White rice, cooked",
+            "quantity": 186,
+            "unit": "g",
+            "category": "grains",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "white_rice"
+          },
+          {
+            "id": "pinto_beans-2",
+            "name": "Pinto beans, cooked",
+            "quantity": 172,
+            "unit": "g",
+            "category": "pantry",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "pinto_beans"
+          },
+          {
+            "id": "fresh_salsa-3",
+            "name": "Fresh tomato salsa",
+            "quantity": 60,
+            "unit": "g",
+            "category": "pantry",
+            "optionalNotes": "",
+            "scalable": true,
+            "foodId": "fresh_salsa"
+          }
+        ],
+        "instructions": [
+          "Marinate steak in lime and garlic, then grill",
+          "Warm rice and beans",
+          "Slice steak and serve with salsa"
+        ],
+        "preparationMinutes": 25,
+        "cookingMinutes": 0,
+        "totalMinutes": 25,
+        "servings": 1,
+        "difficulty": "easy",
+        "estimatedCostPerServing": 2.61,
+        "currency": "USD",
+        "nutritionPerServing": {
+          "calories": 663,
+          "proteinGrams": 44.8,
+          "carbohydratesGrams": 100.1,
+          "fatGrams": 8.7
+        },
+        "nutritionSource": "math",
+        "unmatchedIngredients": [],
+        "ruleWarnings": [],
+        "dietaryTags": [],
+        "allergens": [],
+        "imageSearchTerm": "Grilled steak with rice and beans",
+        "imageUrl": null,
+        "storageNotes": "Keeps 3 days in the fridge in a sealed container."
+      }
+    }
+  ]
+}

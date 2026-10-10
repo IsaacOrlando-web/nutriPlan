@@ -10,6 +10,7 @@ import { useRateMeal } from "@/lib/hooks/usePlan";
 import { cn, fmtNumber, fmtUsd } from "@/lib/utils";
 import type { Meal, MealType } from "@/types/contracts";
 import { MEAL_TIME_OF_DAY } from "./mealTime";
+import { mealImageUrl } from "./meal-image";
 
 export const MEAL_TYPE_LABELS: Record<MealType, string> = {
   breakfast: "Breakfast",
@@ -64,6 +65,12 @@ export function MealCard({ meal, onOpen, showTeaser = true, className }: MealCar
         className="flex flex-col gap-2 text-left focus:outline-none"
         aria-label={`Why ${meal.name}?`}
       >
+        <img
+          src={mealImageUrl(meal)}
+          alt={`${meal.name} dish`}
+          loading="lazy"
+          className="h-40 w-full rounded-lg object-cover"
+        />
         <div className="flex items-start justify-between gap-2">
           <span className="flex items-center gap-1.5">
             <Badge variant={TYPE_VARIANT[meal.type]}>{MEAL_TYPE_LABELS[meal.type]}</Badge>
@@ -92,7 +99,7 @@ export function MealCard({ meal, onOpen, showTeaser = true, className }: MealCar
           <Stat label="Cost" value={fmtUsd(meal.totals.costUsd)} highlight />
         </dl>
         <span className="flex items-center gap-0.5 text-xs font-medium text-brand group-hover:underline">
-          Tap for why
+          View recipe & ingredients
           <ChevronRight className="h-3.5 w-3.5" aria-hidden="true" />
         </span>
       </button>
