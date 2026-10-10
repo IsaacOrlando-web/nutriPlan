@@ -228,7 +228,7 @@
       "tool": "optimizePlan",
       "solve": 1,
       "poolSize": 36,
-      "solveMs": 5269,
+      "solveMs": 2597,
       "brief": {
         "count": 6,
         "feasible": true,
@@ -320,7 +320,7 @@
     "runId": "maria-run-0001",
     "agent": "orchestrator",
     "kind": "proposal",
-    "text": "Second solve used 5 of Chef's 6 new meals; weekly cost went from $71.15 to $67.03, inside the $70. Solved in 4.4 s.",
+    "text": "Second solve used 5 of Chef's 6 new meals; weekly cost went from $71.15 to $67.03, inside the $70. Solved in 1.6 s.",
     "at": "2026-10-09T15:00:19.600Z",
     "data": {
       "solve": 2,
@@ -331,9 +331,9 @@
       "proteinDeviationAfterG": 35,
       "weeklyCostBeforeUsd": 71.15,
       "weeklyCostAfterUsd": 67.03,
-      "solveMs": 4387,
-      "solveSec": 4.4,
-      "shadowPricesMs": 0
+      "solveMs": 1576,
+      "solveSec": 1.6,
+      "shadowPricesMs": 6464
     }
   },
   {
@@ -392,12 +392,11 @@
       "bestEffort": false,
       "concededAny": false,
       "timingMs": {
-        "firstSolveMs": 5274,
-        "chefColumnsMs": 7,
-        "elapsedBeforeSecondSolveMs": 5288,
-        "secondSolveMs": 4392,
-        "shadowPricesMs": 0,
-        "shadowPricesDeferred": 1
+        "firstSolveMs": 2599,
+        "chefColumnsMs": 2,
+        "elapsedBeforeSecondSolveMs": 2605,
+        "secondSolveMs": 1577,
+        "shadowPricesMs": 6464
       }
     }
   }

@@ -237,7 +237,7 @@
         "tool": "optimizePlan",
         "solve": 1,
         "poolSize": 36,
-        "solveMs": 5269,
+        "solveMs": 2597,
         "brief": {
           "count": 6,
           "feasible": true,
@@ -329,7 +329,7 @@
       "runId": "maria-run-0001",
       "agent": "orchestrator",
       "kind": "proposal",
-      "text": "Second solve used 5 of Chef's 6 new meals; weekly cost went from $71.15 to $67.03, inside the $70. Solved in 4.4 s.",
+      "text": "Second solve used 5 of Chef's 6 new meals; weekly cost went from $71.15 to $67.03, inside the $70. Solved in 1.6 s.",
       "at": "2026-10-09T15:00:19.600Z",
       "data": {
         "solve": 2,
@@ -340,9 +340,9 @@
         "proteinDeviationAfterG": 35,
         "weeklyCostBeforeUsd": 71.15,
         "weeklyCostAfterUsd": 67.03,
-        "solveMs": 4387,
-        "solveSec": 4.4,
-        "shadowPricesMs": 0
+        "solveMs": 1576,
+        "solveSec": 1.6,
+        "shadowPricesMs": 6464
       }
     },
     {
@@ -401,12 +401,11 @@
         "bestEffort": false,
         "concededAny": false,
         "timingMs": {
-          "firstSolveMs": 5274,
-          "chefColumnsMs": 7,
-          "elapsedBeforeSecondSolveMs": 5288,
-          "secondSolveMs": 4392,
-          "shadowPricesMs": 0,
-          "shadowPricesDeferred": 1
+          "firstSolveMs": 2599,
+          "chefColumnsMs": 2,
+          "elapsedBeforeSecondSolveMs": 2605,
+          "secondSolveMs": 1577,
+          "shadowPricesMs": 6464
         }
       }
     }
@@ -485,7 +484,7 @@
               },
               {
                 "agent": "budget",
-                "text": "$2.17 for this meal, 35% of today's sodium."
+                "text": "$2.17 for this meal, 35% of today's sodium. Your budget is not limiting the plan right now"
               }
             ]
           },
@@ -557,7 +556,7 @@
               },
               {
                 "agent": "budget",
-                "text": "$3.06 for this meal, 32% of today's sodium."
+                "text": "$3.06 for this meal, 32% of today's sodium. Your budget is not limiting the plan right now"
               }
             ]
           },
@@ -629,7 +628,7 @@
               },
               {
                 "agent": "budget",
-                "text": "$3.11 for this meal, 33% of today's sodium."
+                "text": "$3.11 for this meal, 33% of today's sodium. Your budget is not limiting the plan right now"
               }
             ]
           },
@@ -682,7 +681,7 @@
               },
               {
                 "agent": "budget",
-                "text": "$1.15 for this meal, 0% of today's sodium."
+                "text": "$1.15 for this meal, 0% of today's sodium. Your budget is not limiting the plan right now"
               }
             ]
           }
@@ -761,7 +760,7 @@
               },
               {
                 "agent": "budget",
-                "text": "$2.08 for this meal, 8% of today's sodium."
+                "text": "$2.08 for this meal, 8% of today's sodium. Your budget is not limiting the plan right now"
               }
             ]
           },
@@ -832,7 +831,7 @@
               },
               {
                 "agent": "budget",
-                "text": "$2.88 for this meal, 48% of today's sodium."
+                "text": "$2.88 for this meal, 48% of today's sodium. Your budget is not limiting the plan right now"
               }
             ]
           },
@@ -904,7 +903,7 @@
               },
               {
                 "agent": "budget",
-                "text": "$3.11 for this meal, 29% of today's sodium."
+                "text": "$3.11 for this meal, 29% of today's sodium. Your budget is not limiting the plan right now"
               }
             ]
           },
@@ -957,7 +956,7 @@
               },
               {
                 "agent": "budget",
-                "text": "$2.01 for this meal, 15% of today's sodium."
+                "text": "$2.01 for this meal, 15% of today's sodium. Your budget is not limiting the plan right now"
               }
             ]
           }
@@ -1035,7 +1034,7 @@
               },
               {
                 "agent": "budget",
-                "text": "$3.42 for this meal, 16% of today's sodium."
+                "text": "$3.42 for this meal, 16% of today's sodium. Your budget is not limiting the plan right now"
               }
             ]
           },
@@ -1107,7 +1106,7 @@
               },
               {
                 "agent": "budget",
-                "text": "$3.06 for this meal, 33% of today's sodium."
+                "text": "$3.06 for this meal, 33% of today's sodium. Your budget is not limiting the plan right now"
               }
             ]
           },
@@ -1185,7 +1184,7 @@
               },
               {
                 "agent": "budget",
-                "text": "$2.63 for this meal, 52% of today's sodium."
+                "text": "$2.63 for this meal, 52% of today's sodium. Your budget is not limiting the plan right now"
               }
             ]
           },
@@ -1238,7 +1237,7 @@
               },
               {
                 "agent": "budget",
-                "text": "$1.15 for this meal, 0% of today's sodium."
+                "text": "$1.15 for this meal, 0% of today's sodium. Your budget is not limiting the plan right now"
               }
             ]
           }
@@ -1323,7 +1322,7 @@
               },
               {
                 "agent": "budget",
-                "text": "$2.50 for this meal, 20% of today's sodium."
+                "text": "$2.50 for this meal, 20% of today's sodium. Your budget is not limiting the plan right now"
               }
             ]
           },
@@ -1394,7 +1393,7 @@
               },
               {
                 "agent": "budget",
-                "text": "$2.88 for this meal, 46% of today's sodium."
+                "text": "$2.88 for this meal, 46% of today's sodium. Your budget is not limiting the plan right now"
               }
             ]
           },
@@ -1466,7 +1465,7 @@
               },
               {
                 "agent": "budget",
-                "text": "$2.35 for this meal, 20% of today's sodium."
+                "text": "$2.35 for this meal, 20% of today's sodium. Your budget is not limiting the plan right now"
               }
             ]
           },
@@ -1519,7 +1518,7 @@
               },
               {
                 "agent": "budget",
-                "text": "$2.01 for this meal, 14% of today's sodium."
+                "text": "$2.01 for this meal, 14% of today's sodium. Your budget is not limiting the plan right now"
               }
             ]
           }
@@ -1597,7 +1596,7 @@
               },
               {
                 "agent": "budget",
-                "text": "$3.42 for this meal, 12% of today's sodium."
+                "text": "$3.42 for this meal, 12% of today's sodium. Your budget is not limiting the plan right now"
               }
             ]
           },
@@ -1669,7 +1668,7 @@
               },
               {
                 "agent": "budget",
-                "text": "$1.80 for this meal, 37% of today's sodium."
+                "text": "$1.80 for this meal, 37% of today's sodium. Your budget is not limiting the plan right now"
               }
             ]
           },
@@ -1735,7 +1734,7 @@
               },
               {
                 "agent": "budget",
-                "text": "$1.97 for this meal, 40% of today's sodium."
+                "text": "$1.97 for this meal, 40% of today's sodium. Your budget is not limiting the plan right now"
               }
             ]
           },
@@ -1788,7 +1787,7 @@
               },
               {
                 "agent": "budget",
-                "text": "$0.37 for this meal, 10% of today's sodium."
+                "text": "$0.37 for this meal, 10% of today's sodium. Your budget is not limiting the plan right now"
               }
             ]
           }
@@ -1873,7 +1872,7 @@
               },
               {
                 "agent": "budget",
-                "text": "$2.50 for this meal, 24% of today's sodium."
+                "text": "$2.50 for this meal, 24% of today's sodium. Your budget is not limiting the plan right now"
               }
             ]
           },
@@ -1945,7 +1944,7 @@
               },
               {
                 "agent": "budget",
-                "text": "$4.76 for this meal, 19% of today's sodium."
+                "text": "$4.76 for this meal, 19% of today's sodium. Your budget is not limiting the plan right now"
               }
             ]
           },
@@ -2011,7 +2010,7 @@
               },
               {
                 "agent": "budget",
-                "text": "$1.97 for this meal, 49% of today's sodium."
+                "text": "$1.97 for this meal, 49% of today's sodium. Your budget is not limiting the plan right now"
               }
             ]
           },
@@ -2063,7 +2062,7 @@
               },
               {
                 "agent": "budget",
-                "text": "$1.99 for this meal, 8% of today's sodium."
+                "text": "$1.99 for this meal, 8% of today's sodium. Your budget is not limiting the plan right now"
               }
             ]
           }
@@ -2142,7 +2141,7 @@
               },
               {
                 "agent": "budget",
-                "text": "$2.08 for this meal, 10% of today's sodium."
+                "text": "$2.08 for this meal, 10% of today's sodium. Your budget is not limiting the plan right now"
               }
             ]
           },
@@ -2214,7 +2213,7 @@
               },
               {
                 "agent": "budget",
-                "text": "$1.80 for this meal, 48% of today's sodium."
+                "text": "$1.80 for this meal, 48% of today's sodium. Your budget is not limiting the plan right now"
               }
             ]
           },
@@ -2286,7 +2285,7 @@
               },
               {
                 "agent": "budget",
-                "text": "$4.43 for this meal, 29% of today's sodium."
+                "text": "$4.43 for this meal, 29% of today's sodium. Your budget is not limiting the plan right now"
               }
             ]
           },
@@ -2339,7 +2338,7 @@
               },
               {
                 "agent": "budget",
-                "text": "$0.37 for this meal, 13% of today's sodium."
+                "text": "$0.37 for this meal, 13% of today's sodium. Your budget is not limiting the plan right now"
               }
             ]
           }
@@ -2658,7 +2657,28 @@
         "storeSection": "frozen"
       }
     ],
-    "shadowPrices": [],
+    "shadowPrices": [
+      {
+        "constraint": "weekly_budget",
+        "value": 0,
+        "humanText": "Your budget is not limiting the plan right now"
+      },
+      {
+        "constraint": "max_sodium",
+        "value": 0,
+        "humanText": "Your sodium limit is not changing any meals this week"
+      },
+      {
+        "constraint": "calorie_target",
+        "value": 0,
+        "humanText": "Your calorie target is not limiting meal choices"
+      },
+      {
+        "constraint": "max_carbs_per_meal",
+        "value": 0,
+        "humanText": "Your per meal carb cap is not changing any meals this week"
+      }
+    ],
     "bestEffort": false
   }
 }

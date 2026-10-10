@@ -170,34 +170,34 @@
       "runId": "alex-run-0001",
       "agent": "orchestrator",
       "kind": "tool_call",
-      "text": "First solve: budget and protein are the scarce resources (budget binding at $50; protein 42 g under target on 5 days). Chef: 6 new meals.",
+      "text": "First solve: budget and protein are the scarce resources (budget binding at $50; protein 43 g under target on 5 days). Chef: 6 new meals.",
       "at": "2026-10-09T15:00:14.000Z",
       "data": {
         "tool": "optimizePlan",
         "solve": 1,
         "poolSize": 38,
-        "solveMs": 3056,
+        "solveMs": 1750,
         "brief": {
           "count": 6,
           "feasible": true,
           "weeklyBudgetUsd": 50,
-          "weeklyCostUsd": 50.04,
+          "weeklyCostUsd": 49.86,
           "bindingConstraints": [
             "weekly_budget"
           ],
           "budgetBinding": true,
           "proteinTargetG": 179,
           "proteinShortDays": 5,
-          "proteinGapG": 42,
+          "proteinGapG": 43,
           "sodiumSharePct": 66,
           "costPerType": {
-            "breakfast": 1.87,
-            "lunch": 2.59,
-            "dinner": 2.69
+            "breakfast": 1.96,
+            "lunch": 2.67,
+            "dinner": 2.49
           },
           "typeCounts": {
-            "dinner": 3,
-            "lunch": 3
+            "lunch": 3,
+            "dinner": 3
           },
           "maxMealCostUsd": 2.15,
           "minProteinG": 65,
@@ -219,7 +219,7 @@
             "high protein (at least 65 g)",
             "under $2.15"
           ],
-          "text": "First solve: budget and protein are the scarce resources (budget binding at $50; protein 42 g under target on 5 days). Chef: 6 new meals."
+          "text": "First solve: budget and protein are the scarce resources (budget binding at $50; protein 43 g under target on 5 days). Chef: 6 new meals."
         }
       }
     },
@@ -228,7 +228,7 @@
       "runId": "alex-run-0001",
       "agent": "chef",
       "kind": "proposal",
-      "text": "Brief received: 6 high-protein meals under $2.15. First up: chipotle shredded chicken tostadas, extra chicken breast.",
+      "text": "Brief received: 6 high-protein meals under $2.15. First up: mexican chicken vegetable soup, extra chicken breast.",
       "at": "2026-10-09T15:00:15.400Z",
       "data": {
         "brief": {
@@ -237,17 +237,17 @@
             "under $2.15"
           ],
           "typeCounts": {
-            "dinner": 3,
-            "lunch": 3
+            "lunch": 3,
+            "dinner": 3
           }
         },
         "columns": [
-          "Chipotle shredded chicken tostadas, extra chicken breast",
-          "Lentil bolognese",
-          "One-pot chicken and rice, extra chicken thigh",
           "Mexican chicken vegetable soup, extra chicken breast",
           "Chicken avocado sandwich, extra chicken breast",
-          "Chicken and cactus tacos, extra chicken breast"
+          "Chicken and cactus tacos, extra chicken breast",
+          "Chipotle shredded chicken tostadas, extra chicken breast",
+          "Lentil bolognese",
+          "One-pot chicken and rice, extra chicken thigh"
         ],
         "source": "templates",
         "count": 6
@@ -258,20 +258,20 @@
       "runId": "alex-run-0001",
       "agent": "orchestrator",
       "kind": "proposal",
-      "text": "Second solve used 2 of Chef's 6 new meals; weekly cost went from $50.04 to $49.96, inside the $50. Solved in 4.5 s.",
+      "text": "Second solve used 2 of Chef's 6 new meals; the daily protein gap shrank from 32 g to 20 g. Solved in 3.5 s.",
       "at": "2026-10-09T15:00:16.800Z",
       "data": {
         "solve": 2,
         "usedColumns": 2,
         "offeredColumns": 6,
         "kept": true,
-        "proteinDeviationBeforeG": 31,
+        "proteinDeviationBeforeG": 32,
         "proteinDeviationAfterG": 20,
-        "weeklyCostBeforeUsd": 50.04,
+        "weeklyCostBeforeUsd": 49.86,
         "weeklyCostAfterUsd": 49.96,
-        "solveMs": 4540,
-        "solveSec": 4.5,
-        "shadowPricesMs": 0
+        "solveMs": 3499,
+        "solveSec": 3.5,
+        "shadowPricesMs": 7288
       }
     },
     {
@@ -302,13 +302,14 @@
       "runId": "alex-run-0001",
       "agent": "budget",
       "kind": "proposal",
-      "text": "Budget is the binding constraint: $49.96 of your $50 is working. Every extra dollar buys variety.",
+      "text": "Raising your budget by $5 would let Chef add greek yogurt parfait with walnuts once",
       "at": "2026-10-09T15:00:21.000Z",
       "data": {
-        "bindingConstraints": [
-          "weekly_budget"
-        ],
-        "weeklyCostUsd": 49.96
+        "shadowPrice": {
+          "constraint": "weekly_budget",
+          "value": 32.115,
+          "humanText": "Raising your budget by $5 would let Chef add greek yogurt parfait with walnuts once"
+        }
       }
     },
     {
@@ -344,12 +345,11 @@
         "bestEffort": false,
         "concededAny": false,
         "timingMs": {
-          "firstSolveMs": 3069,
+          "firstSolveMs": 1761,
           "chefColumnsMs": 4,
-          "elapsedBeforeSecondSolveMs": 3093,
-          "secondSolveMs": 4551,
-          "shadowPricesMs": 0,
-          "shadowPricesDeferred": 1
+          "elapsedBeforeSecondSolveMs": 1777,
+          "secondSolveMs": 3506,
+          "shadowPricesMs": 7288
         }
       }
     }
@@ -428,7 +428,7 @@
               },
               {
                 "agent": "budget",
-                "text": "$1.46 for this meal, 43% of today's sodium."
+                "text": "$1.46 for this meal, 43% of today's sodium. Raising your budget by $5 would let Chef add greek yogurt parfait with walnuts once"
               }
             ]
           },
@@ -494,7 +494,7 @@
               },
               {
                 "agent": "budget",
-                "text": "$2.94 for this meal, 20% of today's sodium."
+                "text": "$2.94 for this meal, 20% of today's sodium. Raising your budget by $5 would let Chef add greek yogurt parfait with walnuts once"
               }
             ]
           },
@@ -572,7 +572,7 @@
               },
               {
                 "agent": "budget",
-                "text": "$2.69 for this meal, 37% of today's sodium."
+                "text": "$2.69 for this meal, 37% of today's sodium. Raising your budget by $5 would let Chef add greek yogurt parfait with walnuts once"
               }
             ]
           }
@@ -663,7 +663,7 @@
               },
               {
                 "agent": "budget",
-                "text": "$2.25 for this meal, 38% of today's sodium."
+                "text": "$2.25 for this meal, 38% of today's sodium. Raising your budget by $5 would let Chef add greek yogurt parfait with walnuts once"
               }
             ]
           },
@@ -729,7 +729,7 @@
               },
               {
                 "agent": "budget",
-                "text": "$1.44 for this meal, 20% of today's sodium."
+                "text": "$1.44 for this meal, 20% of today's sodium. Raising your budget by $5 would let Chef add greek yogurt parfait with walnuts once"
               }
             ]
           },
@@ -807,7 +807,7 @@
               },
               {
                 "agent": "budget",
-                "text": "$3.45 for this meal, 43% of today's sodium."
+                "text": "$3.45 for this meal, 43% of today's sodium. Raising your budget by $5 would let Chef add greek yogurt parfait with walnuts once"
               }
             ]
           }
@@ -886,7 +886,7 @@
               },
               {
                 "agent": "budget",
-                "text": "$1.11 for this meal, 36% of today's sodium."
+                "text": "$1.11 for this meal, 36% of today's sodium. Raising your budget by $5 would let Chef add greek yogurt parfait with walnuts once"
               }
             ]
           },
@@ -958,7 +958,7 @@
               },
               {
                 "agent": "budget",
-                "text": "$3.36 for this meal, 22% of today's sodium."
+                "text": "$3.36 for this meal, 22% of today's sodium. Raising your budget by $5 would let Chef add greek yogurt parfait with walnuts once"
               }
             ]
           },
@@ -1036,7 +1036,7 @@
               },
               {
                 "agent": "budget",
-                "text": "$2.69 for this meal, 42% of today's sodium."
+                "text": "$2.69 for this meal, 42% of today's sodium. Raising your budget by $5 would let Chef add greek yogurt parfait with walnuts once"
               }
             ]
           }
@@ -1121,7 +1121,7 @@
               },
               {
                 "agent": "budget",
-                "text": "$1.76 for this meal, 54% of today's sodium."
+                "text": "$1.76 for this meal, 54% of today's sodium. Raising your budget by $5 would let Chef add greek yogurt parfait with walnuts once"
               }
             ]
           },
@@ -1187,7 +1187,7 @@
               },
               {
                 "agent": "budget",
-                "text": "$2.00 for this meal, 9% of today's sodium."
+                "text": "$2.00 for this meal, 9% of today's sodium. Raising your budget by $5 would let Chef add greek yogurt parfait with walnuts once"
               }
             ]
           },
@@ -1265,7 +1265,7 @@
               },
               {
                 "agent": "budget",
-                "text": "$3.39 for this meal, 37% of today's sodium."
+                "text": "$3.39 for this meal, 37% of today's sodium. Raising your budget by $5 would let Chef add greek yogurt parfait with walnuts once"
               }
             ]
           }
@@ -1356,7 +1356,7 @@
               },
               {
                 "agent": "budget",
-                "text": "$2.25 for this meal, 43% of today's sodium."
+                "text": "$2.25 for this meal, 43% of today's sodium. Raising your budget by $5 would let Chef add greek yogurt parfait with walnuts once"
               }
             ]
           },
@@ -1422,7 +1422,7 @@
               },
               {
                 "agent": "budget",
-                "text": "$3.17 for this meal, 21% of today's sodium."
+                "text": "$3.17 for this meal, 21% of today's sodium. Raising your budget by $5 would let Chef add greek yogurt parfait with walnuts once"
               }
             ]
           },
@@ -1488,7 +1488,7 @@
               },
               {
                 "agent": "budget",
-                "text": "$1.68 for this meal, 36% of today's sodium."
+                "text": "$1.68 for this meal, 36% of today's sodium. Raising your budget by $5 would let Chef add greek yogurt parfait with walnuts once"
               }
             ]
           }
@@ -1579,7 +1579,7 @@
               },
               {
                 "agent": "budget",
-                "text": "$2.22 for this meal, 52% of today's sodium."
+                "text": "$2.22 for this meal, 52% of today's sodium. Raising your budget by $5 would let Chef add greek yogurt parfait with walnuts once"
               }
             ]
           },
@@ -1645,7 +1645,7 @@
               },
               {
                 "agent": "budget",
-                "text": "$3.20 for this meal, 43% of today's sodium."
+                "text": "$3.20 for this meal, 43% of today's sodium. Raising your budget by $5 would let Chef add greek yogurt parfait with walnuts once"
               }
             ]
           },
@@ -1717,7 +1717,7 @@
               },
               {
                 "agent": "budget",
-                "text": "$1.51 for this meal, 5% of today's sodium."
+                "text": "$1.51 for this meal, 5% of today's sodium. Raising your budget by $5 would let Chef add greek yogurt parfait with walnuts once"
               }
             ]
           }
@@ -1808,7 +1808,7 @@
               },
               {
                 "agent": "budget",
-                "text": "$2.68 for this meal, 54% of today's sodium."
+                "text": "$2.68 for this meal, 54% of today's sodium. Raising your budget by $5 would let Chef add greek yogurt parfait with walnuts once"
               }
             ]
           },
@@ -1874,7 +1874,7 @@
               },
               {
                 "agent": "budget",
-                "text": "$3.20 for this meal, 41% of today's sodium."
+                "text": "$3.20 for this meal, 41% of today's sodium. Raising your budget by $5 would let Chef add greek yogurt parfait with walnuts once"
               }
             ]
           },
@@ -1946,7 +1946,7 @@
               },
               {
                 "agent": "budget",
-                "text": "$1.51 for this meal, 5% of today's sodium."
+                "text": "$1.51 for this meal, 5% of today's sodium. Raising your budget by $5 would let Chef add greek yogurt parfait with walnuts once"
               }
             ]
           }
@@ -2169,7 +2169,23 @@
         "storeSection": "pantry"
       }
     ],
-    "shadowPrices": [],
+    "shadowPrices": [
+      {
+        "constraint": "weekly_budget",
+        "value": 32.115,
+        "humanText": "Raising your budget by $5 would let Chef add greek yogurt parfait with walnuts once"
+      },
+      {
+        "constraint": "max_sodium",
+        "value": 1.432,
+        "humanText": "Your 2300 mg sodium limit keeps ginger soy chicken rice bowl off the plan. Doctor holds this line"
+      },
+      {
+        "constraint": "calorie_target",
+        "value": 2.418,
+        "humanText": "100 more kcal a day would let Chef add lentil bolognese once"
+      }
+    ],
     "bestEffort": false
   }
 }
