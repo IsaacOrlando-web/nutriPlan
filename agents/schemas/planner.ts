@@ -118,6 +118,7 @@ export const PlannerPreferencesSchema = z
     availableIngredients: textList,
     kitchenEquipment: textList,
     language: LanguageSchema,
+    shoppingWeekday: z.number().int().min(0).max(6).nullable().default(null),
   })
   .strict();
 

@@ -66,6 +66,7 @@ describe("MemoryStore planner", () => {
         availableIngredients: [],
         kitchenEquipment: [],
         language: "en" as const,
+        shoppingWeekday: null,
       },
       favorites: [],
       selectedWeek: WEEK,

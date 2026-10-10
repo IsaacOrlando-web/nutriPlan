@@ -5,6 +5,7 @@ import { api } from "@/lib/api";
 import { todayIso } from "@/lib/utils";
 import type {
   GenerateWeekRequest,
+  PlannerSettingsResponse,
   ReplaceRecipeRequest,
   UpdateWeekStateRequest,
   WeekPlanResponse,
@@ -17,6 +18,37 @@ export function mondayOf(iso: string = todayIso()): string {
   const d = new Date(`${iso}T00:00:00Z`);
   d.setUTCDate(d.getUTCDate() - ((d.getUTCDay() + 6) % 7));
   return d.toISOString().slice(0, 10);
+}
+
+/** Planner preferences; the /plan screen reads the shopping day from here. */
+export function usePlannerSettings() {
+  return useQuery({ queryKey: keys.plannerSettings, queryFn: () => api.planner.settings() });
+}
+
+/** Saves the grocery weekday (0 = Monday ... 6 = Sunday, null clears it). Optimistic, rolls back on error. */
+export function useSaveShoppingDay() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (shoppingWeekday: number | null) => {
+      const current =
+        qc.getQueryData<PlannerSettingsResponse>(keys.plannerSettings) ?? (await api.planner.settings());
+      return api.planner.savePreferences({ ...current.preferences, shoppingWeekday });
+    },
+    onMutate: async (shoppingWeekday) => {
+      await qc.cancelQueries({ queryKey: keys.plannerSettings });
+      const prev = qc.getQueryData<PlannerSettingsResponse>(keys.plannerSettings);
+      if (prev)
+        qc.setQueryData<PlannerSettingsResponse>(keys.plannerSettings, {
+          ...prev,
+          preferences: { ...prev.preferences, shoppingWeekday },
+        });
+      return { prev };
+    },
+    onError: (_err, _day, ctx) => {
+      if (ctx?.prev) qc.setQueryData(keys.plannerSettings, ctx.prev);
+    },
+    onSuccess: (settings) => qc.setQueryData(keys.plannerSettings, settings),
+  });
 }
 
 /** Dish titles of every saved day in a YYYY-MM month, for the calendar in the corner of /plan. */

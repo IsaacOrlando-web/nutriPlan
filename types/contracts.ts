@@ -471,6 +471,8 @@ export interface PlannerPreferences {
   availableIngredients: string[];
   kitchenEquipment: string[];
   language: Language;
+  /** Weekday the user does the groceries: 0 = Monday ... 6 = Sunday; null when not chosen. */
+  shoppingWeekday: number | null;
 }
 
 export interface ShoppingCustomItem {

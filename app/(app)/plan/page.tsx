@@ -18,7 +18,7 @@ import { ErrorState } from "@/components/common/ErrorState";
 import { LoadingState } from "@/components/common/LoadingState";
 import { PageHeader } from "@/components/common/PageHeader";
 import { BudgetSlider } from "@/components/meals/BudgetSlider";
-import { MonthSchedule, monthOfWeek } from "@/components/meals/MonthSchedule";
+import { MonthSchedule, WEEKDAY_NAMES, monthOfWeek } from "@/components/meals/MonthSchedule";
 import { RecipeCard } from "@/components/meals/RecipeCard";
 import { RecipeSheet } from "@/components/meals/RecipeSheet";
 import { Button } from "@/components/ui/button";
@@ -30,11 +30,13 @@ import {
   mondayOf,
   useGenerateWeek,
   useRegenerateAgentPlan,
+  usePlannerSettings,
   useReplaceRecipe,
+  useSaveShoppingDay,
   useWeekPlan,
 } from "@/lib/hooks/usePlanner";
 import { useProfile } from "@/lib/hooks/useProfile";
-import { addDays, formatWeekRange, weekStartOf } from "@/lib/planner/dates";
+import { addDays, formatWeekRange, weekStartOf, weekdayIndex } from "@/lib/planner/dates";
 import { cn, fmtDate, fmtUsd, todayIso } from "@/lib/utils";
 import type { MealPlan, PlannerDay, PlannerMealType, Recipe, WeeklyMealPlan } from "@/types/contracts";
 
@@ -49,6 +51,17 @@ export default function PlanPage() {
   const [month, setMonth] = useState(() => today.slice(0, 7));
   const [monthOpen, setMonthOpen] = useState(false);
   const week = useWeekPlan(weekStart);
+  const plannerSettings = usePlannerSettings();
+  const saveShoppingDay = useSaveShoppingDay();
+  const shoppingWeekday = plannerSettings.data?.preferences.shoppingWeekday ?? null;
+  const changeShoppingDay = (weekday: number | null) =>
+    saveShoppingDay.mutate(weekday, {
+      onSuccess: () =>
+        toast.success(
+          weekday === null ? "Shopping day cleared." : `Shopping day set to ${WEEKDAY_NAMES[weekday]}.`,
+        ),
+      onError: (err) => toast.error(errorMessage(err, "Could not save the shopping day.")),
+    });
   const agentPlan = usePlan();
   const profile = useProfile();
   const generate = useGenerateWeek();
@@ -77,6 +90,8 @@ export default function PlanPage() {
       focusDate={focusDate}
       today={today}
       onPickDate={openDate}
+      shoppingWeekday={shoppingWeekday}
+      onShoppingWeekdayChange={changeShoppingDay}
       className={className}
     />
   );
@@ -154,6 +169,7 @@ export default function PlanPage() {
               isCurrentWeek={isCurrentWeek}
               focusDate={focusDate}
               onFocusDate={setFocusDate}
+              shoppingWeekday={shoppingWeekday}
               weekSwitcher={weekSwitcher}
               regenerating={generate.isPending}
               onRegenerate={regenerate}
@@ -278,6 +294,7 @@ function WeekView({
   isCurrentWeek,
   focusDate,
   onFocusDate,
+  shoppingWeekday,
   weekSwitcher,
   regenerating,
   onRegenerate,
@@ -287,6 +304,7 @@ function WeekView({
   isCurrentWeek: boolean;
   focusDate: string;
   onFocusDate: (date: string) => void;
+  shoppingWeekday: number | null;
   weekSwitcher: ReactNode;
   regenerating: boolean;
   onRegenerate: () => void;
@@ -390,21 +408,26 @@ function WeekView({
           {plan.days.map((d, i) => {
             const active = i === selected;
             const isToday = d.date === today;
+            const isShopping = weekdayIndex(d.date) === shoppingWeekday;
             return (
               <button
                 key={d.date}
                 role="tab"
                 type="button"
                 data-testid="plan-day"
+                data-shopping={isShopping ? "true" : "false"}
                 aria-selected={active}
-                aria-label={`${fmtDate(d.date, { weekday: "long", month: "long", day: "numeric" })}${isToday ? ", today" : ""}`}
+                aria-label={`${fmtDate(d.date, { weekday: "long", month: "long", day: "numeric" })}${isToday ? ", today" : ""}${isShopping ? ", shopping day" : ""}`}
                 onClick={() => setSelected(i)}
                 className={cn(
                   "flex min-w-[4rem] shrink-0 flex-col items-center rounded-xl px-3 py-2 text-sm transition-colors",
                   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
                   active
                     ? "bg-brand text-brand-foreground shadow-sm"
-                    : "bg-surface-raised text-ink-muted ring-1 ring-border hover:ring-ink-subtle",
+                    : isShopping
+                      ? "bg-warning-soft text-ink ring-1 ring-warning hover:ring-2"
+                      : "bg-surface-raised text-ink-muted ring-1 ring-border hover:ring-ink-subtle",
+                  active && isShopping && "ring-2 ring-warning ring-offset-2",
                 )}
               >
                 <span className="text-[11px] uppercase tracking-wide">
@@ -415,12 +438,13 @@ function WeekView({
                 </span>
                 <span
                   className={cn(
-                    "text-[10px] font-medium",
-                    active ? "text-brand-foreground/90" : "text-brand",
-                    !isToday && "invisible",
+                    "flex items-center gap-0.5 text-[10px] font-medium",
+                    active ? "text-brand-foreground/90" : isToday ? "text-brand" : "text-ink",
+                    !isToday && !isShopping && "invisible",
                   )}
                 >
-                  Today
+                  {isShopping && <ShoppingCart className="h-2.5 w-2.5" aria-hidden="true" />}
+                  {isToday ? "Today" : "Shop"}
                 </span>
               </button>
             );

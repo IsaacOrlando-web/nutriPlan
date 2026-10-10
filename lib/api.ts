@@ -27,6 +27,8 @@
 //   POST /api/monitor/run             MonitorResult
 //   POST /api/plan/rate               { mealName, liked }
 //   GET  /api/meal-plans?weekStart=   WeekPlanResponse                   (weekly recipe planner)
+//   GET  /api/planner                 PlannerSettingsResponse            (preferences incl. shopping day)
+//   PUT  /api/planner/preferences     PlannerPreferences -> PlannerSettingsResponse
 //   GET  /api/meal-plans/month?month= PlannerMonthResponse               (month calendar of saved weeks)
 //   POST /api/meal-plans/generate     GenerateWeekRequest -> GenerateWeekResponse
 //   POST /api/recipes/generate        ReplaceRecipeRequest -> ReplaceRecipeResponse (swap one recipe)
@@ -62,6 +64,8 @@ import type {
   MealPlan,
   MonitorResult,
   PlannerMonthResponse,
+  PlannerPreferences,
+  PlannerSettingsResponse,
   PlannerWeekState,
   PhotoLogResult,
   ProfileBundle,
@@ -241,6 +245,38 @@ async function mockWeek(u: MockUser, weekStart: string): Promise<WeeklyMealPlan>
   return (await mockSavedWeek(u, weekStart)) ?? seedMockWeek(u, weekStart);
 }
 
+const mockSettings = new Map<MockUser, PlannerSettingsResponse>();
+
+async function mockPlannerSettings(u: MockUser): Promise<PlannerSettingsResponse> {
+  const saved = mockSettings.get(u);
+  if (saved) return saved;
+  const profile = await mocks.profile(u);
+  const settings: PlannerSettingsResponse = {
+    preferences: {
+      servings: 2,
+      dietaryPreferences: [],
+      excludedIngredients: [],
+      preferredCuisines: [],
+      maxPreparationMinutes: null,
+      availableIngredients: [],
+      kitchenEquipment: [],
+      language: profile.language,
+      shoppingWeekday: null,
+    },
+    favorites: [],
+    selectedWeek: null,
+    locked: {
+      allergies: profile.allergies,
+      restrictions: profile.restrictions,
+      dislikes: profile.dislikes,
+      excludedFoodTags: [],
+      weeklyBudgetUsd: profile.weeklyBudgetUsd,
+    },
+  };
+  mockSettings.set(u, settings);
+  return settings;
+}
+
 async function mockMonth(u: MockUser, month: string): Promise<PlannerMonthResponse> {
   await mockSavedWeek(u, weekStartOf(localIsoDate(new Date())));
   const plans = [...mockWeeks.entries()].filter(([k]) => k.startsWith(`${u}:`)).map(([, p]) => p);
@@ -386,7 +422,8 @@ async function fetchNearbyStores(lat: number, lng: number): Promise<NearbyStore[
   let shops = await overpassShops(lat, lng, 3000);
   if (!shops.some((s) => s.kind === "supermarket")) shops = await overpassShops(lat, lng, 8000);
   return shops.sort(
-    (a, b) => STORE_KINDS.indexOf(a.kind) - STORE_KINDS.indexOf(b.kind) || (a.distanceKm ?? 0) - (b.distanceKm ?? 0),
+    (a, b) =>
+      STORE_KINDS.indexOf(a.kind) - STORE_KINDS.indexOf(b.kind) || (a.distanceKm ?? 0) - (b.distanceKm ?? 0),
   );
 }
 
@@ -501,6 +538,18 @@ export const api = {
             state: mockWeekStates.get(`${u}:${weekStart}`) ?? emptyWeekState(),
           }))
         : request(`/api/meal-plans?weekStart=${weekStart}`),
+    /** Planner preferences (including the shopping day), favorites and the locked profile rules. */
+    settings: (): Promise<PlannerSettingsResponse> =>
+      USE_MOCKS ? mock((u) => mockPlannerSettings(u)) : request("/api/planner"),
+    /** Replaces the stored planner preferences. */
+    savePreferences: (preferences: PlannerPreferences): Promise<PlannerSettingsResponse> =>
+      USE_MOCKS
+        ? mock(async (u) => {
+            const next = { ...(await mockPlannerSettings(u)), preferences };
+            mockSettings.set(u, next);
+            return next;
+          })
+        : request("/api/planner/preferences", { method: "PUT", body: JSON.stringify(preferences) }),
     /** Dish titles of every saved day in a YYYY-MM month (the planner calendar). */
     month: (month: string): Promise<PlannerMonthResponse> =>
       USE_MOCKS ? mock((u) => mockMonth(u, month)) : request(`/api/meal-plans/month?month=${month}`),

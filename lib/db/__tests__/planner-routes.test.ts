@@ -309,6 +309,38 @@ describe("week state, preferences and favorites", () => {
     expect(sneaky.status).toBe(400);
   });
 
+  it("saves the shopping weekday, defaults it to null and rejects days out of range", async () => {
+    const { GET } = await import("@/app/api/planner/route");
+    const { PUT } = await import("@/app/api/planner/preferences/route");
+    const put = (body: unknown) => PUT(req("/api/planner/preferences", { method: "PUT", body }), ctx);
+    const settings = (await (await GET(req("/api/planner"), ctx)).json()) as PlannerSettingsResponse;
+    expect(settings.preferences.shoppingWeekday).toBeNull();
+    const saved = (await (
+      await put({ ...settings.preferences, shoppingWeekday: 5 })
+    ).json()) as PlannerSettingsResponse;
+    expect(saved.preferences.shoppingWeekday).toBe(5);
+    const reread = (await (await GET(req("/api/planner"), ctx)).json()) as PlannerSettingsResponse;
+    expect(reread.preferences.shoppingWeekday).toBe(5);
+    expect((await put({ ...settings.preferences, shoppingWeekday: 7 })).status).toBe(400);
+    const { shoppingWeekday: _omit, ...legacy } = settings.preferences;
+    const cleared = (await (await put(legacy)).json()) as PlannerSettingsResponse;
+    expect(cleared.preferences.shoppingWeekday).toBeNull();
+  });
+
+  it("reads settings saved before the shopping day existed as no shopping day", async () => {
+    const { getStore } = await import("@/lib/db");
+    const { GET } = await import("@/app/api/planner/route");
+    const settings = (await (await GET(req("/api/planner"), ctx)).json()) as PlannerSettingsResponse;
+    const { shoppingWeekday: _omit, ...old } = settings.preferences;
+    await getStore().savePlannerSettings(ALEX, {
+      preferences: old as PlannerSettingsResponse["preferences"],
+      favorites: [],
+      selectedWeek: null,
+    });
+    const reread = (await (await GET(req("/api/planner"), ctx)).json()) as PlannerSettingsResponse;
+    expect(reread.preferences.shoppingWeekday).toBeNull();
+  });
+
   it("adds and removes favorites", async () => {
     const { plan } = (await (await generate()).json()) as GenerateWeekResponse;
     const recipe: Recipe = plan.days[0].dinner;

@@ -114,6 +114,7 @@ export function defaultPreferences(profile: Pick<UserProfile, "language">): Plan
     availableIngredients: [],
     kitchenEquipment: [],
     language: profile.language,
+    shoppingWeekday: null,
   };
 }
 
@@ -175,6 +176,7 @@ export async function plannerContext(
     availableIngredients: overrides.availableIngredients ?? stored.availableIngredients,
     kitchenEquipment: overrides.kitchenEquipment ?? stored.kitchenEquipment,
     language: overrides.language ?? stored.language,
+    shoppingWeekday: stored.shoppingWeekday ?? null,
   };
   return {
     store,

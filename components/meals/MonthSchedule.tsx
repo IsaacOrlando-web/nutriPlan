@@ -1,14 +1,22 @@
 "use client";
 
-import { CalendarDays, ChevronLeft, ChevronRight } from "lucide-react";
+import { CalendarDays, ChevronLeft, ChevronRight, ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { usePlannerMonth } from "@/lib/hooks/usePlanner";
-import { addDays, formatLongDate, monthGrid, shiftMonth, weekStartOf } from "@/lib/planner/dates";
+import {
+  addDays,
+  formatLongDate,
+  monthGrid,
+  shiftMonth,
+  weekStartOf,
+  weekdayIndex,
+} from "@/lib/planner/dates";
 import { cn, fmtDate } from "@/lib/utils";
 import type { PlannerMonthDay } from "@/types/contracts";
 
 const WEEKDAY_INITIALS = ["M", "T", "W", "T", "F", "S", "S"];
+export const WEEKDAY_NAMES = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 
 export interface MonthScheduleProps {
   /** YYYY-MM shown in the grid. */
@@ -20,6 +28,9 @@ export interface MonthScheduleProps {
   focusDate: string;
   today: string;
   onPickDate: (date: string) => void;
+  /** Grocery weekday (0 = Monday ... 6 = Sunday); every such day is painted amber. */
+  shoppingWeekday: number | null;
+  onShoppingWeekdayChange: (weekday: number | null) => void;
   className?: string;
 }
 
@@ -31,6 +42,8 @@ export function MonthSchedule({
   focusDate,
   today,
   onPickDate,
+  shoppingWeekday,
+  onShoppingWeekdayChange,
   className,
 }: MonthScheduleProps) {
   const schedule = usePlannerMonth(month);
@@ -90,7 +103,14 @@ export function MonthSchedule({
             aria-busy={schedule.isLoading}
           >
             {WEEKDAY_INITIALS.map((w, i) => (
-              <span key={i} className="pb-1 text-[11px] font-medium text-ink-subtle" aria-hidden="true">
+              <span
+                key={i}
+                className={cn(
+                  "pb-1 text-[11px] font-medium",
+                  i === shoppingWeekday ? "text-warning" : "text-ink-subtle",
+                )}
+                aria-hidden="true"
+              >
                 {w}
               </span>
             ))}
@@ -100,7 +120,8 @@ export function MonthSchedule({
               const inWeek = date >= weekStart && date <= weekEnd;
               const isFocus = date === focusDate;
               const isToday = date === today;
-              const label = `${formatLongDate(date)}${isToday ? ", today" : ""}: ${
+              const isShopping = weekdayIndex(date) === shoppingWeekday;
+              const label = `${formatLongDate(date)}${isToday ? ", today" : ""}${isShopping ? ", shopping day" : ""}: ${
                 day ? `${day.breakfast}, ${day.lunch}, ${day.dinner}` : "no plan yet"
               }`;
               return (
@@ -109,6 +130,7 @@ export function MonthSchedule({
                   type="button"
                   data-testid="plan-month-day"
                   data-planned={day ? "true" : "false"}
+                  data-shopping={isShopping ? "true" : "false"}
                   aria-label={label}
                   aria-current={isFocus ? "date" : undefined}
                   title={label}
@@ -119,6 +141,7 @@ export function MonthSchedule({
                     inMonth ? "text-ink" : "text-ink-subtle",
                     inWeek && !isFocus && "bg-surface-sunken",
                     day && !isFocus && "bg-brand-soft text-brand-dark",
+                    isShopping && !isFocus && "bg-warning-soft text-ink ring-1 ring-warning",
                     isFocus && "bg-brand font-semibold text-brand-foreground",
                     isToday && !isFocus && "font-bold ring-1 ring-brand",
                     !isFocus && "hover:ring-1 hover:ring-ink-subtle",
@@ -138,6 +161,42 @@ export function MonthSchedule({
             })}
           </div>
         )}
+
+        <div
+          className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-ink-muted"
+          aria-hidden="true"
+        >
+          <span className="flex items-center gap-1">
+            <span className="h-2.5 w-2.5 rounded-sm bg-brand-soft ring-1 ring-brand" />
+            Planned
+          </span>
+          {shoppingWeekday !== null && (
+            <span className="flex items-center gap-1">
+              <span className="h-2.5 w-2.5 rounded-sm bg-warning-soft ring-1 ring-warning" />
+              Shopping day
+            </span>
+          )}
+        </div>
+
+        <label className="flex items-center justify-between gap-2 text-xs">
+          <span className="flex items-center gap-1.5 font-medium text-ink">
+            <ShoppingCart className="h-3.5 w-3.5 text-warning" aria-hidden="true" />
+            Shopping day
+          </span>
+          <select
+            data-testid="plan-shopping-day"
+            value={shoppingWeekday ?? ""}
+            onChange={(e) => onShoppingWeekdayChange(e.target.value === "" ? null : Number(e.target.value))}
+            className="h-8 rounded-md border border-input bg-surface-raised px-2 text-xs text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          >
+            <option value="">Not set</option>
+            {WEEKDAY_NAMES.map((name, i) => (
+              <option key={name} value={i}>
+                {name}
+              </option>
+            ))}
+          </select>
+        </label>
 
         <div className="space-y-1.5 border-t border-border pt-3 text-xs">
           <p className="font-medium text-ink">{formatLongDate(focusDate)}</p>

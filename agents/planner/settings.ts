@@ -25,7 +25,12 @@ export function emptyWeekState(): PlannerWeekState {
 
 async function settingsFor(store: Store, userId: string): Promise<PlannerSettings> {
   const stored = await store.getPlannerSettings(userId);
-  if (stored) return stored;
+  // Settings saved before the shopping day existed have no `shoppingWeekday`.
+  if (stored)
+    return {
+      ...stored,
+      preferences: { ...stored.preferences, shoppingWeekday: stored.preferences.shoppingWeekday ?? null },
+    };
   const profile = await store.getProfile(userId);
   return defaultSettings(profile ?? { language: "en" });
 }

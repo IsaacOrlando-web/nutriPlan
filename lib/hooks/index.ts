@@ -5,6 +5,8 @@ export { usePlan, useGeneratePlan, useRateMeal } from "./usePlan";
 export {
   useWeekPlan,
   usePlannerMonth,
+  usePlannerSettings,
+  useSaveShoppingDay,
   useGenerateWeek,
   useReplaceRecipe,
   useRegenerateAgentPlan,
