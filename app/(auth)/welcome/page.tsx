@@ -67,17 +67,6 @@ export default function WelcomePage() {
           {error}
         </p>
       )}
-
-      <p className="text-sm text-ink-muted">
-        Have an account?{" "}
-        <Link href="/login" className="font-medium text-brand underline-offset-4 hover:underline">
-          Log in
-        </Link>{" "}
-        ·{" "}
-        <Link href="/signup" className="font-medium text-brand underline-offset-4 hover:underline">
-          Sign up
-        </Link>
-      </p>
     </div>
   );
 }
