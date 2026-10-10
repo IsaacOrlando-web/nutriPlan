@@ -1,14 +1,12 @@
 // Session resolution for API routes and server components. Owner: Backend.
-//
-// AUTH_MODE=local    (default) a signed-less demo cookie `np_uid` selects the user. /api/auth/login accepts
-//                    "alex" or "maria" (or any email) and sets the cookie. Perfect for mocks and the demo.
-// AUTH_MODE=supabase Supabase Auth via @supabase/ssr cookies. Same return shape, so routes never care.
-// AUTH_MODE=clerk    Clerk via @clerk/nextjs. The Clerk user id is hashed to a stable uuid so the store schema is unchanged.
+// Local auth uses a signed JWT in an HttpOnly cookie. Supabase remains available as an optional backend mode.
 import { cookies } from "next/headers";
 import type { NextRequest } from "next/server";
 import { DEMO_EMAILS, DEMO_USER_IDS, type DemoUserKey } from "@/lib/db/seed/demo-users";
+import { signAccessToken, verifyAccessToken } from "./jwt";
 
-export const SESSION_COOKIE = "np_uid";
+export const SESSION_COOKIE = "np_session";
+export const SESSION_MAX_AGE = 60 * 60 * 24 * 30;
 
 export interface Session {
   userId: string;
@@ -17,17 +15,6 @@ export interface Session {
 
 export function authMode(): "local" | "supabase" {
   return process.env.AUTH_MODE === "supabase" ? "supabase" : "local";
-}
-
-/**
- * Kept apart from authMode() because SessionInfo.mode in contracts.ts only allows "local" | "supabase".
- * Configured Clerk keys win over AUTH_MODE=local, so a leftover np_uid demo cookie never counts as a login
- * once Clerk is on. Keep in sync with clerkEnabled in middleware.ts.
- */
-export function isClerkMode(): boolean {
-  if (process.env.AUTH_MODE === "clerk") return true;
-  const clerkKeys = Boolean(process.env.CLERK_SECRET_KEY && process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY);
-  return clerkKeys && process.env.AUTH_MODE !== "supabase";
 }
 
 /** Maps "alex" / "maria" / their demo emails to the seeded user ids; anything else becomes a stable uuid. */
@@ -52,16 +39,6 @@ function uuidFromString(s: string): string {
 }
 
 export async function getSession(req?: NextRequest): Promise<Session | null> {
-  if (isClerkMode()) {
-    const { auth, currentUser } = await import("@clerk/nextjs/server");
-    const { userId } = await auth();
-    if (!userId) return null;
-    const user = await currentUser();
-    return {
-      userId: uuidFromString(`clerk:${userId}`),
-      email: user?.primaryEmailAddress?.emailAddress ?? null,
-    };
-  }
   if (authMode() === "supabase") {
     const { createServerSupabase } = await import("@/lib/supabase/server");
     const supabase = await createServerSupabase();
@@ -69,9 +46,22 @@ export async function getSession(req?: NextRequest): Promise<Session | null> {
     return data.user ? { userId: data.user.id, email: data.user.email ?? null } : null;
   }
   const value = req ? req.cookies.get(SESSION_COOKIE)?.value : (await cookies()).get(SESSION_COOKIE)?.value;
-  if (!value) return null;
-  const [userId, email] = value.split("|");
-  return userId ? { userId, email: email ?? null } : null;
+  if (value) {
+    const claims = verifyAccessToken(value);
+    if (claims) return { userId: claims.sub, email: claims.email };
+  }
+  if (process.env.NODE_ENV !== "production") {
+    const legacy = req ? req.cookies.get("np_uid")?.value : (await cookies()).get("np_uid")?.value;
+    if (legacy) {
+      const [userId, email] = legacy.split("|");
+      return userId ? { userId, email: email ?? null } : null;
+    }
+  }
+  return null;
+}
+
+export function createSessionToken(userId: string, email: string): string {
+  return signAccessToken({ sub: userId, email, exp: Math.floor(Date.now() / 1000) + SESSION_MAX_AGE });
 }
 
 export class UnauthorizedError extends Error {

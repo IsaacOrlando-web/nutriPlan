@@ -7,7 +7,7 @@ import { MemoryStore } from "./memory-store";
 import { SupabaseStore } from "./supabase-store";
 import type { Store } from "./store";
 
-export type { Store, AgentLogRecord, FoodSearchOptions, MealRating } from "./store";
+export type { Store, AgentLogRecord, AppUser, FoodSearchOptions, MealRating } from "./store";
 export { newId, nowIso } from "./store";
 
 const globalRef = globalThis as unknown as { __nutriplanStore?: Store };

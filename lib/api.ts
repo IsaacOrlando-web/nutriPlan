@@ -172,16 +172,17 @@ export const api = {
             hasProfile: true,
           }))
         : request("/api/auth/session"),
-    login: (identifier: string): Promise<SessionInfo> =>
+    login: (email: string, password: string): Promise<SessionInfo> =>
       USE_MOCKS
         ? mock(async () => {
-            const u: MockUser = identifier.toLowerCase().includes("maria") ? "maria" : "alex";
+            const u: MockUser = email.toLowerCase().includes("maria") ? "maria" : "alex";
             setMockUser(u);
             return { userId: u, email: `${u}@demo.nutriplan.app`, mode: "local" as const, hasProfile: true };
           })
-        : post("/api/auth/login", { identifier }),
-    logout: (): Promise<void> =>
-      USE_MOCKS ? mock(async () => undefined) : request("/api/auth/logout", { method: "POST" }),
+        : post("/api/auth/login", { email, password }),
+    signup: (input: { name: string; email: string; password: string }): Promise<{ message: string }> =>
+      USE_MOCKS ? mock(async () => ({ message: "Check your email to verify your account." })) : post("/api/auth/signup", input),
+    logout: (): Promise<void> => (USE_MOCKS ? mock(async () => undefined) : request("/api/auth/logout", { method: "POST" })),
   },
 
   profile: {

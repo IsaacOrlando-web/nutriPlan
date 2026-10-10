@@ -41,7 +41,7 @@ export default function ProfilePage() {
         setMockUser(user);
         setCookie("np_uid", `mock-${user}`);
       } else {
-        await api.auth.login(user);
+        await api.auth.login(`${user}@demo.nutriplan.app`, "demo1234");
       }
       await qc.invalidateQueries();
       router.refresh();

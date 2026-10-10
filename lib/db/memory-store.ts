@@ -17,18 +17,11 @@ import type {
   Reading,
   UserProfile,
 } from "@/types/contracts";
-import {
-  newId,
-  nowIso,
-  type AgentLogRecord,
-  type FoodSearchOptions,
-  type MealRating,
-  type Store,
-} from "./store";
-import type { KrogerConnection } from "@/lib/kroger/types";
+import { newId, nowIso, type AgentLogRecord, type AppUser, type FoodSearchOptions, type MealRating, type Store } from "./store";
 import foodsJson from "@/scripts/data/foods.json";
 import templatesJson from "@/scripts/data/meal-templates.json";
 import { DEMO_PROFILES, demoReadings, type DemoUserKey } from "./seed/demo-users";
+import type { KrogerConnection } from "@/lib/kroger/types";
 
 interface UserBucket {
   profile: UserProfile | null;
@@ -46,6 +39,7 @@ interface UserBucket {
 interface Snapshot {
   version: 1;
   users: Record<string, UserBucket>;
+  appUsers: Record<string, AppUser>;
   foods: Record<string, Food>;
   templates: Omit<CandidateMeal, "tasteScore">[];
   runs: Record<string, AgentRun>;
@@ -102,7 +96,7 @@ export class MemoryStore implements Store {
     if (this.file && fs.existsSync(this.file)) {
       try {
         const parsed = JSON.parse(fs.readFileSync(this.file, "utf8")) as Snapshot;
-        if (parsed.version === 1) return parsed;
+        if (parsed.version === 1) return { ...parsed, appUsers: parsed.appUsers ?? {} };
       } catch {
         // corrupt file: fall through and reseed
       }
@@ -114,6 +108,7 @@ export class MemoryStore implements Store {
     const snapshot: Snapshot = {
       version: 1,
       users: {},
+      appUsers: {},
       foods: Object.fromEntries((foodsJson as Food[]).map((f) => [f.foodId, f])),
       templates: templatesJson as Omit<CandidateMeal, "tasteScore">[],
       runs: {},
@@ -154,6 +149,38 @@ export class MemoryStore implements Store {
 
   private bucket(userId: string): UserBucket {
     return (this.data.users[userId] ??= emptyBucket());
+  }
+
+  async createUser(user: AppUser) {
+    this.data.appUsers[user.userId] = user;
+    this.bucket(user.userId);
+    this.persist();
+  }
+  async getUserByEmail(email: string) {
+    const normalized = email.trim().toLowerCase();
+    return Object.values(this.data.appUsers).find((user) => user.email === normalized) ?? null;
+  }
+  async getUser(userId: string) {
+    return this.data.appUsers[userId] ?? null;
+  }
+  async findUserByVerificationToken(tokenHash: string) {
+    return Object.values(this.data.appUsers).find((user) => user.verificationTokenHash === tokenHash) ?? null;
+  }
+  async updateUser(user: AppUser) {
+    this.data.appUsers[user.userId] = user;
+    this.bucket(user.userId);
+    this.persist();
+  }
+  async deleteUser(userId: string) {
+    delete this.data.appUsers[userId];
+    delete this.data.users[userId];
+    for (const run of Object.values(this.data.runs)) {
+      if (run.userId === userId) {
+        delete this.data.runs[run.runId];
+        delete this.data.events[run.runId];
+      }
+    }
+    this.persist();
   }
 
   // ---------------------------------------------------------------- profile bundle
@@ -368,6 +395,7 @@ export class MemoryStore implements Store {
     return Object.keys(this.data.users);
   }
   async resetUser(userId: string) {
+    delete this.data.appUsers[userId];
     const key = (Object.keys(DEMO_PROFILES) as DemoUserKey[]).find((k) => DEMO_PROFILES[k].userId === userId);
     this.data.users[userId] = key
       ? { ...emptyBucket(), profile: DEMO_PROFILES[key], readings: demoReadings(key) }

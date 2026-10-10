@@ -4,6 +4,19 @@
 create extension if not exists "pgcrypto";
 create extension if not exists "pg_trgm";
 
+-- ---------------------------------------------------------------- auth identities
+create table if not exists app_users (
+  user_id uuid primary key,
+  email text not null unique,
+  name text not null,
+  password_hash text not null,
+  email_verified boolean not null default false,
+  verification_token_hash text,
+  verification_expires_at timestamptz,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
 -- ---------------------------------------------------------------- profile bundle
 create table if not exists profiles (
   user_id uuid primary key references auth.users (id) on delete cascade,
