@@ -1,11 +1,11 @@
 // Agent model table and run mode. Owner: Agents.
 // Model ids live ONLY here. Env overrides: MODEL_DOCTOR, MODEL_CHEF, MODEL_BUDGET, MODEL_MONITOR,
-// MODEL_ORCHESTRATOR, MODEL_COACH, MODEL_RECIPES, MODEL_VISION_A, MODEL_VISION_B as "provider:model-id" or "model-id".
+// MODEL_ORCHESTRATOR, MODEL_COACH, MODEL_RECIPES, MODEL_PLANNER, MODEL_VISION_A, MODEL_VISION_B as "provider:model-id" or "model-id".
 // AGENTS_MODE=live|scripted (default: live when any provider key is present, scripted otherwise).
 
 export type Provider = "anthropic" | "openai" | "google";
 export type AgentKey =
-  "doctor" | "chef" | "budget" | "monitor" | "orchestrator" | "coach" | "recipes" | "visionA" | "visionB";
+  "doctor" | "chef" | "budget" | "monitor" | "orchestrator" | "coach" | "recipes" | "planner" | "visionA" | "visionB";
 export type AgentsMode = "live" | "scripted";
 
 export interface ModelChoice {
@@ -30,6 +30,8 @@ export const AGENT_TIMEOUT_MS: Partial<Record<AgentKey, number>> = {
   chef: 10_000,
   coach: 10_000,
   recipes: 10_000,
+  // Weekly planner: one recipe day (3 full recipes) is about 2.5k output tokens.
+  planner: 45_000,
   visionA: 10_000,
   visionB: 10_000,
 };
@@ -43,6 +45,7 @@ export const AGENT_MAX_OUTPUT_TOKENS: Record<AgentKey, number> = {
   orchestrator: 600,
   coach: 900,
   recipes: 700,
+  planner: 4_000,
   visionA: 800,
   visionB: 800,
 };
@@ -80,6 +83,8 @@ export const MODEL_TABLE: Record<AgentKey, AgentModelConfig> = {
   coach: { primary: SONNET, backup: GEMINI_FLASH },
   // Recipe ideas on /plan run on OpenAI (OPENAI_API_KEY); without it the route answers from templates.
   recipes: { primary: GPT_MINI, backup: null },
+  // Weekly meal planner on /plan: OpenAI only (OPENAI_API_KEY). MODEL_PLANNER overrides, e.g. "openai:gpt-4o-mini".
+  planner: { primary: GPT_MINI, backup: null },
   visionA: { primary: SONNET, backup: HAIKU },
   visionB: { primary: GEMINI_FLASH, backup: GPT_MINI },
 };
@@ -92,6 +97,7 @@ const ENV_OVERRIDE: Record<AgentKey, string> = {
   orchestrator: "MODEL_ORCHESTRATOR",
   coach: "MODEL_COACH",
   recipes: "MODEL_RECIPES",
+  planner: "MODEL_PLANNER",
   visionA: "MODEL_VISION_A",
   visionB: "MODEL_VISION_B",
 };

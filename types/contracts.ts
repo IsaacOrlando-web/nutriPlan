@@ -387,6 +387,207 @@ export interface RecipeIdeasResponse {
   source: "llm" | "templates";
 }
 
+// ---------------------------------------------------------------------------
+// Weekly meal planner (/plan). The LLM writes recipes; /math computes nutrition and cost from mapped foods.
+// ---------------------------------------------------------------------------
+
+export type PlannerMealType = "breakfast" | "lunch" | "dinner";
+export type RecipeDifficulty = "easy" | "medium" | "hard";
+
+export interface RecipeIngredient {
+  id: string;
+  name: string;
+  quantity: number | null;
+  unit: string;
+  category: string; // grocery aisle: "produce", "protein", "dairy", "grains", "pantry", "spices", "frozen", "other"
+  optionalNotes: string;
+  /** False for seasonings, leaveners and cooking liquids: serving scaling leaves them alone. */
+  scalable: boolean;
+  /** Matched food in the foods table (code, not the LLM); null when nothing safe matched. */
+  foodId: string | null;
+}
+
+/** Per serving, computed by /math from mapped foods. Null when the recipe could not be fully matched. */
+export interface RecipeNutrition {
+  calories: number | null;
+  proteinGrams: number | null;
+  carbohydratesGrams: number | null;
+  fatGrams: number | null;
+}
+
+export interface Recipe {
+  id: string;
+  title: string;
+  description: string;
+  mealType: PlannerMealType;
+  ingredients: RecipeIngredient[];
+  instructions: string[];
+  preparationMinutes: number;
+  cookingMinutes: number;
+  totalMinutes: number;
+  servings: number;
+  difficulty: RecipeDifficulty;
+  /** Computed by /math from food prices; null when unavailable. */
+  estimatedCostPerServing: number | null;
+  currency: string; // "USD"
+  nutritionPerServing: RecipeNutrition;
+  nutritionSource: "math" | "unavailable";
+  /** Non-minor ingredients that could not be matched to the foods table (why nutrition may be null). */
+  unmatchedIngredients: string[];
+  /** Health rules code could not verify for this recipe (for example the carb cap when nutrition is unknown). */
+  ruleWarnings: string[];
+  dietaryTags: string[];
+  allergens: string[];
+  /** Descriptive words for a future image search. Never an image URL. */
+  imageSearchTerm: string;
+  /** Verified image URL when an image provider is configured; null otherwise. */
+  imageUrl: string | null;
+  storageNotes: string;
+}
+
+export interface PlannerDay {
+  date: string; // YYYY-MM-DD
+  breakfast: Recipe;
+  lunch: Recipe;
+  dinner: Recipe;
+}
+
+export interface WeeklyMealPlan {
+  id: string;
+  userId: string;
+  weekStartDate: string; // Monday, YYYY-MM-DD
+  language: Language;
+  createdAt: string;
+  days: PlannerDay[]; // exactly 7, Monday to Sunday
+}
+
+export interface PlannerPreferences {
+  servings: number;
+  dietaryPreferences: string[];
+  /** Extra exclusions on top of the profile's allergies and restrictions (never replaces them). */
+  excludedIngredients: string[];
+  preferredCuisines: string[];
+  maxPreparationMinutes: number | null;
+  availableIngredients: string[];
+  kitchenEquipment: string[];
+  language: Language;
+}
+
+export interface ShoppingCustomItem {
+  id: string;
+  name: string;
+  quantity: number | null;
+  unit: string;
+  category: string;
+}
+
+/** User edits on top of the aggregated list, keyed by aggregated item key so unaffected items keep their state. */
+export interface ShoppingState {
+  checked: Record<string, boolean>;
+  quantityOverrides: Record<string, string>;
+  removed: string[];
+  customItems: ShoppingCustomItem[];
+}
+
+export interface PlannerWeekState {
+  /** Keyed `${date}:${mealType}`. */
+  completed: Record<string, boolean>;
+  shopping: ShoppingState;
+}
+
+export interface PlannerSettings {
+  preferences: PlannerPreferences;
+  favorites: Recipe[];
+  selectedWeek: string | null;
+}
+
+/** Profile fields the planner always applies and never relaxes (edited on the Profile screen). */
+export interface PlannerLockedRules {
+  allergies: string[];
+  restrictions: string[];
+  dislikes: string[];
+  excludedFoodTags: string[];
+  weeklyBudgetUsd: number;
+}
+
+/** GET /api/planner */
+export interface PlannerSettingsResponse extends PlannerSettings {
+  locked: PlannerLockedRules;
+}
+
+/** GET /api/meal-plans?weekStart= */
+export interface WeekPlanResponse {
+  plan: WeeklyMealPlan | null;
+  state: PlannerWeekState;
+}
+
+/** Optional per-request preference overrides; the server merges them with stored preferences and the profile. */
+export interface PlannerPreferenceOverrides {
+  language?: Language;
+  servings?: number;
+  dietaryPreferences?: string[];
+  allergies?: string[];
+  excludedIngredients?: string[];
+  preferredCuisines?: string[];
+  dislikedIngredients?: string[];
+  maxPreparationMinutes?: number | null;
+  weeklyBudget?: number;
+  currency?: string;
+  availableIngredients?: string[];
+  kitchenEquipment?: string[];
+}
+
+/** POST /api/meal-plans/generate */
+export interface GenerateWeekRequest extends PlannerPreferenceOverrides {
+  weekStartDate: string;
+}
+
+/** POST /api/meal-plans/generate-day */
+export interface GenerateDayRequest extends PlannerPreferenceOverrides {
+  weekStartDate: string;
+  date: string;
+}
+
+/** POST /api/recipes/generate */
+export interface ReplaceRecipeRequest extends PlannerPreferenceOverrides {
+  weekStartDate: string;
+  date: string;
+  mealType: PlannerMealType;
+  currentRecipe?: { title: string; mainIngredients?: string[] };
+}
+
+export interface GenerateWeekResponse {
+  plan: WeeklyMealPlan;
+}
+
+export interface GenerateDayResponse {
+  day: PlannerDay;
+  plan: WeeklyMealPlan;
+}
+
+export interface ReplaceRecipeResponse {
+  recipe: Recipe;
+  plan: WeeklyMealPlan;
+}
+
+/** PATCH /api/meal-plans/state */
+export interface UpdateWeekStateRequest {
+  weekStartDate: string;
+  completed?: Record<string, boolean>;
+  shopping?: ShoppingState;
+}
+
+/** POST /api/planner/favorites */
+export interface FavoriteRequest {
+  recipe: Recipe;
+  favorite: boolean;
+}
+
+/** Error body for planner generation routes; `code` lets the UI show setup or retry guidance. */
+export interface PlannerApiError extends ApiError {
+  code?: "openai_not_configured" | "rate_limited" | "generation_in_progress" | "invalid_model_output";
+}
+
 /** POST /api/upload response. */
 export interface UploadResponse {
   url: string;

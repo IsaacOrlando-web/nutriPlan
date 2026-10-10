@@ -12,10 +12,13 @@ import type {
   FoodLogEntry,
   MealPlan,
   MedicalConstraints,
+  PlannerSettings,
+  PlannerWeekState,
   Reading,
   UserProfile,
+  WeeklyMealPlan,
 } from "@/types/contracts";
-import type { AgentLogRecord, AppUser, FoodSearchOptions, MealRating, Store } from "./store";
+import type { AgentLogRecord, AppUser, FoodSearchOptions, MealRating, PlannerWeekRecord, Store } from "./store";
 import { DEMO_PROFILES, demoReadings, type DemoUserKey } from "./seed/demo-users";
 import type { KrogerConnection } from "@/lib/kroger/types";
 
@@ -74,7 +77,7 @@ export class SupabaseStore implements Store {
     if (error) throw new Error(`[supabase] app_users update: ${error.message}`);
   }
   async deleteUser(userId: string) {
-    for (const table of ["meal_plans", "food_logs", "readings", "meal_ratings", "agent_runs", "medical_constraints", "daily_targets", "tdee_posteriors", "app_users"]) {
+    for (const table of ["meal_plans", "food_logs", "readings", "meal_ratings", "agent_runs", "medical_constraints", "daily_targets", "tdee_posteriors", "planner_weeks", "planner_settings", "app_users"]) {
       const { error } = await this.db.from(table).delete().eq("user_id", userId);
       if (error) throw new Error(`[supabase] delete ${table}: ${error.message}`);
     }
@@ -370,6 +373,36 @@ export class SupabaseStore implements Store {
     if (error) throw new Error(`[supabase] kroger_connections: ${error.message}`);
   }
 
+  // weekly planner (tables from supabase/migrations/0005_planner.sql)
+  async getPlannerWeek(userId: string, weekStartDate: string): Promise<PlannerWeekRecord | null> {
+    const { data, error } = await this.db
+      .from("planner_weeks")
+      .select("plan, state")
+      .match({ user_id: userId, week_start: weekStartDate })
+      .maybeSingle();
+    if (error) throw new Error(`[supabase] planner_weeks: ${error.message}`);
+    if (!data) return null;
+    return { plan: (data.plan as WeeklyMealPlan | null) ?? null, state: (data.state as PlannerWeekState | null) ?? null };
+  }
+  async savePlannerWeekPlan(userId: string, plan: WeeklyMealPlan) {
+    const { error } = await this.db
+      .from("planner_weeks")
+      .upsert({ user_id: userId, week_start: plan.weekStartDate, plan, updated_at: new Date().toISOString() });
+    if (error) throw new Error(`[supabase] planner_weeks: ${error.message}`);
+  }
+  async savePlannerWeekState(userId: string, weekStartDate: string, state: PlannerWeekState) {
+    const { error } = await this.db
+      .from("planner_weeks")
+      .upsert({ user_id: userId, week_start: weekStartDate, state, updated_at: new Date().toISOString() });
+    if (error) throw new Error(`[supabase] planner_weeks: ${error.message}`);
+  }
+  getPlannerSettings(userId: string) {
+    return this.one<PlannerSettings>("planner_settings", { user_id: userId });
+  }
+  savePlannerSettings(userId: string, settings: PlannerSettings) {
+    return this.upsertData("planner_settings", { user_id: userId }, settings);
+  }
+
   // demo helpers
   async listUserIds() {
     const { data, error } = await this.db.from("profiles").select("user_id");
@@ -386,6 +419,8 @@ export class SupabaseStore implements Store {
       "medical_constraints",
       "daily_targets",
       "tdee_posteriors",
+      "planner_weeks",
+      "planner_settings",
       "app_users",
     ]) {
       const { error } = await this.db.from(table).delete().eq("user_id", userId);

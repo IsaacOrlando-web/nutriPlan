@@ -16,8 +16,11 @@ import type {
   FoodLogEntry,
   MealPlan,
   MedicalConstraints,
+  PlannerSettings,
+  PlannerWeekState,
   Reading,
   UserProfile,
+  WeeklyMealPlan,
 } from "@/types/contracts";
 import type { KrogerConnection } from "@/lib/kroger/types";
 
@@ -50,6 +53,11 @@ export interface FoodSearchOptions {
   limit?: number;
   /** Only foods without any of these tags (allergies and restrictions). */
   excludeTags?: string[];
+}
+
+export interface PlannerWeekRecord {
+  plan: WeeklyMealPlan | null;
+  state: PlannerWeekState | null;
 }
 
 export interface Store {
@@ -116,6 +124,13 @@ export interface Store {
   getKrogerConnection(userId: string): Promise<KrogerConnection | null>;
   saveKrogerConnection(userId: string, conn: KrogerConnection): Promise<void>;
   deleteKrogerConnection(userId: string): Promise<void>;
+
+  // Weekly meal planner (/plan): one record per user and Monday, plus per user settings and favorites.
+  getPlannerWeek(userId: string, weekStartDate: string): Promise<PlannerWeekRecord | null>;
+  savePlannerWeekPlan(userId: string, plan: WeeklyMealPlan): Promise<void>;
+  savePlannerWeekState(userId: string, weekStartDate: string, state: PlannerWeekState): Promise<void>;
+  getPlannerSettings(userId: string): Promise<PlannerSettings | null>;
+  savePlannerSettings(userId: string, settings: PlannerSettings): Promise<void>;
 
   // Demo helpers
   listUserIds(): Promise<string[]>;
