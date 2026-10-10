@@ -2,7 +2,9 @@
 //   DATA_BACKEND=memory    (default) JSON under .data/, seeded with Alex and Maria. Zero setup.
 //   DATA_BACKEND=supabase  Postgres through SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY (migrations in /supabase).
 import path from "node:path";
+import { createClient } from "@supabase/supabase-js";
 import { MemoryStore } from "./memory-store";
+import { SupabaseStore } from "./supabase-store";
 import type { Store } from "./store";
 
 export type { Store, AgentLogRecord, FoodSearchOptions, MealRating } from "./store";
@@ -18,9 +20,6 @@ export function getStore(): Store {
     const url = process.env.SUPABASE_URL ?? process.env.NEXT_PUBLIC_SUPABASE_URL;
     const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
     if (!url || !key) throw new Error("DATA_BACKEND=supabase needs SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY");
-    // Lazy require keeps supabase-js out of the memory-only path.
-    const { createClient } = require("@supabase/supabase-js") as typeof import("@supabase/supabase-js");
-    const { SupabaseStore } = require("./supabase-store") as typeof import("./supabase-store");
     store = new SupabaseStore(createClient(url, key, { auth: { persistSession: false } }));
   } else {
     const file =
