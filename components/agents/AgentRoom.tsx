@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { api } from "@/lib/api";
 import { keys } from "@/lib/hooks/keys";
+import { usePrefetchBudgetCurve } from "@/lib/hooks/useBudgetCurve";
 import { cn, plural } from "@/lib/utils";
 import type { AgentEvent, AgentName, MedicalConstraints } from "@/types/contracts";
 import { AGENT_ORDER, AGENT_THEME } from "./agent-theme";
@@ -122,6 +123,11 @@ export function AgentRoom({ runId }: { runId: string }) {
 
   const latest = events[events.length - 1];
   const decided = events.some((e) => e.kind === "decision");
+  // Warm the budget tradeoff curve for the new plan so the slider is ready when the user lands on /plan.
+  const prefetchCurve = usePrefetchBudgetCurve();
+  useEffect(() => {
+    if (decided) prefetchCurve({ invalidate: true });
+  }, [decided, prefetchCurve]);
   const running = phase === "live" || phase === "replay";
   const speaking: AgentName | null = running && latest && !decided ? latest.agent : null;
   const optimizing = running && latest?.kind === "tool_call" && latest.data?.tool === "optimizePlan";

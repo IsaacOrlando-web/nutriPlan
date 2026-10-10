@@ -1,18 +1,19 @@
 "use client";
 
-import { ShoppingCart, Sparkles } from "lucide-react";
+import { Lightbulb, ShoppingCart, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { EmptyState } from "@/components/common/EmptyState";
 import { ErrorState } from "@/components/common/ErrorState";
 import { LoadingState } from "@/components/common/LoadingState";
 import { PageHeader } from "@/components/common/PageHeader";
-import { BudgetSlider } from "@/components/meals/BudgetSlider";
+import { BudgetInsights, BudgetSlider } from "@/components/meals/BudgetSlider";
 import { MealCard } from "@/components/meals/MealCard";
 import { WhySheet } from "@/components/meals/WhySheet";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { useBudgetCurve } from "@/lib/hooks/useBudgetCurve";
 import { usePlan } from "@/lib/hooks/usePlan";
 import { useProfile } from "@/lib/hooks/useProfile";
 import { cn, fmtDate, fmtNumber, fmtUsd, todayIso } from "@/lib/utils";
@@ -59,6 +60,10 @@ function PlanView({ plan, budget }: { plan: MealPlan; budget?: number }) {
   const day = plan.days[selected] ?? plan.days[0];
   const effectiveBudget = budget ?? plan.weeklyCostUsd;
   const overBudget = plan.weeklyCostUsd > effectiveBudget;
+  // Mounting the hook here warms the tradeoff curve as soon as the plan is on screen (feature 7).
+  const curve = useBudgetCurve();
+  const insights = curve.data?.curve.insights ?? [];
+  const curveInsight = insights.find((s) => s.includes(fmtUsd(effectiveBudget, true))) ?? insights[0];
 
   return (
     <>
@@ -90,7 +95,7 @@ function PlanView({ plan, budget }: { plan: MealPlan; budget?: number }) {
       />
 
       <div className="grid gap-4 lg:grid-cols-3">
-        <Card className="lg:col-span-1">
+        <Card className="lg:col-span-1 lg:self-start">
           <CardContent className="space-y-1 p-4 sm:p-5">
             <p className="text-xs uppercase tracking-wide text-ink-muted">Weekly cost</p>
             <p className="flex items-baseline gap-2">
@@ -114,10 +119,22 @@ function PlanView({ plan, budget }: { plan: MealPlan; budget?: number }) {
         </Card>
         <Card className="lg:col-span-2">
           <CardContent className="p-4 sm:p-5">
-            <BudgetSlider value={effectiveBudget} />
+            <BudgetSlider value={effectiveBudget} showInsights={false} />
           </CardContent>
         </Card>
       </div>
+
+      {insights.length > 0 && (
+        <Card className="border-agent-budget/30">
+          <CardContent className="p-4 sm:p-5">
+            <p className="mb-2 flex items-center gap-1.5 text-sm font-semibold text-agent-budget">
+              <Lightbulb className="h-4 w-4" aria-hidden="true" />
+              Insights
+            </p>
+            <BudgetInsights insights={insights} className="text-ink-muted" />
+          </CardContent>
+        </Card>
+      )}
 
       {/* Day chips */}
       <div
@@ -182,7 +199,12 @@ function PlanView({ plan, budget }: { plan: MealPlan; budget?: number }) {
         </Card>
       )}
 
-      <WhySheet meal={openMeal} shadowPrices={plan.shadowPrices} onClose={() => setOpenMeal(null)} />
+      <WhySheet
+        meal={openMeal}
+        shadowPrices={plan.shadowPrices}
+        curveInsight={curveInsight}
+        onClose={() => setOpenMeal(null)}
+      />
     </>
   );
 }

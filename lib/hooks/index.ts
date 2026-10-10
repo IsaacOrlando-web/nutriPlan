@@ -2,6 +2,7 @@ export { keys } from "./keys";
 export { useSession, useLogin, useLogout } from "./useSession";
 export { useProfile, useSaveProfile } from "./useProfile";
 export { usePlan, useGeneratePlan, useRateMeal } from "./usePlan";
+export { useBudgetCurve, useCurvePlanAt, usePrefetchBudgetCurve, CURVE_STALE_MS } from "./useBudgetCurve";
 export { useAgentRun } from "./useAgentRun";
 export { useFoodSearch } from "./useFoods";
 export { useFoodLogs, useCreateLog, useUploadPhoto, usePhotoLog, useInvalidateHealthData } from "./useLogs";

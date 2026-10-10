@@ -5,6 +5,8 @@ export const keys = {
   session: ["session"] as const,
   profile: ["profile"] as const,
   plan: ["plan"] as const,
+  curve: ["plan", "curve"] as const,
+  curvePlanAt: (budget: number) => ["plan", "curve", "at", budget] as const,
   agentRun: (runId: string) => ["agentRun", runId] as const,
   foodSearch: (q: string) => ["foods", "search", q] as const,
   logs: (date?: string) => ["logs", date ?? "all"] as const,

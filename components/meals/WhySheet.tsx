@@ -1,6 +1,6 @@
 "use client";
 
-import { Lightbulb } from "lucide-react";
+import { Lightbulb, TrendingUp } from "lucide-react";
 import { AgentAvatar } from "@/components/agents/AgentAvatar";
 import { AGENT_NAMES } from "@/components/agents/agent-theme";
 import { Badge } from "@/components/ui/badge";
@@ -14,10 +14,12 @@ import { MEAL_TYPE_LABELS } from "./MealCard";
 export interface WhySheetProps {
   meal: Meal | null;
   shadowPrices: ShadowPrice[];
+  /** One sentence from the budget tradeoff curve (feature 7), when it has loaded. */
+  curveInsight?: string;
   onClose: () => void;
 }
 
-export function WhySheet({ meal, shadowPrices, onClose }: WhySheetProps) {
+export function WhySheet({ meal, shadowPrices, curveInsight, onClose }: WhySheetProps) {
   const laptop = useIsLaptop();
 
   return (
@@ -86,6 +88,15 @@ export function WhySheet({ meal, shadowPrices, onClose }: WhySheetProps) {
                   ))}
                 </ol>
               </section>
+            )}
+
+            {curveInsight && (
+              <p data-testid="why-curve" className="flex items-start gap-2 text-sm text-ink-muted">
+                <TrendingUp className="mt-0.5 h-4 w-4 shrink-0 text-agent-budget" aria-hidden="true" />
+                <span>
+                  <span className="font-semibold text-ink">On the budget curve:</span> {curveInsight}
+                </span>
+              </p>
             )}
 
             {shadowPrices.length > 0 && (

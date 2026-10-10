@@ -29,6 +29,8 @@
 import type {
   AgentEvent,
   AgentRunDetail,
+  BudgetCurveResponse,
+  BudgetCurveSummary,
   CoachRequest,
   CoachResponse,
   CreateLogRequest,
@@ -51,6 +53,14 @@ import type {
   UploadResponse,
   UserProfile,
 } from "@/types/contracts";
+
+export interface BudgetCurveParams {
+  min?: number;
+  max?: number;
+  step?: number;
+  budget?: number;
+  refresh?: boolean;
+}
 
 export const USE_MOCKS = process.env.NEXT_PUBLIC_USE_MOCKS === "true";
 const MOCK_DELAY_MS = 600;
@@ -123,6 +133,7 @@ const mocks = {
   constraints: (u: MockUser) => import(`@/mocks/constraints-${u}.json`).then((m) => m.default as ProfileBundle["constraints"]),
   targets: (u: MockUser) => import(`@/mocks/targets-${u}.json`).then((m) => m.default as ProfileBundle["targets"]),
   plan: (u: MockUser) => import(`@/mocks/plan-${u}.json`).then((m) => m.default as MealPlan),
+  curve: (u: MockUser) => import(`@/mocks/curve-${u}.json`).then((m) => m.default.curve as BudgetCurveSummary),
   events: (u: MockUser) => import(`@/mocks/agent-events-${u}.json`).then((m) => m.default as AgentEvent[]),
   readings: (u: MockUser) => import(`@/mocks/readings-${u}.json`).then((m) => m.default as Reading[]),
   summary: (u: MockUser) => import(`@/mocks/summary-${u}.json`).then((m) => m.default as DaySummary),
@@ -176,6 +187,24 @@ export const api = {
     generate: (body: GeneratePlanRequest = {}): Promise<GeneratePlanResponse> =>
       USE_MOCKS ? mock(async (u) => ({ runId: `${u}-run-0001` })) : post("/api/plan/generate", body),
     current: (): Promise<MealPlan> => (USE_MOCKS ? mock(mocks.plan) : request("/api/plan/current")),
+    /** Budget tradeoff curve (feature 7). Cold compute is slow (~50 s) once per user, then served from cache. */
+    curve: (params: BudgetCurveParams = {}): Promise<BudgetCurveResponse> => {
+      if (USE_MOCKS) {
+        return mock(async (u) => ({
+          curve: await mocks.curve(u),
+          ...(params.budget !== undefined ? { planAt: (await mocks.plan(u)).days } : {}),
+          cached: true,
+        }));
+      }
+      const qs = new URLSearchParams();
+      if (params.min !== undefined) qs.set("min", String(params.min));
+      if (params.max !== undefined) qs.set("max", String(params.max));
+      if (params.step !== undefined) qs.set("step", String(params.step));
+      if (params.budget !== undefined) qs.set("budget", String(params.budget));
+      if (params.refresh) qs.set("refresh", "1");
+      const query = qs.toString();
+      return request(`/api/plan/curve${query ? `?${query}` : ""}`);
+    },
     rate: (mealName: string, liked: boolean): Promise<void> =>
       USE_MOCKS ? mock(async () => undefined) : post("/api/plan/rate", { mealName, liked }),
   },
