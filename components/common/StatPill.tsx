@@ -19,6 +19,7 @@ const TONES = {
   danger: "text-danger",
 } as const;
 
+/** One reading: label, number, when. Borderless so a row of them reads as one line, not three boxes. */
 export function StatPill({
   label,
   value,
@@ -30,18 +31,11 @@ export function StatPill({
   ...rest
 }: StatPillProps) {
   return (
-    <div
-      className={cn("flex items-center gap-3 rounded-xl border bg-surface-raised p-3 shadow-sm", className)}
-      {...rest}
-    >
-      {Icon && (
-        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-surface-sunken">
-          <Icon className="h-5 w-5 text-ink-muted" aria-hidden="true" />
-        </div>
-      )}
+    <div className={cn("flex min-w-0 items-start gap-2.5", className)} {...rest}>
+      {Icon && <Icon className="mt-1 h-4 w-4 shrink-0 text-ink-subtle" aria-hidden="true" />}
       <div className="min-w-0">
-        <p className="truncate text-xs text-ink-muted">{label}</p>
-        <p className={cn("text-lg font-semibold leading-tight tabular-nums", TONES[tone])}>
+        <p className="truncate text-xs text-ink-subtle">{label}</p>
+        <p className={cn("text-xl font-semibold leading-tight tabular-nums", TONES[tone])}>
           {value}
           {unit && <span className="ml-1 text-xs font-normal text-ink-subtle">{unit}</span>}
         </p>

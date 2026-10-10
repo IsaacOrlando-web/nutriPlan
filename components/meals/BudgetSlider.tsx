@@ -25,7 +25,7 @@ const MAX_CONSTRAINT_CHIPS = 4;
 export interface BudgetSliderProps {
   /** Budget of the plan the user has today (profile budget). */
   value: number;
-  /** Render the curve insights under the slider. The Plan page renders them in its own card instead. */
+  /** Render the curve insights under the slider. The Plan page renders them in its own list instead. */
   showInsights?: boolean;
   className?: string;
 }
@@ -94,19 +94,22 @@ export function BudgetSlider({ value, showInsights = true, className }: BudgetSl
 
   return (
     <div className={cn("space-y-3", className)}>
-      <p className="text-sm text-ink-muted" data-testid="budget-explainer">
-        Drag to see what each weekly budget buys. The curve is computed by the optimizer, not guessed: higher
-        means a week that fits your rules and taste better.
-      </p>
-      <div className="flex items-center justify-between gap-2">
-        <Label htmlFor="budget-slider">Weekly budget</Label>
-        <span className="text-lg font-bold tabular-nums text-agent-budget">
+      <div className="flex items-baseline justify-between gap-3">
+        <div>
+          <Label htmlFor="budget-slider" className="text-sm font-semibold">
+            Weekly budget
+          </Label>
+          <p className="text-xs text-ink-subtle" data-testid="budget-explainer">
+            Drag to see what each budget buys. Release to preview.
+          </p>
+        </div>
+        <span className="text-2xl font-bold tabular-nums tracking-tight">
           {fmtUsd(local, true)}
-          <span className="text-xs font-normal text-ink-subtle"> per week</span>
+          <span className="text-xs font-normal text-ink-subtle"> / week</span>
         </span>
       </div>
 
-      {/* Curve: the real chart once computed, a skeleton bar while the optimizer sweeps the budgets. */}
+      {/* Curve: the real chart once computed, a skeleton while the optimizer sweeps the budgets. */}
       {summary ? (
         <>
           <BudgetCurveChart curve={summary} current={local} applied={value} />
@@ -134,15 +137,16 @@ export function BudgetSlider({ value, showInsights = true, className }: BudgetSl
         disabled={generate.isPending}
         aria-label="Weekly budget"
         aria-valuetext={`${fmtUsd(local, true)} per week`}
+        className="py-1"
       />
-      <div className="flex justify-between text-xs text-ink-subtle">
+      <div className="flex justify-between text-[11px] tabular-nums text-ink-subtle">
         <span>{fmtUsd(budgets[0], true)}</span>
         <span>{fmtUsd(budgets[budgets.length - 1], true)}</span>
       </div>
 
       {/* Point badges: read locally from the curve while dragging, no network. */}
       <div data-testid="budget-point" className="flex flex-wrap items-center gap-1.5 text-xs">
-        <span className="font-semibold tabular-nums text-ink-muted">At {fmtUsd(local, true)}:</span>
+        <span className="font-semibold tabular-nums text-ink-muted">At {fmtUsd(local, true)}</span>
         {point ? (
           <PointBadges point={point} />
         ) : summary ? (
@@ -152,21 +156,17 @@ export function BudgetSlider({ value, showInsights = true, className }: BudgetSl
         ) : (
           <span className="flex items-center gap-1.5 text-ink-muted" role="status">
             <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden="true" />
-            Preparing budget tradeoffs…
+            Computing tradeoffs…
           </span>
         )}
       </div>
 
-      {generate.isPending ? (
+      {generate.isPending && (
         <p className="flex items-center gap-2 text-sm text-ink-muted" role="status">
           <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
           Opening the Agent Room…
         </p>
-      ) : committed === null ? (
-        <p className="text-xs text-ink-muted">
-          Slide along the curve to see what each budget buys. Release to preview the week, then apply it.
-        </p>
-      ) : null}
+      )}
 
       {committed !== null && (
         <BudgetPreview
@@ -193,21 +193,24 @@ export function BudgetSlider({ value, showInsights = true, className }: BudgetSl
 /** Words for the three regions of the chart, so nobody has to guess what the shading means. */
 function CurveLegend() {
   return (
-    <ul className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-ink-muted" aria-label="Chart legend">
+    <ul
+      className="flex flex-wrap items-center gap-x-4 gap-y-1 text-[11px] text-ink-subtle"
+      aria-label="Chart legend"
+    >
       <li className="flex items-center gap-1.5">
-        <span className="h-3 w-4 rounded-sm bg-danger/20" aria-hidden="true" />
+        <span className="h-2.5 w-3.5 rounded-sm bg-danger/20" aria-hidden="true" />
         No safe plan
       </li>
       <li className="flex items-center gap-1.5">
-        <span className="h-3 w-4 rounded-sm bg-brand/15" aria-hidden="true" />
+        <span className="h-2.5 w-3.5 rounded-sm bg-brand/15" aria-hidden="true" />
         Sweet spot
       </li>
       <li className="flex items-center gap-1.5">
-        <span className="h-3 w-4 rounded-sm bg-ink-subtle/30" aria-hidden="true" />
+        <span className="h-2.5 w-3.5 rounded-sm bg-ink-subtle/30" aria-hidden="true" />
         No extra benefit
       </li>
       <li className="flex items-center gap-1.5">
-        <span className="h-0.5 w-4 rounded bg-brand" aria-hidden="true" />
+        <span className="h-0.5 w-3.5 rounded bg-brand" aria-hidden="true" />
         Plan quality, 0 to 100
       </li>
     </ul>
@@ -283,11 +286,11 @@ function BudgetPreview({ budget, days, loading, error, busy, onApply, onCancel }
   return (
     <section
       data-testid="budget-preview"
-      className="space-y-3 rounded-xl border border-agent-budget/30 bg-agent-budget/5 p-3 sm:p-4"
+      className="space-y-3 rounded-xl bg-surface-sunken p-3 sm:p-4"
       aria-live="polite"
     >
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <p className="text-sm font-semibold text-agent-budget">Preview at {fmtUsd(budget, true)}</p>
+        <p className="text-sm font-semibold">Week at {fmtUsd(budget, true)}</p>
         <div className="flex items-center gap-2">
           <Button
             type="button"
@@ -310,7 +313,7 @@ function BudgetPreview({ budget, days, loading, error, busy, onApply, onCancel }
         <ul className={cn("grid gap-x-4 gap-y-1.5 text-xs sm:grid-cols-2", loading && "opacity-60")}>
           {days.map((d) => (
             <li key={d.date} className="flex gap-2">
-              <span className="w-8 shrink-0 font-semibold uppercase tracking-wide text-ink-muted">
+              <span className="w-8 shrink-0 font-semibold uppercase tracking-wide text-ink-subtle">
                 {fmtDate(d.date, { weekday: "short" })}
               </span>
               <span className="min-w-0 text-ink">{d.meals.map((m) => m.name).join(" · ")}</span>

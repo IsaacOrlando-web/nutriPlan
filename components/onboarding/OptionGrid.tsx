@@ -43,14 +43,14 @@ export function OptionGrid<T extends string | number>({
             aria-checked={active}
             onClick={() => onChange(opt.value)}
             className={cn(
-              "flex items-center justify-between gap-3 rounded-xl border px-4 py-3 text-left transition-colors",
+              "flex min-h-12 items-center justify-between gap-3 rounded-xl px-4 py-3 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-surface",
               active
-                ? "border-brand bg-brand-soft text-brand-dark"
-                : "bg-surface-raised hover:border-ink-subtle",
+                ? "bg-brand-soft text-brand-dark ring-1 ring-brand"
+                : "bg-surface-raised text-ink ring-1 ring-border hover:ring-ink-subtle",
             )}
           >
-            <span>
-              <span className="block font-medium">{opt.label}</span>
+            <span className="min-w-0">
+              <span className="block text-sm font-medium sm:text-base">{opt.label}</span>
               {opt.hint && (
                 <span className={cn("block text-xs", active ? "text-brand-dark/80" : "text-ink-muted")}>
                   {opt.hint}
@@ -59,12 +59,12 @@ export function OptionGrid<T extends string | number>({
             </span>
             <span
               className={cn(
-                "flex h-5 w-5 shrink-0 items-center justify-center rounded-full border",
-                active ? "border-brand bg-brand text-brand-foreground" : "border-ink-subtle",
+                "flex h-5 w-5 shrink-0 items-center justify-center rounded-full transition-colors",
+                active ? "bg-brand text-brand-foreground" : "ring-1 ring-ink-subtle",
               )}
               aria-hidden="true"
             >
-              {active && <Check className="h-3.5 w-3.5" />}
+              {active && <Check className="h-3.5 w-3.5" strokeWidth={3} />}
             </span>
           </button>
         );

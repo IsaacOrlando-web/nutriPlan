@@ -334,7 +334,16 @@ export async function runPlanNegotiation(args: PlanRunArgs): Promise<PlanRunOutc
           { ...opts, shadowPrices: false, timeLimitSec: opts.timeLimitSec ?? SECOND_SOLVE_TIME_SEC },
         );
         timing.secondSolveMs = Date.now() - t;
-        const keep = second.feasible && (second.withinBudget || !first.withinBudget || !first.feasible);
+        // Keep the second solve only when it is really better: it rescues feasibility or the budget, or it
+        // narrows the protein gap without costing more. A plan that fits the money but eats worse stays out.
+        const before = proteinDeviation(first, ctx.targets);
+        const after = proteinDeviation(second, ctx.targets);
+        const rescues = !first.feasible || (!first.withinBudget && second.withinBudget);
+        const improves = after < before || (after === before && second.weeklyCostUsd <= first.weeklyCostUsd);
+        const keep =
+          second.feasible &&
+          (second.withinBudget || !first.withinBudget || !first.feasible) &&
+          (rescues || improves);
         if (keep) result = second;
         // Shadow prices are explanatory, not the plan: they run on the critical path only when the second solve
         // was very quick and the run is on time (measured: 8 to 9 s for 3 to 4 relaxations, too slow for the
@@ -357,21 +366,22 @@ export async function runPlanNegotiation(args: PlanRunArgs): Promise<PlanRunOutc
           }
         }
         const used = usedColumns(second.days, check.kept);
-        const before = proteinDeviation(first, ctx.targets);
-        const after = proteinDeviation(second, ctx.targets);
         const change = !first.feasible
           ? `a feasible week appeared`
           : !first.withinBudget && second.withinBudget
             ? `weekly cost went from ${money(first.weeklyCostUsd)} to ${money(second.weeklyCostUsd)}, inside the $${profile.weeklyBudgetUsd}`
-            : before !== after
-              ? `protein deviation went from ${before} g to ${after} g`
+            : after < before
+              ? `the daily protein gap shrank from ${before} g to ${after} g`
               : `weekly cost went from ${money(first.weeklyCostUsd)} to ${money(second.weeklyCostUsd)}`;
         await emit(
           "orchestrator",
           "proposal",
           keep
             ? `Second solve used ${used} of Chef's ${check.kept.length} new meals; ${change}. Solved in ${(second.solveMs / 1000).toFixed(1)} s.`
-            : `Second solve did not beat the first plan (${second.conflicts[0] ?? "over budget"}); keeping the first solve.`,
+            : `Second solve did not beat the first plan (${
+                second.conflicts[0] ??
+                (!second.withinBudget ? "over budget" : `protein gap ${after} g vs ${before} g`)
+              }); keeping the first solve.`,
           {
             solve: 2,
             usedColumns: used,

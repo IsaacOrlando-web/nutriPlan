@@ -11,6 +11,8 @@ export interface AgentTheme {
   ring: string;
   /** Sets --pulse-color for the agent-pulse keyframe. */
   pulse: string;
+  /** Full strength left accent for transcript bubbles. */
+  accent: string;
 }
 
 export const AGENT_THEME: Record<AgentName, AgentTheme> = {
@@ -22,6 +24,7 @@ export const AGENT_THEME: Record<AgentName, AgentTheme> = {
     border: "border-agent-doctor/30",
     ring: "ring-agent-doctor",
     pulse: "[--pulse-color:theme(colors.agent.doctor/45%)]",
+    accent: "border-l-agent-doctor",
   },
   chef: {
     icon: ChefHat,
@@ -31,6 +34,7 @@ export const AGENT_THEME: Record<AgentName, AgentTheme> = {
     border: "border-agent-chef/30",
     ring: "ring-agent-chef",
     pulse: "[--pulse-color:theme(colors.agent.chef/45%)]",
+    accent: "border-l-agent-chef",
   },
   budget: {
     icon: Wallet,
@@ -40,6 +44,7 @@ export const AGENT_THEME: Record<AgentName, AgentTheme> = {
     border: "border-agent-budget/30",
     ring: "ring-agent-budget",
     pulse: "[--pulse-color:theme(colors.agent.budget/45%)]",
+    accent: "border-l-agent-budget",
   },
   monitor: {
     icon: Activity,
@@ -49,6 +54,7 @@ export const AGENT_THEME: Record<AgentName, AgentTheme> = {
     border: "border-agent-monitor/30",
     ring: "ring-agent-monitor",
     pulse: "[--pulse-color:theme(colors.agent.monitor/45%)]",
+    accent: "border-l-agent-monitor",
   },
   orchestrator: {
     icon: Network,
@@ -58,10 +64,13 @@ export const AGENT_THEME: Record<AgentName, AgentTheme> = {
     border: "border-agent-orchestrator/30",
     ring: "ring-agent-orchestrator",
     pulse: "[--pulse-color:theme(colors.agent.orchestrator/45%)]",
+    accent: "border-l-agent-orchestrator",
   },
 };
 
 export const AGENT_ORDER: AgentName[] = ["doctor", "chef", "budget", "monitor"];
+/** Everyone at the table, referee last. */
+export const ALL_AGENTS: AgentName[] = [...AGENT_ORDER, "orchestrator"];
 
 export const AGENT_NAMES: Record<AgentName, string> = {
   doctor: "Doctor",

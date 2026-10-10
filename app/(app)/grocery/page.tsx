@@ -2,34 +2,81 @@
 
 import { ShoppingBasket } from "lucide-react";
 import Link from "next/link";
+import { Suspense, useMemo, useState } from "react";
+import { toast } from "sonner";
 import { EmptyState } from "@/components/common/EmptyState";
 import { ErrorState } from "@/components/common/ErrorState";
 import { LoadingState } from "@/components/common/LoadingState";
 import { PageHeader } from "@/components/common/PageHeader";
-import { Suspense } from "react";
-import { toast } from "sonner";
-import { GroceryList } from "@/components/grocery/GroceryList";
+import {
+  CopyListButton,
+  GroceryList,
+  OpenCartLink,
+  SendToKrogerButton,
+  listAsText,
+  type KrogerMatch,
+} from "@/components/grocery/GroceryList";
 import { KrogerPanel } from "@/components/grocery/KrogerPanel";
-import { krogerErrorMessage, useKrogerStatus, useSendToKrogerCart } from "@/lib/hooks/useKroger";
 import { Button } from "@/components/ui/button";
+import { Progress } from "@/components/ui/progress";
+import {
+  krogerErrorMessage,
+  useKrogerPrices,
+  useKrogerStatus,
+  useSendToKrogerCart,
+} from "@/lib/hooks/useKroger";
 import { usePlan } from "@/lib/hooks/usePlan";
-import { fmtUsd } from "@/lib/utils";
+import { fmtDate, fmtUsd, plural } from "@/lib/utils";
+import type { GroceryItem } from "@/types/contracts";
 
 export default function GroceryPage() {
   const plan = usePlan();
-  const total = plan.data?.groceryList.reduce((s, i) => s + i.costUsd, 0) ?? 0;
   const kroger = useKrogerStatus();
   const sendToCart = useSendToKrogerCart();
+  const [checked, setChecked] = useState<Set<string>>(new Set());
+  const [cartSent, setCartSent] = useState(false);
+
+  const items = useMemo(() => plan.data?.groceryList ?? [], [plan.data]);
+  const canPrice = Boolean(kroger.data?.configured && kroger.data.location);
+  const prices = useKrogerPrices(canPrice);
+  const priced = useMemo(() => {
+    if (!prices.data) return undefined;
+    const map = new Map<string, KrogerMatch>();
+    for (const item of prices.data.items) if (item.kroger) map.set(item.foodId, item.kroger);
+    return map;
+  }, [prices.data]);
+
+  const toggle = (id: string) =>
+    setChecked((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+
+  const copy = async () => {
+    const text = listAsText(items, checked);
+    try {
+      if (!navigator.clipboard) throw new Error("Clipboard unavailable");
+      await navigator.clipboard.writeText(text);
+      toast.success("List copied");
+    } catch {
+      toast.error("Could not copy. Select the list and copy it by hand.");
+    }
+  };
+
   const canSend = Boolean(kroger.data?.connected && kroger.data.location);
   const onSendToCart = canSend
     ? () =>
         sendToCart.mutate(undefined, {
-          onSuccess: (res) =>
-            toast.success(
-              res.added > 0
-                ? `Added ${res.added} items to your Kroger cart${res.skipped.length ? `, ${res.skipped.length} not found` : ""}`
-                : "Nothing could be added: no items matched at this store",
-            ),
+          onSuccess: (res) => {
+            if (res.added > 0) {
+              setCartSent(true);
+              toast.success(
+                `Added ${res.added} items to your Kroger cart${res.skipped.length ? `, ${res.skipped.length} not found` : ""}`,
+              );
+            } else toast.error("Nothing could be added: no items matched at this store");
+          },
           onError: (err) => toast.error(krogerErrorMessage(err)),
         })
     : undefined;
@@ -39,17 +86,15 @@ export default function GroceryPage() {
       <PageHeader
         title="Grocery list"
         subtitle={
-          plan.data && plan.data.groceryList.length > 0
-            ? `Everything for this week's plan: ${plan.data.groceryList.length} items, ${fmtUsd(total)}. Tick items off as you shop.`
-            : "Everything your week's plan needs, grouped the way the store is."
+          plan.data ? `Week of ${fmtDate(plan.data.startDate, { month: "long", day: "numeric" })}` : undefined
         }
       />
       {plan.isLoading && <LoadingState variant="list" rows={6} />}
       {plan.error && <ErrorState error={plan.error} onRetry={() => void plan.refetch()} />}
-      {!plan.isLoading && !plan.error && (!plan.data || plan.data.groceryList.length === 0) && (
+      {!plan.isLoading && !plan.error && items.length === 0 && (
         <EmptyState
           title="No groceries yet"
-          body="Your grocery list appears once the agents have built a plan."
+          body="The list appears once the agents have built a plan."
           icon={ShoppingBasket}
           action={
             <Button asChild>
@@ -58,14 +103,101 @@ export default function GroceryPage() {
           }
         />
       )}
-      {plan.data && plan.data.groceryList.length > 0 && (
+      {items.length > 0 && (
         <>
-          <Suspense fallback={null}>
-            <KrogerPanel />
-          </Suspense>
-          <GroceryList items={plan.data.groceryList} onSendToCart={onSendToCart} />
+          <GroceryHero
+            items={items}
+            checked={checked}
+            onReset={() => setChecked(new Set())}
+            onCopy={() => void copy()}
+            onSendToCart={onSendToCart}
+            cartSent={cartSent}
+          />
+          <GroceryList
+            items={items}
+            checked={checked}
+            onToggle={toggle}
+            priced={priced}
+            onSendToCart={onSendToCart}
+            onCopy={() => void copy()}
+            cartSent={cartSent}
+          />
         </>
       )}
     </div>
+  );
+}
+
+function GroceryHero({
+  items,
+  checked,
+  onReset,
+  onCopy,
+  onSendToCart,
+  cartSent,
+}: {
+  items: GroceryItem[];
+  checked: Set<string>;
+  onReset: () => void;
+  onCopy: () => void;
+  onSendToCart?: () => void;
+  cartSent: boolean;
+}) {
+  const total = items.reduce((s, i) => s + i.costUsd, 0);
+  const remaining = items.filter((i) => !checked.has(i.foodId)).reduce((s, i) => s + i.costUsd, 0);
+  const pct = items.length ? Math.round((checked.size / items.length) * 100) : 0;
+
+  return (
+    <section
+      className="rounded-2xl bg-surface-raised p-5 shadow-sm ring-1 ring-border sm:p-6"
+      aria-label="This week's total"
+    >
+      <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+        <div className="min-w-0">
+          <p className="text-xs font-semibold uppercase tracking-wide text-ink-subtle">Plan estimate</p>
+          <p
+            className="mt-1 text-4xl font-bold tabular-nums tracking-tight sm:text-5xl"
+            data-testid="grocery-total"
+          >
+            {fmtUsd(total)}
+          </p>
+          <p className="mt-1 text-sm text-ink-muted">{plural(items.length, "item")} for the week</p>
+        </div>
+
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:gap-6">
+          <div className="min-w-0 sm:w-64" aria-live="polite">
+            <div className="flex items-baseline justify-between gap-3 text-sm">
+              <span className="text-ink-muted">In the cart</span>
+              <span className="font-semibold tabular-nums">
+                {checked.size} of {items.length}
+              </span>
+            </div>
+            <Progress
+              value={pct}
+              className="mt-2"
+              aria-label={`${checked.size} of ${items.length} items checked`}
+            />
+            <div className="mt-2 flex items-baseline justify-between gap-3 text-sm">
+              <span className="text-ink-muted">Left to buy</span>
+              <span className="font-semibold tabular-nums">{fmtUsd(remaining)}</span>
+            </div>
+          </div>
+          <div className="hidden items-center gap-2 lg:flex">
+            {checked.size > 0 && (
+              <Button variant="ghost" size="sm" onClick={onReset}>
+                Reset
+              </Button>
+            )}
+            <CopyListButton onClick={onCopy} />
+            {cartSent && <OpenCartLink />}
+            <SendToKrogerButton disabled={onSendToCart === undefined} onClick={onSendToCart} />
+          </div>
+        </div>
+      </div>
+
+      <Suspense fallback={null}>
+        <KrogerPanel className="mt-5 border-t pt-4" />
+      </Suspense>
+    </section>
   );
 }

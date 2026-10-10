@@ -44,3 +44,16 @@ Three changes, no new dependencies:
 - `MemoryStore` seeds each demo user with the plan, run and events from `agents/fallbacks/<user>-plan-run.json`
   when it persists to a file (the app). RAM only stores (`MEMORY_STORE_FILE=none`, tests, `npm run mocks`)
   stay empty, so version numbers in tests are unchanged. Delete `.data/store.json` to pick this up.
+
+## D-015 Real store prices and Kroger matching rules (2026-10-10)
+
+`scripts/data/prices.csv` and `foods.json` now carry prices from one real store, Kroger On the Rhine
+(Cincinnati, 45202), collected 2026-10-10 through the Kroger Public API (`npx tsx scripts/data/kroger-prices.ts --zip 45202`).
+71 of 75 foods matched; arepa, cassava, mixed greens and cactus keep curated prices. Matching rules in
+`lib/kroger/match.ts`: the product must contain the food's head word (so "Eggs, whole" never matches whole
+milk), prepared entrees are penalized, dry grains and raw meats are priced per gram as eaten
+(`COOKED_YIELD`), produce sold by count uses typical piece weights (`UNIT_GRAMS`), and "30 ct / 24.9 oz"
+reads as a total. With real prices the base template pool needs about $60 (Alex) and $79 (Maria); the app
+still lands at $50 and $70 through Chef's column generation, so the base pool unit tests use those higher
+budgets. The orchestrator keeps a second solve only when it rescues feasibility or budget, or narrows the
+protein gap at no extra cost; the daily solver stays five cents under the cap so a plan never reads "$70.01 of $70".

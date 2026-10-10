@@ -1,12 +1,12 @@
 "use client";
 
-import { ArrowRight, Loader2, ShieldCheck } from "lucide-react";
+import { ArrowRight, Loader2 } from "lucide-react";
 import { AgentAvatar } from "@/components/agents/AgentAvatar";
 import { ruleLabel } from "@/components/agents/agent-theme";
-import { Disclaimer } from "@/components/common/Disclaimer";
 import { SourceLink } from "@/components/common/SourceLink";
+import { StickyActions } from "@/components/onboarding/StickyActions";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { fmtNumber } from "@/lib/utils";
 import type { ProfileBundle } from "@/types/contracts";
 
 export interface RulesScreenProps {
@@ -18,91 +18,87 @@ export interface RulesScreenProps {
 
 export function RulesScreen({ bundle, onContinue, pending, error }: RulesScreenProps) {
   const { constraints, targets } = bundle;
+  const secondary: { label: string; value: string }[] = [
+    { label: "Protein", value: `${fmtNumber(targets.proteinG)} g` },
+    { label: "Carbs", value: `${fmtNumber(targets.carbsG)} g` },
+    { label: "Fat", value: `${fmtNumber(targets.fatG)} g` },
+    { label: "Fiber", value: `${fmtNumber(targets.fiberG)} g` },
+    { label: "Sodium", value: `${fmtNumber(targets.sodiumMg)} mg` },
+    { label: "Potassium", value: `${fmtNumber(targets.potassiumMg)} mg` },
+    {
+      label: "Metabolism",
+      value: `${fmtNumber(targets.tdeeEstimate)} ± ${fmtNumber(targets.tdeeUncertainty)}`,
+    },
+  ];
+
   return (
-    <div data-testid="rules-screen" className="mx-auto max-w-2xl space-y-6">
-      <div className="flex items-start gap-3">
-        <AgentAvatar agent="doctor" size="md" />
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">Your plan rules</h1>
-          <p className="mt-1 text-sm text-ink-muted">
-            Doctor read the guidelines that apply to you. Every rule below is a hard constraint for the
-            optimizer.
-          </p>
+    <div data-testid="rules-screen" className="mx-auto flex w-full max-w-xl flex-col">
+      <header className="space-y-3">
+        <div className="flex items-center gap-2.5">
+          <AgentAvatar agent="doctor" size="sm" />
+          <span className="text-xs font-semibold uppercase tracking-wide text-agent-doctor">Doctor</span>
         </div>
-      </div>
+        <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">Your plan rules</h1>
+        <p className="text-sm text-ink-muted">{constraints.summary}</p>
+      </header>
 
-      <div className="rounded-xl border border-agent-doctor/30 bg-agent-doctor/10 p-4 text-sm">
-        {constraints.summary}
-      </div>
-
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-base">Daily targets</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <dl className="grid grid-cols-2 gap-3 text-sm sm:grid-cols-4">
-            <Target label="Calories" value={`${targets.calories} kcal`} />
-            <Target label="Protein" value={`${targets.proteinG} g`} />
-            <Target label="Carbs" value={`${targets.carbsG} g`} />
-            <Target label="Fat" value={`${targets.fatG} g`} />
-            <Target label="Fiber" value={`${targets.fiberG} g`} />
-            <Target label="Sodium" value={`${targets.sodiumMg} mg`} />
-            <Target label="Potassium" value={`${targets.potassiumMg} mg`} />
-            <Target
-              label="Metabolism (kcal)"
-              value={`${targets.tdeeEstimate} ± ${targets.tdeeUncertainty}`}
-            />
-          </dl>
-        </CardContent>
-      </Card>
-
-      <section className="space-y-3">
-        <h2 className="flex items-center gap-2 text-base font-semibold">
-          <ShieldCheck className="h-5 w-5 text-agent-doctor" aria-hidden="true" />
-          {constraints.reasons.length} rules with sources
+      <section className="mt-8 space-y-4" aria-labelledby="rules-targets">
+        <h2 id="rules-targets" className="text-xs font-semibold uppercase tracking-wide text-ink-subtle">
+          Daily target
         </h2>
-        <ul className="space-y-2">
+        <p className="text-5xl font-bold tabular-nums tracking-tight">
+          {fmtNumber(targets.calories)}
+          <span className="ml-2 text-lg font-medium text-ink-muted">kcal</span>
+        </p>
+        <dl className="grid grid-cols-3 gap-x-4 gap-y-3 sm:grid-cols-4">
+          {secondary.map((t) => (
+            <div key={t.label}>
+              <dt className="text-xs text-ink-subtle">{t.label}</dt>
+              <dd className="text-sm font-semibold tabular-nums">{t.value}</dd>
+            </div>
+          ))}
+        </dl>
+      </section>
+
+      <section className="mt-8 space-y-2" aria-labelledby="rules-list">
+        <h2 id="rules-list" className="text-xs font-semibold uppercase tracking-wide text-ink-subtle">
+          {constraints.reasons.length} hard rules
+        </h2>
+        <ul className="divide-y divide-border/70">
           {constraints.reasons.map((r) => (
-            <li key={r.rule} className="rounded-xl border bg-surface-raised p-4">
-              <p className="font-medium">{ruleLabel(r.rule)}</p>
-              <p className="mt-0.5 text-sm text-ink-muted">{r.why}</p>
-              <p className="mt-1.5">
-                <SourceLink source={r.source} />
+            <li key={r.rule} className="grid gap-1 py-3.5 sm:grid-cols-[10rem_1fr] sm:gap-4">
+              <p className="flex items-center gap-2 text-sm font-semibold text-agent-doctor">
+                <span className="h-4 w-0.5 shrink-0 rounded-full bg-agent-doctor" aria-hidden="true" />
+                {ruleLabel(r.rule)}
               </p>
+              <div className="space-y-1 sm:pt-px">
+                <p className="text-sm text-ink">{r.why}</p>
+                <SourceLink source={r.source} />
+              </div>
             </li>
           ))}
         </ul>
       </section>
 
       {error && (
-        <p role="alert" className="text-sm text-danger">
+        <p role="alert" className="mt-4 text-sm text-danger">
           {error}
         </p>
       )}
-      <Button
-        data-testid="rules-continue"
-        size="lg"
-        className="w-full"
-        onClick={onContinue}
-        disabled={pending}
-      >
-        {pending ? (
-          <Loader2 className="animate-spin" aria-hidden="true" />
-        ) : (
-          <ArrowRight aria-hidden="true" />
-        )}
-        Build my plan
-      </Button>
-      <Disclaimer />
-    </div>
-  );
-}
 
-function Target({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="rounded-lg bg-surface-sunken px-3 py-2">
-      <dt className="text-[11px] uppercase tracking-wide text-ink-subtle">{label}</dt>
-      <dd className="font-semibold tabular-nums">{value}</dd>
+      <StickyActions className="mt-6">
+        <Button
+          data-testid="rules-continue"
+          size="lg"
+          className="w-full"
+          onClick={onContinue}
+          disabled={pending}
+        >
+          {pending ? <Loader2 className="animate-spin" aria-hidden="true" /> : null}
+          Build my plan
+          {!pending && <ArrowRight aria-hidden="true" />}
+        </Button>
+      </StickyActions>
     </div>
   );
 }

@@ -15,7 +15,9 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
         </Link>
         <AuthModal />
       </header>
-      <main className="flex flex-1 flex-col items-center justify-center px-4 py-6 sm:px-8">{children}</main>
+      <main className="flex flex-1 flex-col items-center justify-center px-4 py-10 sm:px-8 sm:py-14">
+        {children}
+      </main>
       <footer className="px-4 pb-6 sm:px-8">
         <Disclaimer className="mx-auto max-w-2xl" />
       </footer>

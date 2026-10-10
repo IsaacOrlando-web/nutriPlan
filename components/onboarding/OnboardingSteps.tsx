@@ -2,7 +2,6 @@
 
 import { Pencil } from "lucide-react";
 import { Controller, useFormContext, useWatch, type FieldError } from "react-hook-form";
-import { Disclaimer } from "@/components/common/Disclaimer";
 import { ChipInput } from "@/components/onboarding/ChipInput";
 import {
   ACTIVITY_HINT,
@@ -13,11 +12,10 @@ import {
   SEX_LABEL,
 } from "@/components/onboarding/labels";
 import { OptionGrid } from "@/components/onboarding/OptionGrid";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
-import { cn } from "@/lib/utils";
+import { cn, fmtUsd } from "@/lib/utils";
 import type { ActivityLevel, Condition, Goal } from "@/types/contracts";
 import { HeightField, WeightField } from "./MeasureFields";
 import {
@@ -55,9 +53,9 @@ function FieldMessage({ error }: { error?: FieldError }) {
 function Section({ title, hint, children }: { title: string; hint?: string; children: React.ReactNode }) {
   return (
     <section className="space-y-3">
-      <div>
-        <h2 className="text-sm font-semibold text-ink">{title}</h2>
-        {hint && <p className="text-xs text-ink-muted">{hint}</p>}
+      <div className="space-y-0.5">
+        <h2 className="text-xs font-semibold uppercase tracking-wide text-ink-subtle">{title}</h2>
+        {hint && <p className="text-sm text-ink-muted">{hint}</p>}
       </div>
       {children}
     </section>
@@ -102,7 +100,7 @@ function PresetMulti({
       />
       <div className="space-y-1.5">
         <Label htmlFor={id} className="text-xs text-ink-muted">
-          Other (type and press Enter)
+          Other
         </Label>
         <ChipInput
           id={id}
@@ -121,10 +119,10 @@ export function AboutStep() {
   const { register, control, formState } = useFormContext<OnboardingValues>();
   const { errors } = formState;
   return (
-    <div className="space-y-5">
+    <div className="space-y-6">
       <div className="grid gap-4 sm:grid-cols-[2fr_1fr]">
         <div className="space-y-1.5">
-          <Label htmlFor="name">What should we call you?</Label>
+          <Label htmlFor="name">Name</Label>
           <Input
             id="name"
             data-testid="onboarding-name"
@@ -167,7 +165,7 @@ export function AboutStep() {
             />
           )}
         />
-        <p className="text-xs text-ink-subtle">Used only in the metabolism formula.</p>
+        <p className="text-xs text-ink-subtle">For the metabolism formula only.</p>
       </div>
       <div className="grid gap-4 sm:grid-cols-2">
         <HeightField />
@@ -181,7 +179,7 @@ export function GoalStep() {
   const { control, setValue } = useFormContext<OnboardingValues>();
   const goal = useWatch<OnboardingValues, "goal">({ name: "goal" });
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       <Controller
         control={control}
         name="goal"
@@ -202,24 +200,27 @@ export function GoalStep() {
           control={control}
           name="goalRateKgPerWeek"
           render={({ field }) => (
-            <div className="space-y-2 rounded-xl border bg-surface-raised p-4">
-              <div className="flex items-center justify-between text-sm">
-                <Label htmlFor="goalRate">Pace</Label>
-                <span className="font-semibold tabular-nums">{field.value} kg per week</span>
+            <Section title="Pace" hint="0.5 kg a week is steady. Faster is capped for safety.">
+              <div className="space-y-3 pt-1">
+                <p className="text-3xl font-bold tabular-nums tracking-tight">
+                  {field.value || DEFAULT_RATE_KG_PER_WEEK}
+                  <span className="ml-1.5 text-base font-medium text-ink-muted">kg a week</span>
+                </p>
+                <Slider
+                  id="goalRate"
+                  aria-label="Pace in kg per week"
+                  min={0.25}
+                  max={1}
+                  step={0.25}
+                  value={[field.value || DEFAULT_RATE_KG_PER_WEEK]}
+                  onValueChange={([v]) => field.onChange(v)}
+                />
+                <div className="flex justify-between text-xs tabular-nums text-ink-subtle">
+                  <span>0.25</span>
+                  <span>1</span>
+                </div>
               </div>
-              <Slider
-                id="goalRate"
-                aria-label="Pace in kg per week"
-                min={0.25}
-                max={1}
-                step={0.25}
-                value={[field.value || DEFAULT_RATE_KG_PER_WEEK]}
-                onValueChange={([v]) => field.onChange(v)}
-              />
-              <p className="text-xs text-ink-muted">
-                0.5 kg a week is a steady, sustainable pace. Faster rates are capped for safety.
-              </p>
-            </div>
+            </Section>
           )}
         />
       )}
@@ -230,11 +231,8 @@ export function GoalStep() {
 export function HealthStep() {
   const { control } = useFormContext<OnboardingValues>();
   return (
-    <div className="space-y-6">
-      <Section
-        title="Health conditions"
-        hint="Doctor adds stricter, cited rules for these. Pick any that apply."
-      >
+    <div className="space-y-8">
+      <Section title="Conditions">
         <Controller
           control={control}
           name="conditions"
@@ -254,7 +252,7 @@ export function HealthStep() {
           )}
         />
       </Section>
-      <Section title="Medications" hint="Some medications change what is safe, for example potassium.">
+      <Section title="Medications" hint="Some change what is safe, for example potassium.">
         <Controller
           control={control}
           name="medications"
@@ -268,7 +266,7 @@ export function HealthStep() {
           )}
         />
       </Section>
-      <Section title="Food allergies" hint="Kept separate from dislikes. Allergens are never planned.">
+      <Section title="Allergies" hint="Never planned, not even as a swap.">
         <Controller
           control={control}
           name="allergies"
@@ -284,7 +282,6 @@ export function HealthStep() {
           )}
         />
       </Section>
-      <Disclaimer />
     </div>
   );
 }
@@ -292,7 +289,7 @@ export function HealthStep() {
 export function PreferencesStep() {
   const { control } = useFormContext<OnboardingValues>();
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <Section title="Diet style">
         <Controller
           control={control}
@@ -310,7 +307,7 @@ export function PreferencesStep() {
           )}
         />
       </Section>
-      <Section title="Foods and cuisines you love" hint="Chef builds around these.">
+      <Section title="Love">
         <Controller
           control={control}
           name="likes"
@@ -325,7 +322,7 @@ export function PreferencesStep() {
           )}
         />
       </Section>
-      <Section title="Foods you'd rather avoid" hint="Dislikes, not allergies. Chef keeps them out.">
+      <Section title="Avoid" hint="Dislikes, not allergies.">
         <Controller
           control={control}
           name="dislikes"
@@ -348,14 +345,14 @@ export function LifestyleStep() {
   const budget = useWatch<OnboardingValues, "weeklyBudgetUsd">({ name: "weeklyBudgetUsd" });
   const { errors } = formState;
   return (
-    <div className="space-y-6">
-      <Section
-        title="Weekly grocery budget"
-        hint="If the budget is tight, Budget swaps in cheaper meals and tells you."
-      >
-        <div className="space-y-4 rounded-xl border bg-surface-raised p-4">
-          <div className="flex items-center gap-2">
-            <Label htmlFor="weeklyBudgetUsd" className="text-2xl font-bold text-agent-budget">
+    <div className="space-y-8">
+      <Section title="Weekly grocery budget">
+        <div className="space-y-4">
+          <div className="flex items-end gap-2">
+            <Label
+              htmlFor="weeklyBudgetUsd"
+              className="pb-2 text-3xl font-bold tabular-nums text-agent-budget"
+            >
               $
             </Label>
             <Input
@@ -368,12 +365,12 @@ export function LifestyleStep() {
               step={1}
               aria-invalid={!!errors.weeklyBudgetUsd}
               className={cn(
-                "h-12 max-w-[8rem] text-2xl font-bold tabular-nums",
+                "h-14 w-[7.5rem] px-3 text-4xl font-bold tabular-nums tracking-tight",
                 errors.weeklyBudgetUsd && "border-danger",
               )}
               {...register("weeklyBudgetUsd", { valueAsNumber: true })}
             />
-            <span className="text-sm text-ink-muted">per week (USD)</span>
+            <span className="pb-2 text-sm text-ink-muted">a week</span>
           </div>
           <Slider
             aria-label="Weekly budget"
@@ -387,14 +384,14 @@ export function LifestyleStep() {
               setValue("weeklyBudgetUsd", v, { shouldValidate: true, shouldDirty: true })
             }
           />
-          <div className="flex justify-between text-xs text-ink-subtle">
-            <span>${BUDGET_MIN}</span>
-            <span>${BUDGET_MAX}</span>
+          <div className="flex justify-between text-xs tabular-nums text-ink-subtle">
+            <span>{fmtUsd(BUDGET_MIN, true)}</span>
+            <span>{fmtUsd(BUDGET_MAX, true)}</span>
           </div>
           <FieldMessage error={errors.weeklyBudgetUsd} />
         </div>
       </Section>
-      <Section title="Meals per day">
+      <Section title="Meals a day">
         <Controller
           control={control}
           name="mealsPerDay"
@@ -412,7 +409,7 @@ export function LifestyleStep() {
           )}
         />
       </Section>
-      <Section title="Activity level" hint="Pick the closest match for a normal week.">
+      <Section title="Activity" hint="A normal week.">
         <Controller
           control={control}
           name="activityLevel"
@@ -442,7 +439,7 @@ export function SummaryStep({ onEdit }: { onEdit: (step: number) => void }) {
   const rows: { label: string; value: string; step: number }[] = [
     { label: "Name", value: v.name || "Not set", step: 0 },
     {
-      label: "About you",
+      label: "Body",
       value: `${SEX_LABEL[v.sex]}, ${v.age} years, ${v.heightCm} cm, ${v.weightKg} kg`,
       step: 0,
     },
@@ -451,10 +448,10 @@ export function SummaryStep({ onEdit }: { onEdit: (step: number) => void }) {
       value:
         v.goal === "maintain"
           ? GOAL_LABEL[v.goal]
-          : `${GOAL_LABEL[v.goal]}, ${v.goalRateKgPerWeek} kg per week`,
+          : `${GOAL_LABEL[v.goal]}, ${v.goalRateKgPerWeek} kg a week`,
       step: 1,
     },
-    { label: "Health considerations", value: list(v.conditions.map((c) => CONDITION_LABEL[c])), step: 2 },
+    { label: "Conditions", value: list(v.conditions.map((c) => CONDITION_LABEL[c])), step: 2 },
     { label: "Medications", value: list(v.medications), step: 2 },
     { label: "Allergies", value: list(v.allergies, ALLERGY_OPTIONS), step: 2 },
     {
@@ -462,35 +459,30 @@ export function SummaryStep({ onEdit }: { onEdit: (step: number) => void }) {
       value: v.restrictions.length ? list(v.restrictions, RESTRICTION_OPTIONS) : "No restrictions",
       step: 3,
     },
-    { label: "Loves", value: list(v.likes), step: 3 },
-    { label: "Avoids", value: list(v.dislikes), step: 3 },
-    { label: "Weekly budget", value: `$${v.weeklyBudgetUsd}`, step: 4 },
-    { label: "Meals per day", value: String(v.mealsPerDay), step: 4 },
+    { label: "Love", value: list(v.likes), step: 3 },
+    { label: "Avoid", value: list(v.dislikes), step: 3 },
+    { label: "Budget", value: `${fmtUsd(v.weeklyBudgetUsd, true)} a week`, step: 4 },
+    { label: "Meals a day", value: String(v.mealsPerDay), step: 4 },
     { label: "Activity", value: ACTIVITY_LABEL[v.activityLevel], step: 4 },
   ];
   return (
-    <div className="space-y-4">
-      <dl data-testid="onboarding-summary" className="divide-y rounded-xl border bg-surface-raised">
-        {rows.map((r) => (
-          <div key={r.label} className="flex items-start justify-between gap-3 px-4 py-3">
-            <div className="min-w-0">
-              <dt className="text-xs text-ink-muted">{r.label}</dt>
-              <dd className="break-words text-sm font-medium text-ink">{r.value}</dd>
-            </div>
-            <Button
-              type="button"
-              variant="ghost"
-              size="icon"
-              className="shrink-0"
-              aria-label={`Edit ${r.label.toLowerCase()}`}
-              onClick={() => onEdit(r.step)}
-            >
-              <Pencil aria-hidden="true" />
-            </Button>
+    <dl data-testid="onboarding-summary" className="divide-y divide-border/70 rounded-2xl bg-surface-raised">
+      {rows.map((r) => (
+        <div key={r.label} className="flex items-center gap-3 py-1 pl-4 pr-1.5">
+          <div className="min-w-0 flex-1 py-2">
+            <dt className="text-xs text-ink-subtle">{r.label}</dt>
+            <dd className="break-words text-sm font-medium text-ink">{r.value}</dd>
           </div>
-        ))}
-      </dl>
-      <Disclaimer />
-    </div>
+          <button
+            type="button"
+            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg text-ink-subtle transition-colors hover:bg-surface-sunken hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand"
+            aria-label={`Edit ${r.label.toLowerCase()}`}
+            onClick={() => onEdit(r.step)}
+          >
+            <Pencil className="h-4 w-4" aria-hidden="true" />
+          </button>
+        </div>
+      ))}
+    </dl>
   );
 }

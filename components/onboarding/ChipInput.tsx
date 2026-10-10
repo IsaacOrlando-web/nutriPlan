@@ -16,7 +16,7 @@ export interface ChipInputProps {
 }
 
 const TONES = {
-  neutral: "bg-secondary text-secondary-foreground",
+  neutral: "bg-surface-sunken text-ink",
   success: "bg-success-soft text-brand-dark",
   danger: "bg-danger-soft text-danger",
 } as const;
@@ -47,6 +47,7 @@ export function ChipInput({
           id={id}
           value={draft}
           placeholder={placeholder}
+          className="h-12 text-base"
           onChange={(e) => setDraft(e.target.value)}
           onKeyDown={(e) => {
             if (e.key === "Enter") {
@@ -59,6 +60,7 @@ export function ChipInput({
           type="button"
           variant="outline"
           size="icon"
+          className="h-12 w-12 shrink-0"
           onClick={() => add(draft)}
           aria-label="Add"
           disabled={!draft.trim()}
@@ -72,7 +74,7 @@ export function ChipInput({
             <li
               key={item}
               className={cn(
-                "flex items-center gap-1 rounded-full px-3 py-1 text-sm font-medium",
+                "flex min-h-10 items-center gap-1 rounded-full py-1 pl-3.5 pr-1.5 text-sm font-medium",
                 TONES[tone],
               )}
             >
@@ -81,7 +83,7 @@ export function ChipInput({
                 type="button"
                 onClick={() => remove(item)}
                 aria-label={`Remove ${item}`}
-                className="rounded-full p-0.5 hover:bg-ink/10"
+                className="flex h-7 w-7 items-center justify-center rounded-full hover:bg-ink/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand"
               >
                 <X className="h-3.5 w-3.5" aria-hidden="true" />
               </button>
@@ -90,20 +92,17 @@ export function ChipInput({
         </ul>
       )}
       {unused.length > 0 && (
-        <div className="space-y-1.5">
-          <p className="text-xs text-ink-subtle">Tap to add</p>
-          <div className="flex flex-wrap gap-2">
-            {unused.map((s) => (
-              <button
-                key={s}
-                type="button"
-                onClick={() => add(s)}
-                className="rounded-full border border-dashed px-3 py-1 text-sm text-ink-muted transition-colors hover:border-brand hover:text-brand-dark"
-              >
-                + {s}
-              </button>
-            ))}
-          </div>
+        <div className="flex flex-wrap gap-2">
+          {unused.map((s) => (
+            <button
+              key={s}
+              type="button"
+              onClick={() => add(s)}
+              className="min-h-10 rounded-full bg-surface-raised px-3.5 text-sm text-ink-muted ring-1 ring-border transition-colors hover:text-brand-dark hover:ring-brand focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand"
+            >
+              + {s}
+            </button>
+          ))}
         </div>
       )}
     </div>

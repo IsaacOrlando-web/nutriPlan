@@ -1,8 +1,13 @@
 "use client";
 
+// Grocery list body: sections of tick-off rows, plus the shared action buttons (Copy list, Send to Kroger,
+// Open Kroger cart) and the phone sticky footer. Checked state is owned by the page so the hero can show it.
+import { motion } from "framer-motion";
 import {
   Carrot,
+  Copy,
   Drumstick,
+  ExternalLink,
   Milk,
   Package,
   ShoppingBasket,
@@ -11,12 +16,14 @@ import {
   Wheat,
   type LucideIcon,
 } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { cn, fmtUsd } from "@/lib/utils";
-import type { Food, GroceryItem } from "@/types/contracts";
+import type { Food, GroceryItem, PricedGroceryItem } from "@/types/contracts";
+
+export const KROGER_CART_URL = "https://www.kroger.com/cart";
 
 const SECTION_ORDER: Food["storeSection"][] = [
   "produce",
@@ -38,158 +45,208 @@ export const SECTION_META: Record<Food["storeSection"], { label: string; icon: L
   other: { label: "Other", icon: ShoppingBasket },
 };
 
+export type KrogerMatch = NonNullable<PricedGroceryItem["kroger"]>;
+
+export function groupBySection(items: GroceryItem[]) {
+  const map = new Map<Food["storeSection"], GroceryItem[]>();
+  for (const item of items) {
+    const arr = map.get(item.storeSection) ?? [];
+    arr.push(item);
+    map.set(item.storeSection, arr);
+  }
+  return SECTION_ORDER.filter((s) => map.has(s)).map((s) => ({ section: s, items: map.get(s) ?? [] }));
+}
+
+/** Plain text of the unchecked items, grouped by store section, for the clipboard. */
+export function listAsText(items: GroceryItem[], checked: Set<string>): string {
+  const open = items.filter((i) => !checked.has(i.foodId));
+  return groupBySection(open)
+    .map(
+      (g) =>
+        `${SECTION_META[g.section].label}\n` +
+        g.items.map((i) => `- ${i.name}, ${i.quantityLabel}`).join("\n"),
+    )
+    .join("\n\n");
+}
+
 export interface GroceryListProps {
   items: GroceryItem[];
+  checked: Set<string>;
+  onToggle: (foodId: string) => void;
+  /** Kroger match per foodId. Undefined = prices not loaded; an empty map = loaded, nothing matched. */
+  priced?: Map<string, KrogerMatch>;
   /** Sends the list to the Kroger cart (api.kroger.cart). Undefined = account not connected: button is disabled. */
   onSendToCart?: () => void;
+  onCopy: () => void;
+  /** Set after a successful send: shows the "Open Kroger cart" link. */
+  cartSent?: boolean;
   className?: string;
 }
 
-export function GroceryList({ items, onSendToCart, className }: GroceryListProps) {
-  const [checked, setChecked] = useState<Set<string>>(new Set());
-
-  const groups = useMemo(() => {
-    const map = new Map<Food["storeSection"], GroceryItem[]>();
-    for (const item of items) {
-      const arr = map.get(item.storeSection) ?? [];
-      arr.push(item);
-      map.set(item.storeSection, arr);
-    }
-    return SECTION_ORDER.filter((s) => map.has(s)).map((s) => ({ section: s, items: map.get(s) ?? [] }));
-  }, [items]);
-
-  const total = items.reduce((s, i) => s + i.costUsd, 0);
+export function GroceryList({
+  items,
+  checked,
+  onToggle,
+  priced,
+  onSendToCart,
+  onCopy,
+  cartSent,
+  className,
+}: GroceryListProps) {
+  const groups = useMemo(() => groupBySection(items), [items]);
   const remaining = items.filter((i) => !checked.has(i.foodId)).reduce((s, i) => s + i.costUsd, 0);
 
-  const toggle = (id: string) =>
-    setChecked((prev) => {
-      const next = new Set(prev);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
-      return next;
-    });
-
-  const sendDisabled = onSendToCart === undefined;
-
   return (
-    <div data-testid="grocery-list" className={cn("space-y-6 pb-20 lg:pb-0", className)}>
-      {/* Laptop: progress and actions on top. */}
-      <div className="hidden items-center justify-between gap-3 rounded-xl bg-surface-raised px-4 py-3 shadow-sm ring-1 ring-border lg:flex">
-        <Progress checked={checked.size} total={items.length} remaining={remaining} />
-        <div className="flex items-center gap-2">
-          {checked.size > 0 && (
-            <Button variant="ghost" size="sm" onClick={() => setChecked(new Set())}>
-              Uncheck all
-            </Button>
-          )}
-          <SendToKroger disabled={sendDisabled} onClick={onSendToCart} />
-        </div>
-      </div>
-
-      {groups.map((group) => {
+    <div data-testid="grocery-list" className={cn("space-y-7 pb-20 lg:pb-0", className)}>
+      {groups.map((group, gi) => {
         const meta = SECTION_META[group.section];
         const Icon = meta.icon;
         const done = group.items.filter((i) => checked.has(i.foodId)).length;
         return (
-          <section key={group.section} className="space-y-2" aria-labelledby={`section-${group.section}`}>
-            <div className="flex items-center gap-2">
+          <motion.section
+            key={group.section}
+            className="space-y-2.5"
+            aria-labelledby={`section-${group.section}`}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.2, delay: gi * 0.04 }}
+          >
+            <div className="flex items-center gap-2 px-1">
               <span className="flex h-7 w-7 items-center justify-center rounded-md bg-brand-soft text-brand-dark">
                 <Icon className="h-4 w-4" aria-hidden="true" />
               </span>
               <h2 id={`section-${group.section}`} className="text-sm font-semibold">
                 {meta.label}
               </h2>
-              <span className="text-xs text-ink-subtle">
+              <span className="text-xs tabular-nums text-ink-subtle">
                 {done} of {group.items.length}
               </span>
             </div>
             <ul className="divide-y rounded-xl bg-surface-raised shadow-sm ring-1 ring-border">
-              {group.items.map((item) => {
-                const isDone = checked.has(item.foodId);
-                const id = `grocery-${item.foodId}`;
-                return (
-                  <li
-                    key={item.foodId}
-                    data-testid="grocery-item"
-                    data-checked={isDone}
-                    className="flex items-center gap-3 px-4 py-3"
-                  >
-                    <Checkbox
-                      id={id}
-                      checked={isDone}
-                      onCheckedChange={() => toggle(item.foodId)}
-                      aria-label={item.name}
-                      className="h-6 w-6 [&_svg]:h-4 [&_svg]:w-4"
-                    />
-                    <label
-                      htmlFor={id}
-                      className={cn(
-                        "min-w-0 flex-1 cursor-pointer py-1",
-                        isDone && "text-ink-subtle line-through",
-                      )}
-                    >
-                      <span className="block truncate text-sm font-medium">{item.name}</span>
-                      <span className="block text-xs text-ink-muted">{item.quantityLabel}</span>
-                    </label>
-                    <span
-                      className={cn(
-                        "shrink-0 text-sm tabular-nums",
-                        isDone ? "text-ink-subtle" : "font-semibold",
-                      )}
-                    >
-                      {fmtUsd(item.costUsd)}
-                    </span>
-                  </li>
-                );
-              })}
+              {group.items.map((item) => (
+                <GroceryRow
+                  key={item.foodId}
+                  item={item}
+                  done={checked.has(item.foodId)}
+                  onToggle={() => onToggle(item.foodId)}
+                  match={priced?.get(item.foodId)}
+                  pricesLoaded={priced !== undefined}
+                />
+              ))}
             </ul>
-          </section>
+          </motion.section>
         );
       })}
 
-      <div className="hidden items-center justify-between rounded-xl bg-surface-sunken px-4 py-3 lg:flex">
-        <span className="font-semibold">Total for the week</span>
-        <span className="text-lg font-bold tabular-nums text-agent-budget">{fmtUsd(total)}</span>
-      </div>
-
-      {/* Phone: running total pinned above the tab bar. */}
+      {/* Phone: running total and actions pinned above the tab bar. */}
       <div className="fixed inset-x-0 bottom-[3.75rem] z-20 border-t bg-surface-raised/95 px-4 py-2.5 shadow-[0_-4px_12px_-6px_rgba(15,23,42,0.15)] backdrop-blur lg:hidden">
-        <div className="flex items-center justify-between gap-3">
-          <Progress checked={checked.size} total={items.length} remaining={remaining} compact />
-          <SendToKroger disabled={sendDisabled} onClick={onSendToCart} compact />
+        <div className="flex items-center justify-between gap-2">
+          <div className="min-w-0 text-xs">
+            <p className="text-ink-muted">
+              {checked.size} of {items.length} in the cart
+            </p>
+            <p className="text-base font-bold tabular-nums">{fmtUsd(remaining)}</p>
+          </div>
+          <div className="flex shrink-0 items-center gap-2">
+            <CopyListButton onClick={onCopy} compact />
+            {cartSent && <OpenCartLink compact />}
+            <SendToKrogerButton disabled={onSendToCart === undefined} onClick={onSendToCart} compact />
+          </div>
         </div>
       </div>
     </div>
   );
 }
 
-function Progress({
-  checked,
-  total,
-  remaining,
-  compact,
+function GroceryRow({
+  item,
+  done,
+  onToggle,
+  match,
+  pricesLoaded,
 }: {
-  checked: number;
-  total: number;
-  remaining: number;
-  compact?: boolean;
+  item: GroceryItem;
+  done: boolean;
+  onToggle: () => void;
+  match?: KrogerMatch;
+  pricesLoaded: boolean;
 }) {
+  const id = `grocery-${item.foodId}`;
   return (
-    <div className={cn("min-w-0", compact ? "text-xs" : "text-sm")}>
-      <p className="text-ink-muted">
-        {checked} of {total} in the cart
-      </p>
-      <p>
-        <span className="text-ink-muted">Left to buy </span>
-        <span className={cn("font-bold tabular-nums text-agent-budget", compact && "text-base")}>
-          {fmtUsd(remaining)}
+    <li data-testid="grocery-item" data-checked={done} className="flex items-start gap-3 px-4 py-3">
+      <Checkbox
+        id={id}
+        checked={done}
+        onCheckedChange={onToggle}
+        aria-label={item.name}
+        className="mt-0.5 h-6 w-6 [&_svg]:h-4 [&_svg]:w-4"
+      />
+      <label
+        htmlFor={id}
+        className={cn(
+          "min-w-0 flex-1 cursor-pointer",
+          done && "text-ink-subtle line-through decoration-ink-subtle",
+        )}
+      >
+        <span className="flex items-baseline justify-between gap-3">
+          <span className="truncate text-sm font-medium">{item.name}</span>
+          <span className={cn("shrink-0 text-sm tabular-nums", done ? "text-ink-subtle" : "font-semibold")}>
+            {fmtUsd(item.costUsd)}
+          </span>
         </span>
-      </p>
-    </div>
+        <span className="block text-xs text-ink-muted">{item.quantityLabel}</span>
+        {match && (
+          <span className="mt-1 flex items-baseline justify-between gap-3 text-xs text-ink-muted">
+            <span className="truncate">
+              {match.description} {match.size} · {match.packagesNeeded} × {fmtUsd(match.unitPriceUsd)}
+            </span>
+            <span className="shrink-0 tabular-nums">{fmtUsd(match.lineUsd)} shelf</span>
+          </span>
+        )}
+        {pricesLoaded && !match && (
+          <span className="mt-1 block text-xs text-ink-subtle">Not found at this store</span>
+        )}
+      </label>
+    </li>
   );
 }
 
-function SendToKroger({
+export function CopyListButton({ onClick, compact }: { onClick: () => void; compact?: boolean }) {
+  if (compact) {
+    return (
+      <Button
+        type="button"
+        variant="outline"
+        size="icon"
+        className="h-9 w-9"
+        onClick={onClick}
+        aria-label="Copy list"
+        title="Copy the unchecked items"
+      >
+        <Copy aria-hidden="true" />
+      </Button>
+    );
+  }
+  return (
+    <Button type="button" variant="outline" size="sm" onClick={onClick} className="gap-1.5">
+      <Copy aria-hidden="true" />
+      Copy list
+    </Button>
+  );
+}
+
+export function OpenCartLink({ compact }: { compact?: boolean }) {
+  return (
+    <Button asChild variant="outline" size="sm" className="gap-1.5">
+      <a href={KROGER_CART_URL} target="_blank" rel="noreferrer" data-testid="grocery-open-cart">
+        <ExternalLink aria-hidden="true" />
+        {compact ? "Open cart" : "Open Kroger cart"}
+      </a>
+    </Button>
+  );
+}
+
+export function SendToKrogerButton({
   disabled,
   onClick,
   compact,
@@ -201,7 +258,7 @@ function SendToKroger({
   return (
     <Button
       type="button"
-      variant="outline"
+      variant={disabled ? "outline" : "default"}
       size="sm"
       data-testid="grocery-send-kroger"
       aria-disabled={disabled}
@@ -215,7 +272,7 @@ function SendToKroger({
       {compact ? "Kroger" : "Send to Kroger cart"}
       {disabled && (
         <Badge variant="secondary" className="px-1.5 py-0 text-[10px] font-medium">
-          Connect Kroger
+          Connect first
         </Badge>
       )}
     </Button>

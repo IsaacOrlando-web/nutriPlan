@@ -7,8 +7,8 @@ import { AGENT_NAMES, AGENT_THEME } from "./agent-theme";
 const SIZES = {
   xs: { box: "h-6 w-6", icon: "h-3.5 w-3.5" },
   sm: { box: "h-8 w-8", icon: "h-4 w-4" },
-  md: { box: "h-12 w-12", icon: "h-6 w-6" },
-  lg: { box: "h-16 w-16 sm:h-20 sm:w-20", icon: "h-8 w-8 sm:h-10 sm:w-10" },
+  md: { box: "h-11 w-11", icon: "h-5 w-5" },
+  lg: { box: "h-14 w-14 lg:h-16 lg:w-16", icon: "h-7 w-7 lg:h-8 lg:w-8" },
 } as const;
 
 export interface AgentAvatarProps {
@@ -18,6 +18,8 @@ export interface AgentAvatarProps {
   speaking?: boolean;
   /** Steady glow (decision reached). */
   glow?: boolean;
+  /** Fades the avatar so the speaking one stands out. */
+  muted?: boolean;
   showLabel?: boolean;
   /** Small grey word under the name, for example the agent's role. */
   sublabel?: string;
@@ -29,6 +31,7 @@ export function AgentAvatar({
   size = "md",
   speaking = false,
   glow = false,
+  muted = false,
   showLabel = false,
   sublabel,
   className,
@@ -42,19 +45,20 @@ export function AgentAvatar({
         role="img"
         aria-label={AGENT_NAMES[agent]}
         className={cn(
-          "flex shrink-0 items-center justify-center rounded-full text-white shadow-md transition-transform duration-300",
+          "flex shrink-0 items-center justify-center rounded-full text-white shadow-sm transition-all duration-300",
           s.box,
           theme.bg,
           theme.pulse,
-          speaking && "animate-agent-pulse scale-110",
+          speaking && "animate-agent-pulse scale-110 shadow-md",
           glow && "ring-4 ring-offset-2 ring-offset-surface animate-agent-pulse",
           glow && theme.ring,
+          muted && "opacity-40 saturate-50",
         )}
       >
         <Icon className={s.icon} aria-hidden="true" />
       </div>
       {showLabel && (
-        <span className="flex flex-col items-center leading-tight">
+        <span className={cn("flex flex-col items-center leading-tight", muted && "opacity-50")}>
           <span className={cn("text-xs font-semibold", theme.text)}>{AGENT_NAMES[agent]}</span>
           {sublabel && <span className="text-[10px] text-ink-subtle">{sublabel}</span>}
         </span>

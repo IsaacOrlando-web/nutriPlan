@@ -6,9 +6,7 @@ import { useMemo, useState } from "react";
 import { AgentAvatar } from "@/components/agents/AgentAvatar";
 import { CalorieRing } from "@/components/charts/CalorieRing";
 import { MacroBar } from "@/components/charts/MacroBar";
-import { EmptyState } from "@/components/common/EmptyState";
 import { ErrorState } from "@/components/common/ErrorState";
-import { LoadingState } from "@/components/common/LoadingState";
 import { PageHeader } from "@/components/common/PageHeader";
 import { StatPill } from "@/components/common/StatPill";
 import { MEAL_TYPE_LABELS } from "@/components/meals/MealCard";
@@ -17,7 +15,6 @@ import { nextMealType } from "@/components/meals/mealTime";
 import { planReasonSentence } from "@/components/meals/planReason";
 import { WhySheet } from "@/components/meals/WhySheet";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useFoodLogs } from "@/lib/hooks/useLogs";
 import { useMonitorRun } from "@/lib/hooks/useMonitorRun";
@@ -28,17 +25,19 @@ import { useSummary } from "@/lib/hooks/useSummary";
 import { cn, fmtDate, fmtNumber, fmtRelative, todayIso } from "@/lib/utils";
 import type { DaySummary, FoodLogEntry, Meal, PlanDay, Reading } from "@/types/contracts";
 
+const LABEL = "text-xs font-semibold uppercase tracking-wide text-ink-subtle";
+
 const SOURCE_LABEL: Record<FoodLogEntry["source"], string> = {
-  photo: "from a photo",
-  manual: "typed in",
-  plan: "from your plan",
+  photo: "photo",
+  manual: "typed",
+  plan: "from plan",
 };
 
 function latest(readings: Reading[] | undefined, type: Reading["type"]): Reading | undefined {
   return readings?.filter((r) => r.type === type).sort((a, b) => b.takenAt.localeCompare(a.takenAt))[0];
 }
 
-/** The meal the Today sentence talks about: the next slot by wall clock, if the plan has one. */
+/** The meal the Today line talks about: the next slot by wall clock, if the plan has one. */
 function pickNextMeal(day: PlanDay | undefined, now: Date): Meal | undefined {
   if (!day || day.meals.length === 0) return undefined;
   const type = nextMealType(
@@ -49,28 +48,20 @@ function pickNextMeal(day: PlanDay | undefined, now: Date): Meal | undefined {
 }
 
 /**
- * One plain sentence about today. Every number is the server's; the only arithmetic is the
- * difference between what is left and the next planned meal, which picks the wording.
+ * One short line about today. Every number is the server's; the only arithmetic is the difference
+ * between what is left and the next planned meal, which picks the wording.
  */
-function todaySentence(summary: DaySummary, next: Meal | undefined): string {
-  const eaten = Math.round(summary.eaten.calories);
-  const target = Math.round(summary.targets.calories);
+function todayLine(summary: DaySummary, next: Meal | undefined): string {
   const left = Math.round(summary.targets.calories - summary.eaten.calories);
-  const head = `${fmtNumber(eaten)} of ${fmtNumber(target)} kcal eaten.`;
-  if (left <= 0) {
-    return `${head} You are ${fmtNumber(-left)} kcal over today's target. Tomorrow's plan starts fresh.`;
-  }
-  if (!next) return `${head} ${fmtNumber(left)} kcal left for the rest of the day.`;
+  if (left <= 0) return `${fmtNumber(-left)} kcal over target. Tomorrow starts fresh.`;
+  if (!next) return `${fmtNumber(left)} kcal left for the rest of today.`;
   const mealKcal = Math.round(next.totals.calories);
-  const label = MEAL_TYPE_LABELS[next.type].toLowerCase();
+  const label = MEAL_TYPE_LABELS[next.type];
   const spare = left - mealKcal;
-  if (spare >= 150) {
-    return `${head} ${fmtNumber(left)} left: ${label} is ${fmtNumber(mealKcal)}, so you have room for a snack.`;
-  }
-  if (spare >= 0) {
-    return `${head} ${fmtNumber(left)} left: ${label} is ${fmtNumber(mealKcal)}, so it fits with ${fmtNumber(spare)} to spare.`;
-  }
-  return `${head} ${fmtNumber(left)} left: ${label} is ${fmtNumber(mealKcal)}, so a slightly lighter portion keeps you on target.`;
+  if (spare >= 150) return `${label} is next at ${fmtNumber(mealKcal)} kcal. Room for a snack after.`;
+  if (spare >= 0)
+    return `${label} is next at ${fmtNumber(mealKcal)} kcal. Fits, with ${fmtNumber(spare)} to spare.`;
+  return `${label} is next at ${fmtNumber(mealKcal)} kcal. A lighter portion keeps you on target.`;
 }
 
 export default function DashboardPage() {
@@ -97,93 +88,77 @@ export default function DashboardPage() {
     monitor.isPending ||
     monitor.data !== undefined ||
     (plan.data ? plan.data.version > 1 || plan.data.bestEffort : false);
+  const mealCols = (todayDay?.meals.length ?? 0) >= 4 ? "lg:grid-cols-4" : "lg:grid-cols-3";
 
   return (
-    <div data-testid="dashboard" className="space-y-6">
-      <PageHeader
-        title={profile.data ? `Hi ${profile.data.profile.name}` : "Hi there"}
-        subtitle={`${fmtDate(new Date(), { weekday: "long", month: "long", day: "numeric" })} · here is where today stands.`}
-      />
+    <div data-testid="dashboard" className="space-y-8">
+      <PageHeader title={profile.data ? `Hi ${profile.data.profile.name}` : "Hi there"} />
 
-      {/* 1. Today */}
-      <Card className="border-0 shadow-sm">
-        <CardContent className="space-y-5 p-5 sm:p-6">
-          <div className="space-y-1">
-            <h2 className="text-lg font-semibold">Today</h2>
-            {summary.isLoading && <Skeleton className="h-5 w-3/4 max-w-xl" />}
-            {summary.data && (
-              <p className="text-sm text-ink-muted sm:text-base" data-testid="today-sentence">
-                {todaySentence(summary.data, next)}
+      {/* 1. Today: the hero */}
+      <section className="rounded-2xl bg-surface-raised p-5 shadow-sm sm:p-6" aria-labelledby="today">
+        <h2 id="today" className={LABEL}>
+          Today · {fmtDate(new Date(), { weekday: "long", month: "long", day: "numeric" })}
+        </h2>
+        {summary.isLoading && <TodaySkeleton />}
+        {summary.error && (
+          <ErrorState error={summary.error} onRetry={() => void summary.refetch()} className="mt-4" />
+        )}
+        {summary.data && (
+          <div className="mt-4 flex flex-col items-center gap-6 sm:flex-row sm:items-center sm:gap-8">
+            <CalorieRing eaten={summary.data.eaten.calories} target={summary.data.targets.calories} />
+            <div className="w-full min-w-0 flex-1 space-y-5">
+              <p className="text-base font-medium leading-snug sm:text-lg" data-testid="today-sentence">
+                {todayLine(summary.data, next)}
               </p>
-            )}
-          </div>
-          {summary.isLoading && <TodaySkeleton />}
-          {summary.error && <ErrorState error={summary.error} onRetry={() => void summary.refetch()} />}
-          {summary.data && (
-            <div className="flex flex-col items-center gap-6 sm:flex-row sm:items-center">
-              <CalorieRing eaten={summary.data.eaten.calories} target={summary.data.targets.calories} />
-              <div className="w-full flex-1 space-y-3">
-                <MacroBar eaten={summary.data.eaten} target={summary.data.targets} />
-                <p className="text-xs text-ink-muted">
-                  Fiber {Math.round(summary.data.eaten.fiberG)} of {summary.data.targets.fiberG} g · Sodium{" "}
-                  {fmtNumber(Math.round(summary.data.eaten.sodiumMg))} of{" "}
-                  {fmtNumber(summary.data.targets.sodiumMg)} mg
-                </p>
-              </div>
+              <MacroBar eaten={summary.data.eaten} target={summary.data.targets} />
             </div>
-          )}
-        </CardContent>
-      </Card>
+          </div>
+        )}
+      </section>
 
       {/* 2. Today's meals */}
       <section className="space-y-3" aria-labelledby="todays-meals">
         <div className="flex items-baseline justify-between gap-3">
-          <div>
-            <h2 id="todays-meals" className="text-lg font-semibold">
-              Today&apos;s meals
-            </h2>
-            <p className="text-sm text-ink-muted">
-              {todayDay
-                ? `${todayDay.meals.length} meals planned for ${fmtDate(todayDay.date, { weekday: "long" })}. Tap one to see why the agents chose it.`
-                : "What the agents planned for you today."}
-            </p>
-          </div>
+          <h2 id="todays-meals" className={LABEL}>
+            Today&apos;s meals
+          </h2>
           <Link
             href="/plan"
-            className="flex shrink-0 items-center gap-0.5 rounded text-sm font-medium text-brand hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            className="flex shrink-0 items-center gap-0.5 rounded text-sm font-medium text-ink-muted transition-colors hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
             Full week
             <ChevronRight className="h-4 w-4" aria-hidden="true" />
           </Link>
         </div>
         {plan.isLoading && (
-          <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+          <div className="grid grid-cols-2 gap-3 lg:grid-cols-3">
             {Array.from({ length: 3 }).map((_, i) => (
-              <Skeleton key={i} className="h-40 rounded-xl" />
+              <Skeleton key={i} className="h-32 rounded-2xl" />
             ))}
           </div>
         )}
         {plan.error && <ErrorState error={plan.error} onRetry={() => void plan.refetch()} />}
         {!plan.isLoading && !plan.error && !todayDay && (
-          <EmptyState
-            title="No plan yet"
-            body="Answer a few questions and four AI agents will build your first week."
-            action={
-              <Button asChild>
-                <Link href="/onboarding">Build my plan</Link>
-              </Button>
-            }
-          />
+          <EmptyLine text="No plan yet.">
+            <Button asChild size="sm">
+              <Link href="/onboarding">Build my plan</Link>
+            </Button>
+          </EmptyLine>
         )}
         {todayDay && (
-          <div className="no-scrollbar -mx-4 flex snap-x gap-3 overflow-x-auto px-4 pb-1 sm:mx-0 sm:grid sm:grid-cols-2 sm:overflow-visible sm:px-0 lg:grid-cols-4">
+          <div
+            className={cn(
+              "no-scrollbar -mx-4 flex snap-x gap-3 overflow-x-auto px-4 pb-1 sm:mx-0 sm:grid sm:grid-cols-2 sm:overflow-visible sm:px-0",
+              mealCols,
+            )}
+          >
             {todayDay.meals.map((meal) => (
               <MealCardCompact
                 key={meal.mealId}
                 meal={meal}
                 onOpen={setOpenMeal}
                 highlighted={next?.mealId === meal.mealId}
-                className="w-[260px] shrink-0 snap-start sm:w-auto"
+                className="w-[250px] shrink-0 snap-start sm:w-auto"
               />
             ))}
           </div>
@@ -192,94 +167,95 @@ export default function DashboardPage() {
 
       {/* 3. Your agents noticed */}
       {noticed && (
-        <Card className="border-0 shadow-sm ring-1 ring-agent-monitor/25">
-          <CardContent className="flex flex-col gap-4 p-5 sm:flex-row sm:items-start">
-            <AgentAvatar agent="monitor" size="md" />
-            <div className="min-w-0 flex-1 space-y-1">
-              <p className="text-sm font-semibold text-agent-monitor">Your agents noticed</p>
-              {monitor.isPending ? (
-                <p className="text-sm text-ink-muted">Monitor is reading your trends…</p>
-              ) : monitor.data ? (
-                <>
-                  <p className="text-sm">{monitor.data.reason}</p>
-                  {monitor.data.alerts[0] && (
-                    <p className="text-sm text-ink-muted">{monitor.data.alerts[0].body}</p>
-                  )}
-                </>
-              ) : plan.data ? (
-                <>
-                  <p className="text-sm">{planReasonSentence(plan.data)}</p>
-                  <p className="text-xs text-ink-subtle">
-                    Plan version {plan.data.version}. Doctor&apos;s rules were kept in every version.
-                  </p>
-                </>
-              ) : null}
-            </div>
-            {monitor.data?.runId && (
-              <Button asChild variant="outline" size="sm" className="shrink-0">
-                <Link href={`/agents/${monitor.data.runId}`}>
-                  <Sparkles aria-hidden="true" />
-                  Watch the replan
-                </Link>
-              </Button>
-            )}
-          </CardContent>
-        </Card>
+        <section
+          className="flex flex-col gap-4 rounded-2xl bg-agent-monitor/5 p-5 sm:flex-row sm:items-center"
+          aria-label="Your agents noticed"
+        >
+          <AgentAvatar agent="monitor" size="sm" />
+          <div className="min-w-0 flex-1 space-y-0.5">
+            <p className="text-xs font-semibold uppercase tracking-wide text-agent-monitor">
+              Monitor noticed
+            </p>
+            {monitor.isPending ? (
+              <p className="text-sm text-ink-muted">Reading your trends…</p>
+            ) : monitor.data ? (
+              <>
+                <p className="text-sm">{monitor.data.reason}</p>
+                {monitor.data.alerts[0] && (
+                  <p className="text-sm text-ink-muted">{monitor.data.alerts[0].body}</p>
+                )}
+              </>
+            ) : plan.data ? (
+              <>
+                <p className="text-sm">{planReasonSentence(plan.data)}</p>
+                <p className="text-xs text-ink-subtle">
+                  Plan version {plan.data.version}. Doctor&apos;s rules kept.
+                </p>
+              </>
+            ) : null}
+          </div>
+          {monitor.data?.runId && (
+            <Button asChild variant="outline" size="sm" className="shrink-0">
+              <Link href={`/agents/${monitor.data.runId}`}>
+                <Sparkles aria-hidden="true" />
+                Watch the replan
+              </Link>
+            </Button>
+          )}
+        </section>
       )}
 
-      {/* 4. Quick actions and recent */}
-      <div className="grid gap-6 lg:grid-cols-3">
+      {/* 4. Log and recent */}
+      <div className="grid gap-8 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-12">
         <section className="space-y-3" aria-labelledby="quick-actions">
-          <h2 id="quick-actions" className="text-lg font-semibold">
-            Log something
+          <h2 id="quick-actions" className={LABEL}>
+            Log
           </h2>
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
-            <ActionTile
-              href="/log/photo"
-              icon={Camera}
-              title="Log a meal photo"
-              hint="Two AI models read the photo and vote on what is on the plate."
-              primary
-            />
-            <ActionTile
-              href="/log/reading"
-              icon={ClipboardList}
-              title="Log a reading"
-              hint="Weight, glucose or blood pressure. Monitor reads the trend."
-            />
+          <div className="grid grid-cols-2 gap-3">
+            <Button asChild size="lg" className="h-12 justify-start px-4">
+              <Link href="/log/photo">
+                <Camera aria-hidden="true" />
+                Meal photo
+              </Link>
+            </Button>
+            <Button asChild size="lg" variant="outline" className="h-12 justify-start px-4">
+              <Link href="/log/reading">
+                <ClipboardList aria-hidden="true" />
+                Reading
+              </Link>
+            </Button>
           </div>
           <Button
             variant="ghost"
             size="sm"
-            className="w-full justify-start text-ink-muted"
+            className="-ml-3 text-ink-muted"
             onClick={() => monitor.mutate()}
             disabled={monitor.isPending}
           >
             <Activity aria-hidden="true" />
-            {monitor.isPending ? "Monitor is checking…" : "Ask Monitor to check my trends now"}
+            {monitor.isPending ? "Monitor is checking…" : "Ask Monitor to check my trends"}
           </Button>
         </section>
 
-        <section className="space-y-3 lg:col-span-2" aria-labelledby="recent">
-          <h2 id="recent" className="text-lg font-semibold">
+        <section className="space-y-3" aria-labelledby="recent">
+          <h2 id="recent" className={LABEL}>
             Recent
           </h2>
           {readings.isLoading ? (
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-              <Skeleton className="h-16 rounded-xl" />
-              <Skeleton className="h-16 rounded-xl" />
+            <div className="flex gap-8" role="status" aria-label="Loading readings">
+              <Skeleton className="h-11 w-28 rounded-lg" />
+              <Skeleton className="h-11 w-28 rounded-lg" />
             </div>
           ) : readings.error ? (
             <ErrorState error={readings.error} onRetry={() => void readings.refetch()} />
           ) : (
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+            <div className="flex flex-wrap gap-x-10 gap-y-3">
               <StatPill
                 label="Weight"
                 value={weight ? weight.value : "–"}
                 unit={weight?.unit}
                 hint={weight ? fmtRelative(weight.takenAt) : "No reading yet"}
                 icon={Scale}
-                className="border-0 ring-1 ring-border"
               />
               {(hasConditions || glucose) && (
                 <StatPill
@@ -288,7 +264,6 @@ export default function DashboardPage() {
                   unit={glucose?.unit}
                   hint={glucose ? fmtRelative(glucose.takenAt) : "No reading yet"}
                   icon={Droplets}
-                  className="border-0 ring-1 ring-border"
                 />
               )}
               {(hasConditions || bp) && (
@@ -298,41 +273,38 @@ export default function DashboardPage() {
                   unit={bp?.unit}
                   hint={bp ? fmtRelative(bp.takenAt) : "No reading yet"}
                   icon={Activity}
-                  className="border-0 ring-1 ring-border"
                 />
               )}
             </div>
           )}
-          {logs.isLoading && <LoadingState variant="list" rows={2} />}
+          {logs.isLoading && (
+            <div className="space-y-2" role="status" aria-label="Loading meals">
+              <Skeleton className="h-12 w-full rounded-xl" />
+              <Skeleton className="h-12 w-full rounded-xl" />
+            </div>
+          )}
           {logs.error && <ErrorState error={logs.error} onRetry={() => void logs.refetch()} />}
           {logs.data && logs.data.length === 0 && (
-            <EmptyState
-              title="Nothing logged yet"
-              body="Photograph a meal and two vision models will identify it."
-              icon={Camera}
-              action={
-                <Button asChild size="sm">
-                  <Link href="/log/photo">Log a meal photo</Link>
-                </Button>
-              }
-            />
+            <EmptyLine text="No meals logged yet.">
+              <Button asChild size="sm" variant="outline">
+                <Link href="/log/photo">Log a meal</Link>
+              </Button>
+            </EmptyLine>
           )}
           {logs.data && logs.data.length > 0 && (
-            <ul className="divide-y rounded-xl bg-surface-raised shadow-sm ring-1 ring-border">
+            <ul className="divide-y divide-border/70 rounded-2xl bg-surface-raised px-4 shadow-sm">
               {logs.data.slice(0, 5).map((entry) => (
-                <li key={entry.logId} className="flex items-center gap-3 px-4 py-3">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-surface-sunken">
-                    <Camera className="h-5 w-5 text-ink-muted" aria-hidden="true" />
-                  </div>
+                <li key={entry.logId} className="flex items-center gap-3 py-3">
+                  <Camera className="h-4 w-4 shrink-0 text-ink-subtle" aria-hidden="true" />
                   <div className="min-w-0 flex-1">
                     <p className="truncate text-sm font-medium">
                       {entry.items.map((i) => i.name).join(", ")}
                     </p>
-                    <p className="text-xs text-ink-muted">
+                    <p className="text-xs text-ink-subtle">
                       {fmtDate(entry.eatenAt, { hour: "numeric", minute: "2-digit" })} ·{" "}
                       {SOURCE_LABEL[entry.source]}
                       {entry.visionAgreement !== null &&
-                        ` · the two models agreed ${Math.round(entry.visionAgreement * 100)}%`}
+                        ` · models agreed ${Math.round(entry.visionAgreement * 100)}%`}
                     </p>
                   </div>
                   <p className="shrink-0 text-sm font-semibold tabular-nums">
@@ -354,59 +326,36 @@ export default function DashboardPage() {
   );
 }
 
-function TodaySkeleton() {
+/** Empty state as the brief asks: one line and one button, no box. */
+function EmptyLine({ text, children }: { text: string; children: React.ReactNode }) {
   return (
-    <div className="flex flex-col items-center gap-6 sm:flex-row" role="status" aria-label="Loading today">
-      <Skeleton className="h-[168px] w-[168px] shrink-0 rounded-full" />
-      <div className="w-full flex-1 space-y-3">
-        <Skeleton className="h-4 w-full rounded-full" />
-        <div className="grid grid-cols-3 gap-2">
-          <Skeleton className="h-12 rounded-lg" />
-          <Skeleton className="h-12 rounded-lg" />
-          <Skeleton className="h-12 rounded-lg" />
-        </div>
-        <Skeleton className="h-3 w-2/3" />
-      </div>
+    <div className="flex items-center justify-between gap-3 rounded-xl bg-surface-sunken px-4 py-3">
+      <p className="text-sm text-ink-muted">{text}</p>
+      {children}
     </div>
   );
 }
 
-function ActionTile({
-  href,
-  icon: Icon,
-  title,
-  hint,
-  primary,
-}: {
-  href: string;
-  icon: typeof Camera;
-  title: string;
-  hint: string;
-  primary?: boolean;
-}) {
+function TodaySkeleton() {
   return (
-    <Link
-      href={href}
-      className={cn(
-        "flex items-center gap-4 rounded-xl p-4 shadow-sm transition-shadow hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
-        primary ? "bg-brand text-brand-foreground" : "bg-surface-raised ring-1 ring-border",
-      )}
+    <div
+      className="mt-4 flex flex-col items-center gap-6 sm:flex-row sm:items-center sm:gap-8"
+      role="status"
+      aria-label="Loading today"
     >
-      <span
-        className={cn(
-          "flex h-12 w-12 shrink-0 items-center justify-center rounded-lg",
-          primary ? "bg-brand-foreground/20" : "bg-brand-soft text-brand-dark",
-        )}
-      >
-        <Icon className="h-6 w-6" aria-hidden="true" />
-      </span>
-      <span className="min-w-0">
-        <span className="block font-semibold">{title}</span>
-        <span className={cn("block text-xs", primary ? "text-brand-foreground/85" : "text-ink-muted")}>
-          {hint}
-        </span>
-      </span>
-      <ChevronRight className="ml-auto h-5 w-5 shrink-0 opacity-70" aria-hidden="true" />
-    </Link>
+      <Skeleton className="h-[176px] w-[176px] shrink-0 rounded-full" />
+      <div className="w-full flex-1 space-y-5">
+        <Skeleton className="h-6 w-3/4 max-w-md" />
+        <div className="grid grid-cols-3 gap-4 sm:grid-cols-5">
+          {Array.from({ length: 5 }).map((_, i) => (
+            <div key={i} className="space-y-1.5">
+              <Skeleton className="h-3 w-12" />
+              <Skeleton className="h-4 w-16" />
+              <Skeleton className="h-1.5 w-full rounded-full" />
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
   );
 }

@@ -21,11 +21,7 @@ function UnitToggle({
   options: Record<Units, string>;
 }) {
   return (
-    <div
-      role="radiogroup"
-      aria-label={label}
-      className="inline-flex rounded-lg border bg-surface-sunken p-0.5"
-    >
+    <div role="radiogroup" aria-label={label} className="inline-flex rounded-lg bg-surface-sunken p-0.5">
       {(Object.keys(options) as Units[]).map((u) => (
         <button
           key={u}
@@ -34,7 +30,7 @@ function UnitToggle({
           aria-checked={value === u}
           onClick={() => onChange(u)}
           className={cn(
-            "rounded-md px-2.5 py-1 text-xs font-medium transition-colors",
+            "rounded-md px-3 py-1.5 text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand",
             value === u ? "bg-surface-raised text-ink shadow-sm" : "text-ink-muted hover:text-ink",
           )}
         >
@@ -216,10 +212,8 @@ export function WeightField() {
           {units === "imperial" ? "Weight must be between 66 and 661 lb." : error}
         </p>
       ) : (
-        <p className="text-xs text-ink-subtle">
-          {units === "imperial" && show(weightKg) ? `Saved as ${show(weightKg)} kg. ` : ""}A rough number is
-          fine, Monitor learns the real trend from your readings.
-        </p>
+        units === "imperial" &&
+        show(weightKg) && <p className="text-xs text-ink-subtle">Saved as {show(weightKg)} kg</p>
       )}
     </div>
   );

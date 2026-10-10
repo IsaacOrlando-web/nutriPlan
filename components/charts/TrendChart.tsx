@@ -12,7 +12,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { fmtDate } from "@/lib/utils";
+import { cn, fmtDate } from "@/lib/utils";
 import type { TrendPoint } from "@/types/contracts";
 import { CHART } from "./tokens";
 
@@ -21,7 +21,9 @@ export interface TrendChartProps {
   unit: string;
   /** Draws a dashed reference line, for example a glucose limit. */
   limit?: { value: number; label: string };
+  /** Fixed pixel height. Leave unset and pass a height class in `className` for responsive heights. */
   height?: number;
+  className?: string;
 }
 
 interface Row {
@@ -31,7 +33,7 @@ interface Row {
   band: [number, number];
 }
 
-export function TrendChart({ points, unit, limit, height = 260 }: TrendChartProps) {
+export function TrendChart({ points, unit, limit, height, className }: TrendChartProps) {
   const rows: Row[] = points.map((p) => ({
     date: p.date,
     raw: p.raw,
@@ -47,39 +49,50 @@ export function TrendChart({ points, unit, limit, height = 260 }: TrendChartProp
   const shortDate = (d: string) => fmtDate(d, { month: "short", day: "numeric" });
 
   return (
-    <div data-testid="trend-chart" className="w-full" style={{ height }}>
+    <div
+      data-testid="trend-chart"
+      className={cn("w-full", !height && "h-[240px]", className)}
+      style={height ? { height } : undefined}
+    >
       <ResponsiveContainer width="100%" height="100%">
-        <ComposedChart data={rows} margin={{ top: 8, right: 8, bottom: 0, left: -12 }}>
+        <ComposedChart data={rows} margin={{ top: 12, right: 12, bottom: 0, left: -8 }}>
           <CartesianGrid stroke={CHART.border} strokeDasharray="3 3" vertical={false} />
           <XAxis
             dataKey="date"
             tickFormatter={shortDate}
-            tick={{ fontSize: 11, fill: CHART.inkMuted }}
+            tick={{ fontSize: 11, fill: CHART.inkSubtle }}
             axisLine={false}
             tickLine={false}
-            minTickGap={24}
+            minTickGap={28}
+            dy={6}
           />
           <YAxis
             domain={[Math.floor(min - pad), Math.ceil(max + pad)]}
-            tick={{ fontSize: 11, fill: CHART.inkMuted }}
+            tick={{ fontSize: 11, fill: CHART.inkSubtle }}
             axisLine={false}
             tickLine={false}
             width={44}
           />
           <Tooltip
+            cursor={{ stroke: CHART.inkSubtle, strokeDasharray: "3 3" }}
             labelFormatter={(label) => shortDate(String(label))}
             formatter={(value, name) => {
               if (Array.isArray(value)) return [`${value[0]} – ${value[1]} ${unit}`, "Likely range"];
-              return [`${value} ${unit}`, name === "raw" ? "Reading" : "Trend"];
+              return [`${value} ${unit}`, name === "raw" ? "Logged" : "Trend"];
             }}
-            contentStyle={{ borderRadius: 12, borderColor: CHART.border, fontSize: 12 }}
+            contentStyle={{
+              borderRadius: 12,
+              borderColor: CHART.border,
+              fontSize: 12,
+              boxShadow: "0 4px 12px -4px rgba(15,23,42,0.15)",
+            }}
           />
           <Area
             type="monotone"
             dataKey="band"
             stroke="none"
             fill={CHART.brand}
-            fillOpacity={0.14}
+            fillOpacity={0.12}
             isAnimationActive={false}
           />
           <Line
@@ -88,9 +101,10 @@ export function TrendChart({ points, unit, limit, height = 260 }: TrendChartProp
             stroke={CHART.brand}
             strokeWidth={2.5}
             dot={false}
+            activeDot={{ r: 5, strokeWidth: 0 }}
             isAnimationActive={false}
           />
-          <Scatter dataKey="raw" fill={CHART.inkMuted} shape={<circle r={3.5} />} isAnimationActive={false} />
+          <Scatter dataKey="raw" fill={CHART.inkMuted} shape={<circle r={3} />} isAnimationActive={false} />
           {limit && (
             <ReferenceLine
               y={limit.value}

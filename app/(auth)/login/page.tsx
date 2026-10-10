@@ -1,5 +1,5 @@
-import { CredentialsForm } from "@/components/auth/CredentialsForm";
+import { AuthCard } from "./AuthCard";
 
 export default function LoginPage() {
-  return <CredentialsForm mode="login" redirectTo="/" />;
+  return <AuthCard mode="login" redirectTo="/" />;
 }

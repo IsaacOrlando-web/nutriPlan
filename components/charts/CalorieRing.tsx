@@ -1,6 +1,6 @@
 "use client";
 
-import { cn } from "@/lib/utils";
+import { cn, fmtNumber } from "@/lib/utils";
 
 export interface CalorieRingProps {
   eaten: number;
@@ -10,17 +10,18 @@ export interface CalorieRingProps {
   className?: string;
 }
 
-export function CalorieRing({ eaten, target, size = 168, stroke = 14, className }: CalorieRingProps) {
+/** The dashboard hero: how many calories are left today, inside a ring that fills as the day is eaten. */
+export function CalorieRing({ eaten, target, size = 176, stroke = 12, className }: CalorieRingProps) {
   const radius = (size - stroke) / 2;
   const circumference = 2 * Math.PI * radius;
   const ratio = target > 0 ? eaten / target : 0;
   const shown = Math.min(ratio, 1);
   const over = ratio > 1;
-  const remaining = Math.max(0, Math.round(target - eaten));
+  const left = Math.round(target - eaten);
   return (
     <div
       data-testid="calorie-ring"
-      className={cn("relative inline-flex items-center justify-center", className)}
+      className={cn("relative inline-flex shrink-0 items-center justify-center", className)}
       style={{ width: size, height: size }}
     >
       <svg
@@ -55,12 +56,17 @@ export function CalorieRing({ eaten, target, size = 168, stroke = 14, className 
         />
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-        <span className="text-3xl font-bold leading-none tabular-nums">{Math.round(eaten)}</span>
-        <span className="text-xs text-ink-muted">
-          / {Math.round(target)} kcal
+        <span
+          className={cn(
+            "text-4xl font-bold leading-none tracking-tight tabular-nums",
+            over && "text-warning",
+          )}
+        >
+          {fmtNumber(Math.abs(left))}
         </span>
-        <span className={cn("mt-1 text-[11px] font-medium", over ? "text-warning" : "text-brand-dark")}>
-          {over ? `${Math.round(eaten - target)} kcal over` : `${remaining} kcal left`}
+        <span className="mt-1.5 text-xs font-medium text-ink-muted">{over ? "kcal over" : "kcal left"}</span>
+        <span className="mt-0.5 text-[11px] tabular-nums text-ink-subtle">
+          {fmtNumber(Math.round(eaten))} of {fmtNumber(Math.round(target))}
         </span>
       </div>
     </div>

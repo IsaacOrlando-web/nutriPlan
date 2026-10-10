@@ -1,65 +1,114 @@
 "use client";
 
-import { cn } from "@/lib/utils";
+import { cn, fmtNumber } from "@/lib/utils";
 import { MACRO_CLASSES } from "./tokens";
 
 export interface MacroBarProps {
-  eaten: { proteinG: number; carbsG: number; fatG: number };
-  target: { proteinG: number; carbsG: number; fatG: number };
+  eaten: { proteinG: number; carbsG: number; fatG: number; fiberG?: number; sodiumMg?: number };
+  target: { proteinG: number; carbsG: number; fatG: number; fiberG?: number; sodiumMg?: number };
   className?: string;
 }
 
-const KCAL_PER_G = { protein: 4, carbs: 4, fat: 9 } as const;
-type Macro = keyof typeof KCAL_PER_G;
-const MACRO_LABELS: Record<Macro, string> = { protein: "Protein", carbs: "Carbs", fat: "Fat" };
+interface Meter {
+  key: string;
+  label: string;
+  eaten: number;
+  target: number;
+  unit: string;
+  /** "min" meters fill toward a goal, "max" meters fill toward a cap. */
+  kind: "min" | "max";
+  fill: string;
+  soft: string;
+}
 
+/**
+ * One line of meters: protein, carbs, fat and, when the API gives them, fiber and sodium.
+ * Each bar is eaten / target; sodium turns red only past its cap. Numbers are the server's.
+ */
 export function MacroBar({ eaten, target, className }: MacroBarProps) {
-  const rows: { key: Macro; eaten: number; target: number }[] = [
-    { key: "protein", eaten: eaten.proteinG, target: target.proteinG },
-    { key: "carbs", eaten: eaten.carbsG, target: target.carbsG },
-    { key: "fat", eaten: eaten.fatG, target: target.fatG },
+  const meters: Meter[] = [
+    {
+      key: "protein",
+      label: "Protein",
+      eaten: eaten.proteinG,
+      target: target.proteinG,
+      unit: "g",
+      kind: "min",
+      ...MACRO_CLASSES.protein,
+    },
+    {
+      key: "carbs",
+      label: "Carbs",
+      eaten: eaten.carbsG,
+      target: target.carbsG,
+      unit: "g",
+      kind: "min",
+      ...MACRO_CLASSES.carbs,
+    },
+    {
+      key: "fat",
+      label: "Fat",
+      eaten: eaten.fatG,
+      target: target.fatG,
+      unit: "g",
+      kind: "min",
+      ...MACRO_CLASSES.fat,
+    },
   ];
-  const totalKcal = rows.reduce((s, r) => s + r.target * KCAL_PER_G[r.key], 0);
+  if (eaten.fiberG !== undefined && target.fiberG !== undefined) {
+    meters.push({
+      key: "fiber",
+      label: "Fiber",
+      eaten: eaten.fiberG,
+      target: target.fiberG,
+      unit: "g",
+      kind: "min",
+      fill: "bg-ink-muted",
+      soft: "bg-surface-sunken",
+    });
+  }
+  if (eaten.sodiumMg !== undefined && target.sodiumMg !== undefined) {
+    meters.push({
+      key: "sodium",
+      label: "Sodium",
+      eaten: eaten.sodiumMg,
+      target: target.sodiumMg,
+      unit: "mg",
+      kind: "max",
+      fill: "bg-ink-muted",
+      soft: "bg-surface-sunken",
+    });
+  }
   return (
-    <div className={cn("space-y-3", className)}>
-      {/* Stacked bar: each segment is sized by the macro's share of target calories and filled by eaten / target. */}
-      <div
-        className="flex h-4 w-full gap-0.5 overflow-hidden rounded-full"
-        role="img"
-        aria-label="Protein, carbs and fat eaten versus targets"
-      >
-        {rows.map((r) => {
-          const widthPct = totalKcal > 0 ? ((r.target * KCAL_PER_G[r.key]) / totalKcal) * 100 : 33;
-          const fillPct = r.target > 0 ? Math.min(100, (r.eaten / r.target) * 100) : 0;
-          return (
-            <div
-              key={r.key}
-              className={cn("relative h-full", MACRO_CLASSES[r.key].soft)}
-              style={{ width: `${widthPct}%` }}
-            >
+    <dl
+      className={cn("grid grid-cols-3 gap-x-4 gap-y-3 sm:grid-cols-5", className)}
+      aria-label="Today versus targets"
+    >
+      {meters.map((m) => {
+        const ratio = m.target > 0 ? m.eaten / m.target : 0;
+        const overCap = m.kind === "max" && ratio > 1;
+        return (
+          <div key={m.key} className="min-w-0 space-y-1.5">
+            <dt className="truncate text-[11px] font-medium text-ink-subtle">{m.label}</dt>
+            <dd className="truncate text-sm leading-none tabular-nums">
+              <span className="font-semibold">{fmtNumber(Math.round(m.eaten))}</span>
+              <span className="text-ink-subtle">
+                {" / "}
+                {fmtNumber(Math.round(m.target))} {m.unit}
+              </span>
+            </dd>
+            <div className={cn("h-1.5 w-full overflow-hidden rounded-full", m.soft)} aria-hidden="true">
               <div
-                className={cn("h-full transition-[width] duration-700", MACRO_CLASSES[r.key].fill)}
-                style={{ width: `${fillPct}%` }}
+                className={cn(
+                  "h-full rounded-full transition-[width] duration-700",
+                  overCap ? "bg-danger" : m.fill,
+                )}
+                style={{ width: `${Math.min(100, ratio * 100)}%` }}
               />
             </div>
-          );
-        })}
-      </div>
-      <dl className="grid grid-cols-3 gap-2 text-center">
-        {rows.map((r) => (
-          <div key={r.key} className="rounded-lg bg-surface-sunken px-2 py-1.5">
-            <dt
-              className={cn("text-[11px] font-semibold uppercase tracking-wide", MACRO_CLASSES[r.key].text)}
-            >
-              {MACRO_LABELS[r.key]}
-            </dt>
-            <dd className="text-sm tabular-nums">
-              <span className="font-semibold">{Math.round(r.eaten)}</span>
-              <span className="text-ink-subtle"> / {Math.round(r.target)} g</span>
-            </dd>
           </div>
-        ))}
-      </dl>
-    </div>
+        );
+      })}
+    </dl>
   );
 }

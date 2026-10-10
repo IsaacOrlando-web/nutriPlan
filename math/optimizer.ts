@@ -603,7 +603,9 @@ async function solveDailyModel(
   opts: OptimizeOptions,
 ): Promise<SolvedWeek | null> {
   const repeat: RepeatState = { used: new Map(), yesterday: new Set() };
-  const cap = ctx.budgetCap + relax.budgetUsd;
+  // Five cents under the cap: seven day costs are each rounded to cents, and "$70.01 of your $70" reads as a
+  // broken promise even though withinBudget tolerates a cent.
+  const cap = Math.max(0, ctx.budgetCap + relax.budgetUsd - 0.05);
   let spent = 0;
   let objective = 0;
   const days: PlanDay[] = [];

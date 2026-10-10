@@ -38,7 +38,7 @@ Copy the block from `.env.example` into `.env.local`:
 Restart `npm run dev` after editing `.env.local`. With `DATA_BACKEND=supabase`, apply
 `supabase/migrations/0003_kroger.sql` (`npm run db:reset` locally or the Supabase SQL editor).
 
-## 3. Price the food catalog from one real store
+## 3. Price the food catalog from one real store (done on 2026-10-10 for Kroger On the Rhine, 45202; rerun to refresh)
 
 Satisfies the spec requirement "prices from one real store with the date collected".
 

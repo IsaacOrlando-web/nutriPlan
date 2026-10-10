@@ -7,7 +7,6 @@ import { toast } from "sonner";
 import { EmptyState } from "@/components/common/EmptyState";
 import { ErrorState } from "@/components/common/ErrorState";
 import { LoadingState } from "@/components/common/LoadingState";
-import { PageHeader } from "@/components/common/PageHeader";
 import { GoalsForm } from "@/components/onboarding/GoalsForm";
 import { toProfileInput } from "@/components/onboarding/goalsSchema";
 import { Button } from "@/components/ui/button";
@@ -19,11 +18,11 @@ export default function GoalsPage() {
   const save = useSaveProfile();
 
   return (
-    <div data-testid="goals-screen" className="mx-auto w-full max-w-3xl space-y-6">
-      <PageHeader
-        title="Define your goals"
-        subtitle="Doctor, Chef and Budget plan your week around these answers."
-      />
+    <div data-testid="goals-screen" className="mx-auto flex w-full max-w-xl flex-col">
+      <header className="space-y-1 pb-8">
+        <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">Your goals</h1>
+        <p className="text-sm text-ink-muted">Doctor, Chef and Budget plan the week around these.</p>
+      </header>
 
       {profile.isPending && <LoadingState variant="page" />}
 
@@ -33,7 +32,7 @@ export default function GoalsPage() {
         <EmptyState
           icon={UserRound}
           title="No profile yet"
-          body="Answer a few questions first, then come back to fine tune your goals."
+          body="Answer a few questions first."
           action={
             <Button asChild>
               <Link href="/onboarding">Start onboarding</Link>

@@ -48,7 +48,7 @@ export function fmtDate(date: Date | string, options: Intl.DateTimeFormatOptions
 /** "3 hours ago", "yesterday", "in 2 days". */
 export function fmtRelative(date: Date | string, now: Date = new Date()): string {
   const d = typeof date === "string" ? new Date(date) : date;
-  const diffSec = Math.round((d.getTime() - now.getTime()) / 1000);
+  const diffSec = Math.min(0, Math.round((d.getTime() - now.getTime()) / 1000)); // seeded readings can sit a few hours ahead of a browser clock; never say "in 1 hour"
   const abs = Math.abs(diffSec);
   const rtf = new Intl.RelativeTimeFormat("en-US", { numeric: "auto" });
   if (abs < 60) return rtf.format(diffSec, "second");
