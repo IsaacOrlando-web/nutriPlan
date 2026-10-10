@@ -52,3 +52,15 @@ Anything outside `/math`. If Agents need a new signature, agree on it in chat an
 ## Requesting a contract change
 
 Group chat: "Contract request: <type>.<field> because <math needs it>". Math internal types (`OptimizeOptions`, `PortionPattern`, `HardConstraintName`, `TdeeObservation`) stay in `/math` and are exported from `index.ts`.
+
+## Budget curve (feature 7)
+
+`math/curve.ts` solves the plan at several weekly budgets so the budget slider is instant and can explain the tradeoff.
+
+- `computeBudgetCurve(input, budgets, { focusBudgetUsd? })` where `input` is an `OptimizeInput` without `weeklyBudgetUsd`. The pool is prepared once (`prepareContext`), each budget is a `withBudget` solve in daily mode with a 3 s limit (under 1 s per point on a Chef sized pool, 11 points in about 9 s for Alex; about 2.6 s per point on the full 64 meal pool the API uses, so a cold 16 point curve takes 40 to 65 s and is cached afterwards). Returns `BudgetCurve { budgets, points, insights, minFeasibleBudgetUsd, saturationBudgetUsd, computedMs }`; each `BudgetCurvePoint` carries `feasible`, `withinBudget`, `weeklyCostUsd`, `objective`, `proteinGapG`, `calorieGapPct`, `sodiumUsePct`, `bindingConstraints`, `mealNames` and the 7 `days`.
+- `repairDominated` keeps the curve Pareto consistent: a cheaper plan that beats a pricier point is reused at the higher budget.
+- Insights are built by code from the points, for example "Below $50 the plan cannot stay within budget and meet every Doctor rule", "Above $80 more money does not make the plan healthier", "At $50 your sodium sits at 41% of the cap". Every number in an insight is a point field; tests enforce this.
+- `planFromCurve(point, { startDate? })` returns an `OptimizeResult` for one point without re-solving, so a slider choice can be saved as a MealPlan (Agents add the grocery list and shadow prices).
+- `math/curve-cache.ts` is the one allowed piece of module state in `/math`: an in-process LRU of 20 curves keyed by `curveCacheKey({ userId, candidateIds, constraints, targets, mealsPerDay, concessions })`, with in-flight deduplication (`getOrComputeCurve`).
+- `GET /api/plan/curve?min=25&max=100&step=5&budget=55&refresh=1` (`app/api/plan/curve/route.ts`) returns `{ curve: BudgetCurveSummary, planAt?: PlanDay[], cached }`; the curve summary is the curve with `days` stripped from every point. The profile's current budget is always on the grid.
+- Tests: `math/__tests__/curve.test.ts` (monotone objective, within budget means within budget, insight numbers come from the points, cache LRU and in-flight sharing, `planFromCurve` re-dating).

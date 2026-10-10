@@ -115,13 +115,19 @@ interface PreparedCandidate {
   patterns: PortionPattern[];
 }
 
-interface Context {
+/**
+ * Everything the solver needs that does not depend on the budget: filtered pool, enumerated portion patterns
+ * with precomputed totals, slot layout. Build it once with `prepareContext` and reuse it across solves
+ * (shadow prices, the budget curve) with `withBudget`. Treat it as opaque outside /math.
+ */
+export interface PreparedContext {
   input: OptimizeInput;
   slots: MealType[];
   bySlot: Map<MealType, PreparedCandidate[]>;
   budgetCap: number;
   droppedCandidates: string[];
 }
+type Context = PreparedContext;
 
 // ---------------------------------------------------------------------------
 // Preparation: allergy and restriction filtering happens here, in code, before optimization.
@@ -181,7 +187,7 @@ export function enumeratePatterns(
   });
 }
 
-function prepare(input: OptimizeInput): Context {
+export function prepareContext(input: OptimizeInput): PreparedContext {
   const slots = SLOTS_BY_MEALS[input.mealsPerDay];
   const { kept, dropped } = filterPool(input.pool, input.foods, input.constraints.excludedFoodTags);
   const bySlot = new Map<MealType, PreparedCandidate[]>(slots.map((s) => [s, []]));
@@ -203,13 +209,25 @@ function prepare(input: OptimizeInput): Context {
     });
     list.push({ idx, meal, ingredients, patterns: enumeratePatterns(ingredients) });
   });
-  const budgetCap = input.weeklyBudgetUsd * (1 + input.concessions.budgetSlackPct / 100);
+  const budgetCap = budgetCapFor(input.weeklyBudgetUsd, input.concessions.budgetSlackPct);
   return { input, slots, bySlot, budgetCap, droppedCandidates: dropped };
 }
 
+function budgetCapFor(weeklyBudgetUsd: number, budgetSlackPct: number): number {
+  return weeklyBudgetUsd * (1 + budgetSlackPct / 100);
+}
+
+/** Same prepared pool and patterns, different weekly budget. Patterns are shared, not copied. */
+export function withBudget(ctx: PreparedContext, weeklyBudgetUsd: number): PreparedContext {
+  const input = { ...ctx.input, weeklyBudgetUsd };
+  return { ...ctx, input, budgetCap: budgetCapFor(weeklyBudgetUsd, input.concessions.budgetSlackPct) };
+}
+
 function patternAllowed(t: MealTotals, c: MedicalConstraints, relax: Relax): boolean {
-  if (c.maxCarbsPerMealG !== undefined && t.carbsG > c.maxCarbsPerMealG + relax.carbsPerMealG + 1e-9) return false;
-  if (c.maxGlycemicLoadPerMeal !== undefined && t.glycemicLoad > c.maxGlycemicLoadPerMeal + 1e-9) return false;
+  if (c.maxCarbsPerMealG !== undefined && t.carbsG > c.maxCarbsPerMealG + relax.carbsPerMealG + 1e-9)
+    return false;
+  if (c.maxGlycemicLoadPerMeal !== undefined && t.glycemicLoad > c.maxGlycemicLoadPerMeal + 1e-9)
+    return false;
   return true;
 }
 
@@ -318,19 +336,67 @@ function buildModel(
     });
 
     // Soft macro targets with absolute deviation slacks.
-    addDeviation(model, `cal${d}`, dayTerms.calories, calTarget, WEIGHTS.calPct, WEIGHTS.calPct, 0.05, WEIGHTS.calOutside5Pct);
-    addDeviation(model, `pro${d}`, dayTerms.proteinG, targets.proteinG, WEIGHTS.proteinOverPct, WEIGHTS.proteinUnderPct);
+    addDeviation(
+      model,
+      `cal${d}`,
+      dayTerms.calories,
+      calTarget,
+      WEIGHTS.calPct,
+      WEIGHTS.calPct,
+      0.05,
+      WEIGHTS.calOutside5Pct,
+    );
+    addDeviation(
+      model,
+      `pro${d}`,
+      dayTerms.proteinG,
+      targets.proteinG,
+      WEIGHTS.proteinOverPct,
+      WEIGHTS.proteinUnderPct,
+    );
     addDeviation(model, `carbs${d}`, dayTerms.carbsG, targets.carbsG, WEIGHTS.carbPct, WEIGHTS.carbPct);
     addDeviation(model, `fat${d}`, dayTerms.fatG, targets.fatG, WEIGHTS.fatPct, WEIGHTS.fatPct);
 
     // Hard daily rules (Doctor). Elastic only so impossible combinations are reported, never silently accepted.
-    hardLo(model, addElastic, `mincal${d}`, "min_calories", dayTerms.calories, constraints.minCaloriesPerDay, 100);
+    hardLo(
+      model,
+      addElastic,
+      `mincal${d}`,
+      "min_calories",
+      dayTerms.calories,
+      constraints.minCaloriesPerDay,
+      100,
+    );
     hardLo(model, addElastic, `fiber${d}`, "min_fiber", dayTerms.fiberG, constraints.minFiberG, 1);
-    hardHi(model, addElastic, `sugar${d}`, "max_added_sugar", dayTerms.addedSugarG, constraints.maxAddedSugarG, 1);
-    hardHi(model, addElastic, `sodium${d}`, "max_sodium", dayTerms.sodiumMg, constraints.maxSodiumMgPerDay + relax.sodiumMg, 100);
+    hardHi(
+      model,
+      addElastic,
+      `sugar${d}`,
+      "max_added_sugar",
+      dayTerms.addedSugarG,
+      constraints.maxAddedSugarG,
+      1,
+    );
+    hardHi(
+      model,
+      addElastic,
+      `sodium${d}`,
+      "max_sodium",
+      dayTerms.sodiumMg,
+      constraints.maxSodiumMgPerDay + relax.sodiumMg,
+      100,
+    );
     hardHi(model, addElastic, `satfat${d}`, "max_sat_fat", dayTerms.satFatBalance, 0, 9);
     if (constraints.minPotassiumMgPerDay !== undefined) {
-      hardLo(model, addElastic, `potassium${d}`, "min_potassium", dayTerms.potassiumMg, constraints.minPotassiumMgPerDay, 100);
+      hardLo(
+        model,
+        addElastic,
+        `potassium${d}`,
+        "min_potassium",
+        dayTerms.potassiumMg,
+        constraints.minPotassiumMgPerDay,
+        100,
+      );
     }
     days.push(handles);
   }
@@ -356,7 +422,11 @@ function buildModel(
       for (const [d, zs] of perDay) {
         // Candidates belong to one meal type, so this only matters if a type fills several slots.
         if (zs.length > 1 && ctx.slots.length > new Set(ctx.slots).size) {
-          model.addConstraint(`once${d}_${sanitize(cid)}`, zs.map((z) => [z, 1]), { hi: 1 });
+          model.addConstraint(
+            `once${d}_${sanitize(cid)}`,
+            zs.map((z) => [z, 1]),
+            { hi: 1 },
+          );
         }
       }
     }
@@ -384,8 +454,22 @@ function addDeviation(
   if (band !== undefined && outsideBandWeightPct !== undefined) {
     const ou = model.addVar(`${name}_ou`, "continuous", 0);
     const od = model.addVar(`${name}_od`, "continuous", 0);
-    model.addConstraint(`${name}_bu`, [[ou, 1], [up, -1]], { lo: -band * target });
-    model.addConstraint(`${name}_bd`, [[od, 1], [dn, -1]], { lo: -band * target });
+    model.addConstraint(
+      `${name}_bu`,
+      [
+        [ou, 1],
+        [up, -1],
+      ],
+      { lo: -band * target },
+    );
+    model.addConstraint(
+      `${name}_bd`,
+      [
+        [od, 1],
+        [dn, -1],
+      ],
+      { lo: -band * target },
+    );
     model.addObjective(ou, (outsideBandWeightPct * 100) / target);
     model.addObjective(od, (outsideBandWeightPct * 100) / target);
   }
@@ -393,13 +477,29 @@ function addDeviation(
 
 type ElasticFn = (name: string, c: HardConstraintName, scale: number) => string;
 
-function hardLo(model: LinearModel, el: ElasticFn, name: string, c: HardConstraintName, terms: [string, number][], lo: number, scale: number) {
+function hardLo(
+  model: LinearModel,
+  el: ElasticFn,
+  name: string,
+  c: HardConstraintName,
+  terms: [string, number][],
+  lo: number,
+  scale: number,
+) {
   if (terms.length === 0) return;
   const e = el(name, c, scale);
   model.addConstraint(name, [...terms, [e, 1]], { lo });
 }
 
-function hardHi(model: LinearModel, el: ElasticFn, name: string, c: HardConstraintName, terms: [string, number][], hi: number, scale: number) {
+function hardHi(
+  model: LinearModel,
+  el: ElasticFn,
+  name: string,
+  c: HardConstraintName,
+  terms: [string, number][],
+  hi: number,
+  scale: number,
+) {
   if (terms.length === 0) return;
   const e = el(name, c, scale);
   model.addConstraint(name, [...terms, [e, -1]], { hi });
@@ -447,7 +547,8 @@ function extractDays(ctx: Context, built: BuiltModel, sol: LinearSolution): Extr
       const items: MealItem[] = [];
       chosen.cand.ingredients.forEach((ing, i) => {
         const servings = chosen.pattern.servings[i];
-        if (servings > 0) items.push({ foodId: ing.foodId, name: ing.name, servings, grams: servings * ing.servingG });
+        if (servings > 0)
+          items.push({ foodId: ing.foodId, name: ing.name, servings, grams: servings * ing.servingG });
       });
       const m = chosen.cand.meal;
       meals.push({
@@ -496,7 +597,11 @@ async function solveWeekModel(ctx: Context, relax: Relax, opts: OptimizeOptions)
   };
 }
 
-async function solveDailyModel(ctx: Context, relax: Relax, opts: OptimizeOptions): Promise<SolvedWeek | null> {
+async function solveDailyModel(
+  ctx: Context,
+  relax: Relax,
+  opts: OptimizeOptions,
+): Promise<SolvedWeek | null> {
   const repeat: RepeatState = { used: new Map(), yesterday: new Set() };
   const cap = ctx.budgetCap + relax.budgetUsd;
   let spent = 0;
@@ -509,11 +614,22 @@ async function solveDailyModel(ctx: Context, relax: Relax, opts: OptimizeOptions
     const dayBudget = Math.max(0, (cap - spent) / (DAYS - d));
     const built = buildModel(ctx, [d], relax, dayBudget, repeat);
     const dayLimit = Math.max(0.3, (opts.timeLimitSec ?? 4) / DAYS);
-    let sol = await solveLinear(built.model, { prefer: opts.solver, timeLimitSec: dayLimit, mipRelGap: opts.mipRelGap ?? 0.01, mipAbsGap: 1 });
+    let sol = await solveLinear(built.model, {
+      prefer: opts.solver,
+      timeLimitSec: dayLimit,
+      mipRelGap: opts.mipRelGap ?? 0.01,
+      mipAbsGap: 1,
+    });
     // A time-limited incumbent that still breaks a hard rule gets one longer retry before we report a conflict.
     if (sol.status === "feasible" && elasticConflicts(built, sol).length > 0) {
-      const retry = await solveLinear(built.model, { prefer: opts.solver, timeLimitSec: dayLimit * 3, mipRelGap: opts.mipRelGap ?? 0.01, mipAbsGap: 1 });
-      if (retry.status === "optimal" || (retry.status === "feasible" && retry.objective < sol.objective)) sol = retry;
+      const retry = await solveLinear(built.model, {
+        prefer: opts.solver,
+        timeLimitSec: dayLimit * 3,
+        mipRelGap: opts.mipRelGap ?? 0.01,
+        mipAbsGap: 1,
+      });
+      if (retry.status === "optimal" || (retry.status === "feasible" && retry.objective < sol.objective))
+        sol = retry;
     }
     if (sol.status === "infeasible" || sol.status === "error") return null;
     solver = sol.solver;
@@ -528,7 +644,12 @@ async function solveDailyModel(ctx: Context, relax: Relax, opts: OptimizeOptions
   return { days, objective, conflicts: [...conflicts], mode: "daily", solver };
 }
 
-async function solve(ctx: Context, relax: Relax, opts: OptimizeOptions, forceMode?: "week" | "daily"): Promise<SolvedWeek | null> {
+async function solve(
+  ctx: Context,
+  relax: Relax,
+  opts: OptimizeOptions,
+  forceMode?: "week" | "daily",
+): Promise<SolvedWeek | null> {
   const mode = forceMode ?? opts.mode ?? "auto";
   if (mode === "daily") return solveDailyModel(ctx, relax, opts);
   if (mode === "week") return solveWeekModel(ctx, relax, opts);
@@ -553,41 +674,68 @@ export function verifyPlan(days: PlanDay[], constraints: MedicalConstraints): st
     const t = day.dayTotals;
     if (t.calories < constraints.minCaloriesPerDay - tol)
       violations.push(`min_calories on ${day.date} (${t.calories} < ${constraints.minCaloriesPerDay})`);
-    if (t.fiberG < constraints.minFiberG - 0.2) violations.push(`min_fiber on ${day.date} (${t.fiberG} < ${constraints.minFiberG})`);
+    if (t.fiberG < constraints.minFiberG - 0.2)
+      violations.push(`min_fiber on ${day.date} (${t.fiberG} < ${constraints.minFiberG})`);
     if (t.addedSugarG > constraints.maxAddedSugarG + 0.2)
       violations.push(`max_added_sugar on ${day.date} (${t.addedSugarG} > ${constraints.maxAddedSugarG})`);
     if (t.sodiumMg > constraints.maxSodiumMgPerDay + tol)
       violations.push(`max_sodium on ${day.date} (${t.sodiumMg} > ${constraints.maxSodiumMgPerDay})`);
     if (t.calories > 0 && (9 * t.satFatG) / t.calories > constraints.maxSatFatPct / 100 + 0.002)
       violations.push(`max_sat_fat on ${day.date}`);
-    if (constraints.minPotassiumMgPerDay !== undefined && t.potassiumMg < constraints.minPotassiumMgPerDay - tol)
-      violations.push(`min_potassium on ${day.date} (${t.potassiumMg} < ${constraints.minPotassiumMgPerDay})`);
+    if (
+      constraints.minPotassiumMgPerDay !== undefined &&
+      t.potassiumMg < constraints.minPotassiumMgPerDay - tol
+    )
+      violations.push(
+        `min_potassium on ${day.date} (${t.potassiumMg} < ${constraints.minPotassiumMgPerDay})`,
+      );
     for (const meal of day.meals) {
-      if (constraints.maxCarbsPerMealG !== undefined && meal.totals.carbsG > constraints.maxCarbsPerMealG + 0.2)
+      if (
+        constraints.maxCarbsPerMealG !== undefined &&
+        meal.totals.carbsG > constraints.maxCarbsPerMealG + 0.2
+      )
         violations.push(`max_carbs_per_meal on ${day.date} ${meal.type}`);
-      if (constraints.maxGlycemicLoadPerMeal !== undefined && meal.totals.glycemicLoad > constraints.maxGlycemicLoadPerMeal + 0.2)
+      if (
+        constraints.maxGlycemicLoadPerMeal !== undefined &&
+        meal.totals.glycemicLoad > constraints.maxGlycemicLoadPerMeal + 0.2
+      )
         violations.push(`max_glycemic_load_per_meal on ${day.date} ${meal.type}`);
     }
   }
   return violations;
 }
 
-function bindingConstraints(days: PlanDay[], constraints: MedicalConstraints, weeklyCost: number, budgetCap: number): string[] {
+function bindingConstraints(
+  days: PlanDay[],
+  constraints: MedicalConstraints,
+  weeklyCost: number,
+  budgetCap: number,
+): string[] {
   const out = new Set<string>();
   if (weeklyCost >= 0.97 * budgetCap) out.add("weekly_budget");
   for (const day of days) {
     const t = day.dayTotals;
     if (t.sodiumMg >= 0.95 * constraints.maxSodiumMgPerDay) out.add("max_sodium");
     if (t.addedSugarG >= 0.95 * constraints.maxAddedSugarG) out.add("max_added_sugar");
-    if (t.calories > 0 && (9 * t.satFatG) / t.calories >= 0.95 * (constraints.maxSatFatPct / 100)) out.add("max_sat_fat");
+    if (t.calories > 0 && (9 * t.satFatG) / t.calories >= 0.95 * (constraints.maxSatFatPct / 100))
+      out.add("max_sat_fat");
     if (t.fiberG <= 1.03 * constraints.minFiberG) out.add("min_fiber");
     if (t.calories <= 1.02 * constraints.minCaloriesPerDay) out.add("min_calories");
-    if (constraints.minPotassiumMgPerDay !== undefined && t.potassiumMg <= 1.03 * constraints.minPotassiumMgPerDay)
+    if (
+      constraints.minPotassiumMgPerDay !== undefined &&
+      t.potassiumMg <= 1.03 * constraints.minPotassiumMgPerDay
+    )
       out.add("min_potassium");
     for (const m of day.meals) {
-      if (constraints.maxCarbsPerMealG !== undefined && m.totals.carbsG >= 0.95 * constraints.maxCarbsPerMealG)
+      if (
+        constraints.maxCarbsPerMealG !== undefined &&
+        m.totals.carbsG >= 0.95 * constraints.maxCarbsPerMealG
+      )
         out.add("max_carbs_per_meal");
-      if (constraints.maxGlycemicLoadPerMeal !== undefined && m.totals.glycemicLoad >= 0.95 * constraints.maxGlycemicLoadPerMeal)
+      if (
+        constraints.maxGlycemicLoadPerMeal !== undefined &&
+        m.totals.glycemicLoad >= 0.95 * constraints.maxGlycemicLoadPerMeal
+      )
         out.add("max_glycemic_load_per_meal");
     }
   }
@@ -621,9 +769,18 @@ function times(n: number): string {
 
 type Gain = { name: string; extra: number } | null;
 
-async function computeShadowPrices(ctx: Context, base: SolvedWeek, opts: OptimizeOptions): Promise<ShadowPrice[]> {
+async function computeShadowPrices(
+  ctx: Context,
+  base: SolvedWeek,
+  opts: OptimizeOptions,
+): Promise<ShadowPrice[]> {
   const { constraints } = ctx.input;
-  const relaxations: { constraint: string; relax: Partial<Relax>; delta: number; text: (g: Gain, value: number) => string }[] = [
+  const relaxations: {
+    constraint: string;
+    relax: Partial<Relax>;
+    delta: number;
+    text: (g: Gain, value: number) => string;
+  }[] = [
     {
       constraint: "weekly_budget",
       relax: { budgetUsd: 5 },
@@ -649,7 +806,9 @@ async function computeShadowPrices(ctx: Context, base: SolvedWeek, opts: Optimiz
       relax: { calories: 100 },
       delta: 100,
       text: (g) =>
-        g ? `100 more kcal a day would let Chef add ${g.name.toLowerCase()} ${times(g.extra)}` : "Your calorie target is not limiting meal choices",
+        g
+          ? `100 more kcal a day would let Chef add ${g.name.toLowerCase()} ${times(g.extra)}`
+          : "Your calorie target is not limiting meal choices",
     },
   ];
   if (constraints.maxCarbsPerMealG !== undefined) {
@@ -673,7 +832,11 @@ async function computeShadowPrices(ctx: Context, base: SolvedWeek, opts: Optimiz
     // MILP gaps add noise: only claim a change when the objective improved by a meaningful amount.
     const meaningful = improvement > SHADOW_MIN_IMPROVEMENT;
     const value = meaningful ? Math.round((improvement / r.delta) * 1000) / 1000 : 0;
-    out.push({ constraint: r.constraint, value, humanText: r.text(meaningful ? biggestGain(base.days, relaxed.days) : null, value) });
+    out.push({
+      constraint: r.constraint,
+      value,
+      humanText: r.text(meaningful ? biggestGain(base.days, relaxed.days) : null, value),
+    });
   }
   return out;
 }
@@ -682,9 +845,19 @@ async function computeShadowPrices(ctx: Context, base: SolvedWeek, opts: Optimiz
 // Public entry point
 // ---------------------------------------------------------------------------
 
-export async function optimizePlan(input: OptimizeInput, opts: OptimizeOptions = {}): Promise<OptimizeResult> {
+/**
+ * OptimizeResult plus the solver's objective value (lower is better). The objective is math-internal: it
+ * lets the budget curve compare plans across budgets. `Infinity` when no plan could be produced.
+ */
+export type DetailedOptimizeResult = OptimizeResult & { objective: number };
+
+/** Solves on an already prepared context (see `prepareContext` / `withBudget`). */
+export async function optimizePrepared(
+  ctx: PreparedContext,
+  opts: OptimizeOptions = {},
+): Promise<DetailedOptimizeResult> {
   const started = Date.now();
-  const ctx = prepare(input);
+  const { input } = ctx;
 
   const emptySlots = ctx.slots.filter((s) => (ctx.bySlot.get(s) ?? []).length === 0);
   if (emptySlots.length === ctx.slots.length) {
@@ -697,6 +870,7 @@ export async function optimizePlan(input: OptimizeInput, opts: OptimizeOptions =
       bindingConstraints: [],
       conflicts: ["no_safe_candidates"],
       solveMs: Date.now() - started,
+      objective: Infinity,
     };
   }
 
@@ -713,13 +887,18 @@ export async function optimizePlan(input: OptimizeInput, opts: OptimizeOptions =
       bindingConstraints: [],
       conflicts: ["solver_failed"],
       solveMs,
+      objective: Infinity,
     };
   }
 
   const weeklyCostUsd = Math.round(base.days.reduce((s, d) => s + d.dayTotals.costUsd, 0) * 100) / 100;
   const violations = verifyPlan(base.days, input.constraints);
   const conflicts = [
-    ...new Set([...base.conflicts, ...violations.map((v) => v.split(" ")[0]), ...emptySlots.map((s) => `no_candidates_${s}`)]),
+    ...new Set([
+      ...base.conflicts,
+      ...violations.map((v) => v.split(" ")[0]),
+      ...emptySlots.map((s) => `no_candidates_${s}`),
+    ]),
   ];
   const shadowPrices = opts.shadowPrices === false ? [] : await computeShadowPrices(ctx, base, opts);
 
@@ -732,5 +911,22 @@ export async function optimizePlan(input: OptimizeInput, opts: OptimizeOptions =
     bindingConstraints: bindingConstraints(base.days, input.constraints, weeklyCostUsd, ctx.budgetCap),
     conflicts,
     solveMs,
+    objective: base.objective,
   };
+}
+
+/** Like `optimizePlan` but keeps the objective value. Used by the budget curve. */
+export function optimizePlanDetailed(
+  input: OptimizeInput,
+  opts: OptimizeOptions = {},
+): Promise<DetailedOptimizeResult> {
+  return optimizePrepared(prepareContext(input), opts);
+}
+
+export async function optimizePlan(
+  input: OptimizeInput,
+  opts: OptimizeOptions = {},
+): Promise<OptimizeResult> {
+  const { objective: _objective, ...result } = await optimizePlanDetailed(input, opts);
+  return result;
 }
