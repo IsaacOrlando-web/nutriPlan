@@ -185,6 +185,6 @@ export async function budgetConcede(
     slack === 5
       ? `${over}Okay, I can stretch the budget 5%. Beans are cheap, so is my patience.`
       : `${over}Last offer: 10% over budget, not a cent more. Rent is also a nutrient.`;
-  await ctx.emit("budget", "concession", text, { concessions: next, round });
+  await ctx.emit("budget", "concession", text, { concessions: next, round, overBy: overBy === undefined ? null : Math.round(overBy * 100) / 100 });
   return next;
 }

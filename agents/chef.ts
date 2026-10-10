@@ -171,6 +171,7 @@ export async function chefConcede(
   round: number,
   current: Concessions,
   detail?: string,
+  data?: Record<string, unknown>,
 ): Promise<Concessions> {
   const next: Concessions = { ...current, maxRepeatsPerWeek: 3 };
   const text = detail
@@ -178,7 +179,7 @@ export async function chefConcede(
     : round <= 1
       ? "Fine, favorites may repeat three times this week and I open the full recipe book. Flavor stays."
       : "Alright, I keep the swaps and let the optimizer pick. Chef's pride survives.";
-  await ctx.emit("chef", "concession", text, { concessions: next, round });
+  await ctx.emit("chef", "concession", text, { concessions: next, round, ...(data ?? {}) });
   return next;
 }
 

@@ -13,6 +13,8 @@ import type { AgentKey } from "@/agents/config";
 
 interface Template {
   label: string;
+  /** URL substrings that select this template in scripted mode. */
+  keywords: string[];
   items: { foodId: string; grams: number; confidence: number }[];
   /** Extra food only model B sees (forces a question in the demo). */
   extraB?: { foodId: string; grams: number; confidence: number };
@@ -21,6 +23,7 @@ interface Template {
 export const SCRIPTED_TEMPLATES: Template[] = [
   {
     label: "chicken rice bowl",
+    keywords: ["chicken", "lunch-bowl", "rice-bowl"],
     items: [
       { foodId: "chicken_breast", grams: 120, confidence: 0.9 },
       { foodId: "brown_rice", grams: 150, confidence: 0.85 },
@@ -29,6 +32,7 @@ export const SCRIPTED_TEMPLATES: Template[] = [
   },
   {
     label: "salmon plate",
+    keywords: ["salmon", "fish"],
     items: [
       { foodId: "salmon", grams: 130, confidence: 0.88 },
       { foodId: "quinoa", grams: 140, confidence: 0.8 },
@@ -37,6 +41,7 @@ export const SCRIPTED_TEMPLATES: Template[] = [
   },
   {
     label: "bean tacos",
+    keywords: ["taco", "bean"],
     items: [
       { foodId: "black_beans", grams: 120, confidence: 0.86 },
       { foodId: "corn_tortilla", grams: 52, confidence: 0.9 },
@@ -46,6 +51,7 @@ export const SCRIPTED_TEMPLATES: Template[] = [
   },
   {
     label: "yogurt bowl with a doubt",
+    keywords: ["yogurt", "parfait"],
     items: [
       { foodId: "greek_yogurt", grams: 170, confidence: 0.9 },
       { foodId: "blueberries", grams: 70, confidence: 0.8 },
@@ -68,7 +74,10 @@ export async function scriptedReadings(
 ): Promise<{ a: VisionReading; b: VisionReading }> {
   const key = photoUrl.startsWith("data:") ? photoUrl.slice(0, 256) + photoUrl.length : photoUrl;
   const h = hashString(key);
-  const template = SCRIPTED_TEMPLATES[h % SCRIPTED_TEMPLATES.length];
+  // A URL that names a dish (demo photos) picks that template; anything else is chosen by hash.
+  const lower = photoUrl.toLowerCase();
+  const byName = SCRIPTED_TEMPLATES.find((t) => t.keywords.some((k) => lower.includes(k)));
+  const template = byName ?? SCRIPTED_TEMPLATES[h % SCRIPTED_TEMPLATES.length];
   const ids = template.items.map((i) => i.foodId).concat(template.extraB ? [template.extraB.foodId] : []);
   const foods = await store.getFoods(ids);
   const name = (id: string) => foods[id]?.name ?? id;

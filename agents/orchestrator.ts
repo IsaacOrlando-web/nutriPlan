@@ -260,7 +260,7 @@ export async function runPlanNegotiation(args: PlanRunArgs): Promise<PlanRunOutc
         ? `Rules collide (${result.conflicts.slice(0, 2).join(", ")}).`
         : `Week costs ${money(result.weeklyCostUsd)}, ${money(overBy)} over.`;
       if (round === 1) {
-        concessions = await chefConcede(ctx, round, concessions, problem);
+        concessions = await chefConcede(ctx, round, concessions, problem, { weeklyCostUsd: result.weeklyCostUsd, overBy: Math.round(overBy * 100) / 100, conflicts: result.conflicts });
         pool = [...pool, ...scored.filter((t) => !pool.some((c) => c.candidateId === t.candidateId))];
         pool = reviewSafe(
           pool,
@@ -276,7 +276,7 @@ export async function runPlanNegotiation(args: PlanRunArgs): Promise<PlanRunOutc
       "orchestrator",
       "proposal",
       `Optimizer solved in ${(result.solveMs / 1000).toFixed(1)} s. Weekly cost ${money(result.weeklyCostUsd)}${round ? ` after ${round} ${round === 1 ? "round" : "rounds"}` : ""}.`,
-      { solveMs: result.solveMs, weeklyCostUsd: result.weeklyCostUsd, rounds: round, concessions },
+      { solveMs: result.solveMs, solveSec: Number((result.solveMs / 1000).toFixed(1)), weeklyCostUsd: result.weeklyCostUsd, rounds: round, concessions },
     );
     if (!result.feasible)
       throw new Error(
