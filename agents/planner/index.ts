@@ -32,6 +32,7 @@ import {
 } from "../schemas/planner";
 import { buildRecipe, RecipeRejectedError, type BuildContext } from "./build";
 import { findForbidden, normalizeTerms, type ForbiddenRules } from "./safety";
+import { mainIngredients, mainProteins, swapSimilarity } from "./variety";
 
 export { RecipeRejectedError } from "./build";
 
@@ -271,8 +272,12 @@ async function generateRecipe(
   mealType: PlannerMealType,
   avoidTitles: string[],
   hint: string,
+  /** Extra rejection reasons for a built recipe (empty = accept). Skipped on the last attempt so a swap never fails on it. */
+  check?: (recipe: Recipe) => string[],
 ): Promise<Recipe> {
+  let attempt = 0;
   return withRetries(`${mealType} recipe`, async (feedback) => {
+    const last = attempt++ === MAX_RECIPE_RETRIES;
     const { recipe } = await callPlanner<{ recipe: LlmRecipe }>(
       LlmReplacementSchema,
       [
@@ -287,7 +292,10 @@ async function generateRecipe(
       1_800,
       30_000,
     );
-    return buildRecipe(recipe, mealType, ctx);
+    const built = await buildRecipe(recipe, mealType, ctx);
+    const reasons = check && !last ? check(built) : [];
+    if (reasons.length) throw new RecipeRejectedError(reasons);
+    return built;
   });
 }
 
@@ -477,7 +485,7 @@ export async function generateDay(
   });
 }
 
-/** Replaces one recipe with a meaningfully different one of the same meal type; nothing else changes. */
+/** Replaces one recipe with a totally different one of the same meal type (checked in code); nothing else changes. */
 export async function replaceRecipe(
   userId: string,
   weekStartDate: string,
@@ -494,16 +502,24 @@ export async function replaceRecipe(
     if (index < 0) throw new PlannerNotFoundError(`${date} is not in the week of ${weekStartDate}.`);
     const ctx = await plannerContext(store, userId, overrides);
     const old = current.days[index][mealType];
-    const mains = currentRecipe?.mainIngredients?.length
-      ? currentRecipe.mainIngredients
-      : old.ingredients.slice(0, 4).map((i) => i.name);
-    const hint = `Replace "${currentRecipe?.title ?? old.title}" (main ingredients: ${mains.join(", ")}) with a meaningfully different dish: different main ingredient or cooking method.`;
+    // The saved recipe is the source of truth for what to move away from; the client's list only adds to it.
+    const mains = [...new Set([...mainIngredients(old), ...(currentRecipe?.mainIngredients ?? [])])];
+    const proteins = mainProteins(old);
+    const hint = [
+      `Replace "${old.title}" with a TOTALLY DIFFERENT ${mealType}, not a variation of it.`,
+      proteins.length
+        ? `Use a different main protein: not ${proteins.join(", ")}.`
+        : "Build it around a different main ingredient.",
+      `Do not base it on any of: ${mains.join(", ")}.`,
+      "Pick a different cuisine, cooking method and dish format (for example soup vs bowl vs wrap vs bake).",
+    ].join(" ");
     const recipe = await generateRecipe(
       ctx,
       date,
       mealType,
       [...allTitles(current, { date, slot: mealType }), old.title],
       hint,
+      (next) => swapSimilarity(old, next),
     );
     const plan: WeeklyMealPlan = {
       ...current,

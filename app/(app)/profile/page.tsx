@@ -174,15 +174,6 @@ export default function ProfilePage() {
           </Button>
         </CardContent>
       </Card>}
-
-      <Button
-        variant="ghost"
-        className="text-danger hover:bg-danger-soft hover:text-danger"
-        onClick={() => void logout()}
-      >
-        <LogOut aria-hidden="true" />
-        Log out
-      </Button>
     </div>
   );
 }

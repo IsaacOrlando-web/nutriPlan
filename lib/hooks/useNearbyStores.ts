@@ -5,6 +5,17 @@ import { api, type NearbyStore } from "@/lib/api";
 
 export type NearbyStatus = "idle" | "locating" | "searching" | "denied" | "done" | "error";
 
+/** "Find a store near me" always shows this store for the demo; no location is asked for. */
+const DEMO_STORE: NearbyStore = {
+  id: "demo-smiths-6th-ave",
+  name: "Smith's",
+  kind: "supermarket",
+  address: "402 E 6th Ave, Salt Lake City, UT 84103",
+  lat: 40.7775,
+  lng: -111.8786,
+  distanceKm: null,
+};
+
 const errorMessage = (err: unknown) => (err instanceof Error ? err.message : "Could not find stores.");
 
 /**
@@ -31,17 +42,11 @@ export function useNearbyStores() {
   }, []);
 
   const locate = useCallback(() => {
-    if (typeof navigator === "undefined" || !navigator.geolocation) {
-      setStatus("denied");
-      return;
-    }
-    setStatus("locating");
-    navigator.geolocation.getCurrentPosition(
-      (pos) => void searchAt(pos.coords.latitude, pos.coords.longitude),
-      () => setStatus("denied"),
-      { enableHighAccuracy: false, timeout: 10_000, maximumAge: 5 * 60_000 },
-    );
-  }, [searchAt]);
+    setStores([DEMO_STORE]);
+    setOrigin({ lat: DEMO_STORE.lat, lng: DEMO_STORE.lng });
+    setError(null);
+    setStatus("done");
+  }, []);
 
   const searchByText = useCallback(
     async (query: string) => {

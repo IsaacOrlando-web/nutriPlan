@@ -49,12 +49,6 @@ export function NearbyStore({ className }: { className?: string }) {
           </h2>
           <p className="text-sm text-ink-muted">A supermarket near you carries everything on this list.</p>
         </div>
-        {nearby.status !== "idle" && !busy && (
-          <Button variant="ghost" size="sm" onClick={nearby.locate}>
-            <LocateFixed aria-hidden="true" />
-            Use my location
-          </Button>
-        )}
       </div>
 
       {nearby.status === "idle" && (
@@ -78,14 +72,16 @@ export function NearbyStore({ className }: { className?: string }) {
             className="flex flex-col gap-3 rounded-lg bg-brand-soft/60 p-3 sm:flex-row sm:items-center sm:justify-between"
           >
             <div className="min-w-0 space-y-0.5">
-              <p className="flex flex-wrap items-center gap-2">
+              <div className="flex flex-wrap items-center gap-2">
                 <span className="font-semibold">{best.name}</span>
                 <Badge variant="success">{KIND_LABEL[best.kind]}</Badge>
-              </p>
+              </div>
               {best.address && <p className="text-sm text-ink-muted">{best.address}</p>}
-              <p className="text-sm font-medium tabular-nums text-brand-dark">
-                {distanceLabel(best.distanceKm)}
-              </p>
+              {best.distanceKm !== null && (
+                <p className="text-sm font-medium tabular-nums text-brand-dark">
+                  {distanceLabel(best.distanceKm)}
+                </p>
+              )}
             </div>
             <Button asChild className="shrink-0">
               <a href={directionsUrl(best)} target="_blank" rel="noopener noreferrer">
@@ -101,7 +97,8 @@ export function NearbyStore({ className }: { className?: string }) {
                   <span className="min-w-0">
                     <span className="block truncate font-medium">{s.name}</span>
                     <span className="block text-xs text-ink-muted">
-                      {KIND_LABEL[s.kind]} · {distanceLabel(s.distanceKm)}
+                      {KIND_LABEL[s.kind]}
+                      {s.distanceKm !== null && ` · ${distanceLabel(s.distanceKm)}`}
                     </span>
                   </span>
                   <a

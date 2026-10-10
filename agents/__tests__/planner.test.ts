@@ -286,6 +286,39 @@ describe("replaceRecipe and generateDay", () => {
     expect((await store.getPlannerWeek(ALEX, WEEK))?.plan?.days[2].dinner.id).toBe(next.id);
   });
 
+  it("rejects a swap that keeps the same main protein and asks again with that feedback", async () => {
+    await generateWeek(ALEX, WEEK, {}, { store });
+    const date = weekDates(WEEK)[2];
+    let calls = 0;
+    respond(undefined, () => {
+      calls++;
+      return calls === 1
+        ? { recipe: recipe("dinner") } // salmon again
+        : {
+            recipe: recipe(
+              "dinner",
+              [ing("Black beans", 2, "cup", "protein"), ing("Corn tortillas", 4, "", "grains")],
+              "Black Bean Tacos",
+            ),
+          };
+    });
+    const { recipe: next } = await replaceRecipe(ALEX, WEEK, date, "dinner", undefined, {}, { store });
+    expect(next.title).toBe("Black Bean Tacos");
+    expect(calls).toBe(2);
+    const prompts = callObject.mock.calls.slice(-2).map((c) => c[0].prompt as string);
+    expect(prompts[0]).toContain("TOTALLY DIFFERENT dinner");
+    expect(prompts[0]).toContain("not salmon fillet");
+    expect(prompts[1]).toContain("same main protein");
+  });
+
+  it("still swaps when the model keeps repeating the protein (last attempt is accepted)", async () => {
+    await generateWeek(ALEX, WEEK, {}, { store });
+    const date = weekDates(WEEK)[2];
+    respond(undefined, () => ({ recipe: recipe("dinner") }));
+    const { recipe: next } = await replaceRecipe(ALEX, WEEK, date, "dinner", undefined, {}, { store });
+    expect(next.mealType).toBe("dinner");
+  });
+
   it("regenerates one day's three meals only", async () => {
     const before = await generateWeek(ALEX, WEEK, {}, { store });
     const { day, plan } = await generateDay(ALEX, WEEK, before.days[4].date, {}, { store });

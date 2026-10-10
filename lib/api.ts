@@ -32,7 +32,7 @@
 //   PATCH /api/meal-plans/state       UpdateWeekStateRequest -> PlannerWeekState (grocery ticks)
 //
 // External, public, no keys (browser -> OpenStreetMap), only after the user taps "Find a store near me":
-//   POST https://overpass-api.de/api/interpreter          supermarkets around a point
+//   POST https://overpass-api.de/api/interpreter          supermarkets around a point (+ 2 public mirrors)
 //   GET  https://nominatim.openstreetmap.org/search      city or ZIP -> coordinates
 //   POST /api/demo/reset              { user: "alex" | "maria" }         (demo helper)
 import type {
@@ -94,7 +94,8 @@ export interface NearbyStore {
   address: string | null;
   lat: number;
   lng: number;
-  distanceKm: number;
+  /** Null when the store is not measured from the user's position (the fixed demo store). */
+  distanceKm: number | null;
 }
 
 export const USE_MOCKS = process.env.NEXT_PUBLIC_USE_MOCKS === "true";
@@ -292,6 +293,12 @@ const MOCK_STORES: NearbyStore[] = [
   },
 ];
 
+const OVERPASS_URLS = [
+  "https://overpass-api.de/api/interpreter",
+  "https://overpass.kumi.systems/api/interpreter",
+  "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
+];
+
 const STORE_KINDS: NearbyStore["kind"][] = ["supermarket", "greengrocer", "convenience"];
 
 /** Great circle distance in km (display only: "0.8 km away"). */
@@ -314,12 +321,22 @@ interface OverpassElement {
 
 async function overpassShops(lat: number, lng: number, radiusM: number): Promise<NearbyStore[]> {
   const query = `[out:json][timeout:15];nwr["shop"~"^(supermarket|greengrocer|convenience)$"]["name"](around:${radiusM},${lat},${lng});out center 60;`;
-  const res = await fetch("https://overpass-api.de/api/interpreter", {
-    method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    body: `data=${encodeURIComponent(query)}`,
-  });
-  if (!res.ok) throw new ApiRequestError(res.status, "Could not reach OpenStreetMap to find stores.");
+  // The public servers are often busy (429/504), so try the main one and then a mirror.
+  let res: Response | null = null;
+  for (const url of OVERPASS_URLS) {
+    try {
+      res = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: `data=${encodeURIComponent(query)}`,
+      });
+      if (res.ok) break;
+    } catch {
+      res = null;
+    }
+  }
+  if (!res?.ok)
+    throw new ApiRequestError(res?.status ?? 503, "Could not reach OpenStreetMap to find stores.");
   const { elements } = (await res.json()) as { elements: OverpassElement[] };
   return elements.flatMap((el) => {
     const pLat = el.lat ?? el.center?.lat;
@@ -348,7 +365,7 @@ async function fetchNearbyStores(lat: number, lng: number): Promise<NearbyStore[
   let shops = await overpassShops(lat, lng, 3000);
   if (!shops.some((s) => s.kind === "supermarket")) shops = await overpassShops(lat, lng, 8000);
   return shops.sort(
-    (a, b) => STORE_KINDS.indexOf(a.kind) - STORE_KINDS.indexOf(b.kind) || a.distanceKm - b.distanceKm,
+    (a, b) => STORE_KINDS.indexOf(a.kind) - STORE_KINDS.indexOf(b.kind) || (a.distanceKm ?? 0) - (b.distanceKm ?? 0),
   );
 }
 

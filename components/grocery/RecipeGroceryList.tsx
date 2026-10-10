@@ -8,6 +8,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { useUpdateWeekState } from "@/lib/hooks/usePlanner";
 import { cn, fmtUsd } from "@/lib/utils";
 import { aggregateShopping, applyShoppingState, groupByCategory } from "@/math/shopping";
+import { estimateItemPriceUsd, sumPricesUsd } from "@/math/shopping-prices";
 import type { Food, PlannerWeekState, Recipe, WeeklyMealPlan } from "@/types/contracts";
 import { SECTION_META } from "./GroceryList";
 
@@ -33,12 +34,14 @@ export function RecipeGroceryList({ plan, state, className }: RecipeGroceryListP
     () => applyShoppingState(aggregateShopping(recipes), state.shopping),
     [recipes, state.shopping],
   );
-  const groups = useMemo(() => groupByCategory(view.items), [view.items]);
-
-  // Display sum of Math's per serving costs; recipes without a price are named, never guessed.
-  const priced = recipes.filter((r) => r.estimatedCostPerServing !== null);
-  const total = priced.reduce((s, r) => s + (r.estimatedCostPerServing ?? 0) * r.servings, 0);
-  const unpriced = recipes.length - priced.length;
+  // Demo shelf prices from Math, one per line; the totals are sums of the prices shown.
+  const items = useMemo(
+    () => view.items.map((i) => ({ ...i, priceUsd: estimateItemPriceUsd(i) })),
+    [view.items],
+  );
+  const groups = useMemo(() => groupByCategory(items), [items]);
+  const total = sumPricesUsd(items.map((i) => i.priceUsd));
+  const left = sumPricesUsd(items.filter((i) => !i.checked).map((i) => i.priceUsd));
 
   const saveChecked = (checked: Record<string, boolean>) =>
     update.mutate(
@@ -53,12 +56,14 @@ export function RecipeGroceryList({ plan, state, className }: RecipeGroceryListP
       <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl bg-surface-raised px-4 py-3 shadow-sm ring-1 ring-border">
         <div className="space-y-0.5">
           <p className="text-sm font-semibold">
-            {view.purchased} of {view.items.length} items bought
+            {view.purchased} of {items.length} items bought
           </p>
           <p className="text-xs text-ink-muted">
             Estimated week:{" "}
-            <span className="font-semibold tabular-nums text-agent-budget">{fmtUsd(total)}</span>
-            {unpriced > 0 && ` · ${unpriced} ${unpriced === 1 ? "recipe" : "recipes"} not priced`}
+            <span data-testid="grocery-total" className="font-semibold tabular-nums text-agent-budget">
+              {fmtUsd(total)}
+            </span>
+            {view.purchased > 0 && ` · ${fmtUsd(left)} left to buy`}
           </p>
         </div>
         {view.purchased > 0 && (
@@ -79,6 +84,7 @@ export function RecipeGroceryList({ plan, state, className }: RecipeGroceryListP
         const meta = sectionMeta(group.category);
         const Icon = meta.icon;
         const done = group.items.filter((i) => i.checked).length;
+        const groupTotal = sumPricesUsd(group.items.map((i) => i.priceUsd));
         return (
           <section key={group.category} className="space-y-2" aria-labelledby={`section-${group.category}`}>
             <div className="flex items-center gap-2">
@@ -91,6 +97,7 @@ export function RecipeGroceryList({ plan, state, className }: RecipeGroceryListP
               <span className="text-xs text-ink-subtle">
                 {done} of {group.items.length}
               </span>
+              <span className="ml-auto text-xs font-medium tabular-nums text-ink-muted">{fmtUsd(groupTotal)}</span>
             </div>
             <ul className="divide-y rounded-xl bg-surface-raised shadow-sm ring-1 ring-border">
               {group.items.map((item) => {
@@ -127,13 +134,15 @@ export function RecipeGroceryList({ plan, state, className }: RecipeGroceryListP
                         </span>
                       )}
                     </label>
-                    <span
-                      className={cn(
-                        "shrink-0 text-right text-sm tabular-nums",
-                        item.checked ? "text-ink-subtle" : "font-semibold",
-                      )}
-                    >
-                      {item.quantityLabel}
+                    <span className="shrink-0 text-right tabular-nums">
+                      <span
+                        className={cn("block text-sm", item.checked ? "text-ink-subtle" : "font-semibold")}
+                      >
+                        {item.quantityLabel}
+                      </span>
+                      <span data-testid="grocery-item-price" className="block text-xs text-ink-muted">
+                        {fmtUsd(item.priceUsd)}
+                      </span>
                     </span>
                   </li>
                 );

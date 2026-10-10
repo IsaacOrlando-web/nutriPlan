@@ -53,7 +53,7 @@
   },
   "votes": {
     "a": {
-      "model": "scripted-a-fallback",
+      "model": "Claude 3.7 Sonnet",
       "items": [
         {
           "foodId": "chicken_breast_roasted",

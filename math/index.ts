@@ -108,3 +108,6 @@ export {
   sortShopping,
 } from "./shopping";
 export type { ShoppingListItem, ShoppingListView } from "./shopping";
+export { estimateItemPriceUsd, shelfPrice, sumPricesUsd } from "./shopping-prices";
+export { FLAT_SLOPE_KG_PER_WEEK, goalProgress } from "./progress";
+export type { GoalDirection, GoalProgress, GoalProgressInput } from "./progress";
