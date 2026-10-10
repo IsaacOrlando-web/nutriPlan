@@ -21,12 +21,15 @@
       "Bash(git branch:*)"
     ],
     "deny": [
-      "Edit(.env*)",
-      "Write(.env*)",
-      "Read(.env.local)",
       "Read(.env)",
+      "Edit(.env)",
+      "Write(.env)",
+      "Read(.env.local)",
       "Edit(.env.local)",
       "Write(.env.local)",
+      "Read(.env.*.local)",
+      "Edit(.env.*.local)",
+      "Write(.env.*.local)",
       "Bash(git push --force:*)",
       "Bash(git push -f:*)"
     ]
