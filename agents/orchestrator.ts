@@ -20,6 +20,7 @@ import { getStore } from "@/lib/db";
 import { newId } from "@/lib/db/store";
 import type { Store } from "@/lib/db/store";
 import { DEMO_USER_IDS, type DemoUserKey } from "@/lib/db/seed/demo-users";
+import { warmBudgetCurve } from "@/lib/plan/curve-input";
 import { llmAvailable } from "./llm";
 import type { AgentContext } from "./context";
 import { emitEvent, emitterFor, eventDelayMs } from "./tools/events";
@@ -64,6 +65,8 @@ export const FIRST_SOLVE_TIME_SEC = 2;
 export const SECOND_SOLVE_TIME_SEC = 3;
 /** Deferred shadow pricing waits this long after the decision so the plan page loads before the solver runs. */
 export const DEFERRED_SHADOW_DELAY_MS = 1_500;
+/** Curve warm up starts this long after a run completes, after the deferred shadow prices have had their turn. */
+export const CURVE_WARM_DELAY_MS = 4_000;
 
 /** AGENTS_SHADOW_MAX_MS overrides the gate (0 disables shadow prices, a large value forces them). */
 function shadowSolveMaxMs(): number {
@@ -585,12 +588,21 @@ export async function startPlanRun(args: StartPlanRunArgs): Promise<{ runId: str
     trigger: args.trigger,
     reason: args.reason ?? TRIGGER_TEXT[args.trigger],
   });
-  void runPlanNegotiation({ ...args, runId: run.runId, store }).catch((err) => {
-    console.error(
-      `[orchestrator] unexpected failure in run ${run.runId}:`,
-      err instanceof Error ? err.message : err,
-    );
-  });
+  // Start on the next tick so the HTTP response carrying runId is flushed before the first solve runs.
+  setTimeout(() => {
+    runPlanNegotiation({ ...args, runId: run.runId, store })
+      .then((outcome) => {
+        // Warm the budget curve now (solves yield between budgets), so the plan page's slider answers from cache.
+        if (outcome.status === "done" && !outcome.fallback)
+          setTimeout(() => void warmBudgetCurve(args.userId), CURVE_WARM_DELAY_MS);
+      })
+      .catch((err) => {
+        console.error(
+          `[orchestrator] unexpected failure in run ${run.runId}:`,
+          err instanceof Error ? err.message : err,
+        );
+      });
+  }, 0);
   return { runId: run.runId };
 }
 

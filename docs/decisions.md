@@ -29,3 +29,18 @@ One line per decision: id, date, what, why, consequences. Newest at the bottom. 
 `app/api/kroger/**`. `lib/kroger/types.ts` re-exports them and keeps only the persisted connection and raw
 Kroger API shapes. Frontend adds `api.kroger.*`, `lib/hooks/useKroger.ts` and `components/grocery/KrogerPanel.tsx`.
 The panel renders nothing until the server has `KROGER_CLIENT_ID` + `KROGER_CLIENT_SECRET` (docs/kroger-setup.md).
+
+## D-014 Solver yields to the event loop; curve cache warmed after every run; demo users start with a plan (2026-10-10)
+
+HiGHS runs synchronously inside WebAssembly, so a 16 point budget curve or a negotiation froze every HTTP
+request for 40 to 55 s (observed: `/api/plan/curve` 38 s, `POST /api/plan/generate` 54 s, e2e timeouts).
+Three changes, no new dependencies:
+
+- `math/lp.ts` `solveLinear` awaits `yieldToEventLoop()` before each solve. Solves are still bounded by
+  their time limits; requests are served in the gaps. The curve limit drops to 2 s per point.
+- `lib/plan/curve-input.ts` (Backend) builds the curve input and cache key for both `GET /api/plan/curve`
+  and `warmBudgetCurve(userId)`, which the orchestrator calls 4 s after a run completes. The plan page's
+  slider then answers from the cache instead of solving while the user waits.
+- `MemoryStore` seeds each demo user with the plan, run and events from `agents/fallbacks/<user>-plan-run.json`
+  when it persists to a file (the app). RAM only stores (`MEMORY_STORE_FILE=none`, tests, `npm run mocks`)
+  stay empty, so version numbers in tests are unchanged. Delete `.data/store.json` to pick this up.

@@ -18,7 +18,7 @@ Startup time on a cold `npm run dev` is 10 to 20 s; open `/welcome` once before 
 
 - UI: Profile -> "Reset demo data".
 - API: `curl -X POST http://localhost:3000/api/demo/reset -H "Content-Type: application/json" -d "{\"user\":\"alex\"}"` (and `maria`). PowerShell: `Invoke-RestMethod -Method Post -Uri http://localhost:3000/api/demo/reset -ContentType application/json -Body '{"user":"alex"}'`.
-- Nuclear, memory backend: stop the server, delete `.data/store.json`, start again (reseeds from `lib/db/seed/demo-users.ts`).
+- Nuclear, memory backend: stop the server, delete `.data/store.json`, start again (reseeds from `lib/db/seed/demo-users.ts`, plus the demo plans from `agents/fallbacks/`).
 - Supabase: `npm run seed:demo` with the project keys in `.env.local`.
 
 ## Switch modes

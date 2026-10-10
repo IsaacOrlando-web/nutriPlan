@@ -83,7 +83,10 @@ function expr(terms: Map<string, number>): string {
 
 /** Serializes to CPLEX LP format (what HiGHS reads). */
 export function toLpFormat(model: LinearModel): string {
-  const out: string[] = ["Minimize", ` obj: ${model.objective.size ? expr(model.objective) : "0 " + model.vars.keys().next().value}`];
+  const out: string[] = [
+    "Minimize",
+    ` obj: ${model.objective.size ? expr(model.objective) : "0 " + model.vars.keys().next().value}`,
+  ];
   out.push("Subject To");
   for (const c of model.constraints) {
     if (c.lo !== undefined && c.hi !== undefined && c.lo === c.hi) {
@@ -133,7 +136,9 @@ let highsPromise: Promise<HighsInstance> | null = null;
 async function loadHighs(): Promise<HighsInstance> {
   if (!highsPromise) {
     highsPromise = (async () => {
-      const mod = (await import("highs")) as unknown as { default: (opts?: object) => Promise<HighsInstance> };
+      const mod = (await import("highs")) as unknown as {
+        default: (opts?: object) => Promise<HighsInstance>;
+      };
       return mod.default();
     })().catch((err) => {
       highsPromise = null;
@@ -187,12 +192,16 @@ type JsLpModel = {
   options?: Record<string, unknown>;
 };
 
-export async function solveWithJsLp(model: LinearModel, opts: { timeLimitSec?: number } = {}): Promise<LinearSolution> {
+export async function solveWithJsLp(
+  model: LinearModel,
+  opts: { timeLimitSec?: number } = {},
+): Promise<LinearSolution> {
   const solverMod = (await import("javascript-lp-solver")) as unknown as {
     default?: { Solve: (m: JsLpModel) => Record<string, number | boolean> };
     Solve?: (m: JsLpModel) => Record<string, number | boolean>;
   };
-  const solver = solverMod.default ?? (solverMod as { Solve: (m: JsLpModel) => Record<string, number | boolean> });
+  const solver =
+    solverMod.default ?? (solverMod as { Solve: (m: JsLpModel) => Record<string, number | boolean> });
 
   const js: JsLpModel = {
     optimize: "__obj",
@@ -221,16 +230,30 @@ export async function solveWithJsLp(model: LinearModel, opts: { timeLimitSec?: n
   const res = solver.Solve(js);
   if (!res.feasible) return { status: "infeasible", objective: NaN, values: {}, solver: "jslp" };
   const values: Record<string, number> = {};
-  for (const name of model.vars.keys()) values[name] = typeof res[name] === "number" ? (res[name] as number) : 0;
+  for (const name of model.vars.keys())
+    values[name] = typeof res[name] === "number" ? (res[name] as number) : 0;
   let objective = 0;
   for (const [v, c] of model.objective) objective += c * values[v];
   return { status: "feasible", objective, values, solver: "jslp" };
+}
+
+/**
+ * Lets the Node event loop run once before a solve. HiGHS runs synchronously inside WebAssembly, so without
+ * this a budget curve (16 budgets x 7 days) or a negotiation would freeze every HTTP request for its whole
+ * duration. Each solve is still bounded by its time limit; requests are served in the gaps between solves.
+ */
+export function yieldToEventLoop(): Promise<void> {
+  return new Promise((resolve) => {
+    if (typeof setImmediate === "function") setImmediate(resolve);
+    else setTimeout(resolve, 0);
+  });
 }
 
 export async function solveLinear(
   model: LinearModel,
   opts: { prefer?: "highs" | "jslp"; timeLimitSec?: number; mipRelGap?: number; mipAbsGap?: number } = {},
 ): Promise<LinearSolution> {
+  await yieldToEventLoop();
   if (opts.prefer !== "jslp") {
     try {
       const sol = await solveWithHighs(model, opts);

@@ -58,7 +58,7 @@ export interface BudgetCurveOptions extends OptimizeOptions {
  * worse than $55) at 2.3 to 4.9 s per point; 3 s gives a clean monotone curve at about the same 2.6 s per
  * point. On the Chef sized ~30 meal pool a point takes under 1 s either way.
  */
-export const CURVE_SOLVE_OPTIONS: OptimizeOptions = { shadowPrices: false, mode: "daily", timeLimitSec: 3 };
+export const CURVE_SOLVE_OPTIONS: OptimizeOptions = { shadowPrices: false, mode: "daily", timeLimitSec: 2 };
 /** Protein shortfall under this many grams counts as "target reached". */
 export const PROTEIN_OK_G = 2;
 /** Objective improvement (relative) under which an extra budget step counts as saturated. */

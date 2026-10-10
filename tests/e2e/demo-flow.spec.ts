@@ -30,11 +30,15 @@ async function loginAs(page: Page, user: "alex" | "maria"): Promise<void> {
   await expect(page.getByTestId("dashboard")).toBeVisible({ timeout: NAV_TIMEOUT });
 }
 
-/** Clicks the first match if it shows up within `timeout`. Returns true when clicked. */
+/**
+ * Clicks the first match if it shows up within `timeout`. Returns true when clicked.
+ * `isVisible()` never waits, so this uses `waitFor`: on a slow dev server the element may render a moment late.
+ */
 async function clickIfVisible(locator: Locator, timeout = 3_000): Promise<boolean> {
   const visible = await locator
     .first()
-    .isVisible({ timeout })
+    .waitFor({ state: "visible", timeout })
+    .then(() => true)
     .catch(() => false);
   if (visible) await locator.first().click();
   return visible;
